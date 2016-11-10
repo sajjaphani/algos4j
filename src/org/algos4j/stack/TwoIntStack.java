@@ -9,11 +9,9 @@ package org.algos4j.stack;
  */
 public class TwoIntStack {
 
-	int[] arr;
-	int top1, top2;
-	int[] next;
-	int free;
-	int size;
+	private int[] arr;
+	private int top1, top2;
+	private int size;
 
 	/**
 	 * Initializes the two stack object with the given size.
