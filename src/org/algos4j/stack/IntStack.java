@@ -53,14 +53,14 @@ public class IntStack {
 	 * 		current size
 	 */
 	public int size() {
-		return top +1;
+		return top + 1;
 	}
 	
 	/**
 	 * Push an element into the top of the stack.
 	 * 
 	 * @param element
-	 * 		element to fush
+	 * 		element to push
 	 * 
 	 * @throws IllegalStateException
 	 *             if the stack overflows.
@@ -68,7 +68,8 @@ public class IntStack {
 	public void push(int element) {
 		if (isFull())
 			throw new IllegalStateException("Stack overflow.");
-		elements[++top] = element;
+		top = top + 1;
+		elements[top] = element;
 	}
 
 	/**
@@ -83,7 +84,9 @@ public class IntStack {
 	public int pop() {
 		if (isEmpty())
 			throw new IllegalStateException("Stack underflow.");
-		return elements[top--];
+		int elt = elements[top];
+		top = top - 1;
+		return elt;
 	}
 
 	/**

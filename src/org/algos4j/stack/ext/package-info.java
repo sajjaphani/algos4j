@@ -1,7 +1,6 @@
 /**
+ * Holds additional classes for Stack data structure. E.g, Generic stack.
  * 
- */
-/**
  * @author psajja
  *
  */

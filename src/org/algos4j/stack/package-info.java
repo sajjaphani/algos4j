@@ -1,7 +1,6 @@
 /**
+ * This package contains classes related Stack data structure.
  * 
- */
-/**
  * @author psajja
  *
  */

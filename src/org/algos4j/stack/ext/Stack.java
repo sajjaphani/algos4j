@@ -11,6 +11,9 @@ public class Stack<E> {
 	private Node<E> top;
 	private int size;
 
+	/**
+	 * Initialize
+	 */
 	public Stack() {
 		top = null;
 		size = 0;
@@ -20,6 +23,7 @@ public class Stack<E> {
 	 * Check whether the stack is empty.
 	 * 
 	 * @return
+	 * 		true if the stack is empty, false otherwise
 	 */
 	public boolean isEmpty() {
 		return top == null;
@@ -29,35 +33,41 @@ public class Stack<E> {
 	 * Current size of the stack.
 	 * 
 	 * @return
+	 * 		current size
 	 */
 	public int size() {
 		return size;
 	}
 
 	/**
-	 * Push an element into the top of the stack.
+	 * Push an element onto the top of the stack.
 	 * 
 	 * @param element
+	 * 		element to push
 	 * 
 	 */
 	public void push(E element) {
 		Node<E> newTop = new Node<E>(element);
 		newTop.next = top;
 		top = newTop;
-		size++;
+		size = size + 1;
 	}
 
 	/**
 	 * Removes and Returns the top of the element.
 	 * 
 	 * @return
+	 * 		top element
+	 * 
+	 * @throws IllegalStateException
+	 * 		if the stack underflows
 	 */
 	public E pop() {
 		if (isEmpty())
 			throw new IllegalStateException("Stack underflows.");
 		E temp = top.item;
 		top = top.next;
-		size--;
+		size = size - 1;
 		return temp;
 	}
 
@@ -65,6 +75,10 @@ public class Stack<E> {
 	 * Returns the top of the stack without removing it.
 	 * 
 	 * @return
+	 * 		top element
+	 * 
+	 * @throws IllegalStateException
+	 * 		if the stack underflows
 	 */
 	public E peek() {
 		if (isEmpty())
@@ -87,5 +101,4 @@ public class Stack<E> {
 			this.item = item;
 		}
 	}
-
 }

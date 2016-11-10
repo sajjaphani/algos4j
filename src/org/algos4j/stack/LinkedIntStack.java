@@ -14,7 +14,6 @@ public class LinkedIntStack {
 	/**
 	 * Initialize the stack.
 	 * 
-	 * @param capacity
 	 */
 	public LinkedIntStack() {
 		size = 0;
@@ -34,19 +33,21 @@ public class LinkedIntStack {
 	 * Push an element into the top of the stack.
 	 * 
 	 * @param element
+	 * 		element to push
 	 * 
 	 */
 	public void push(int element) {
 		Node top = new Node(element);
 		top.next = this.top;
 		this.top = top;
-		size++;
+		size = size + 1;
 	}
 
 	/**
 	 * Removes and Returns the top of the element.
 	 * 
 	 * @return
+	 * 		popped element
 	 * 
 	 * @throws IllegalStateException
 	 *             if the stack underflows.
@@ -56,7 +57,7 @@ public class LinkedIntStack {
 			throw new IllegalStateException("Stack underflow.");
 		Node top = this.top;
 		this.top = this.top.next;
-		size--;
+		size = size - 1;
 		return top.getData();
 	}
 
@@ -64,6 +65,7 @@ public class LinkedIntStack {
 	 * Returns the top of the stack.
 	 * 
 	 * @return
+	 * 		top of the stack
 	 */
 	public int peek() {
 		if (isEmpty())
@@ -75,6 +77,7 @@ public class LinkedIntStack {
 	 * Returns the size of the stack.
 	 * 
 	 * @return
+	 * 		current size
 	 */
 	public int size() {
 		return size;
