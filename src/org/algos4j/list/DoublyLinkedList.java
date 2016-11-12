@@ -370,7 +370,7 @@ public class DoublyLinkedList {
 	 */
 	static class DoublyNode {
 
-		private int data;
+		int data;
 		public DoublyNode prev;
 		public DoublyNode next;
 
