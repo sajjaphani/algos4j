@@ -1,5 +1,5 @@
 /**
- * This package contains classes related Queue data structure.
+ * This package contains classes/utilities related to Queue data structure.
  * 
  * @author psajja
  *

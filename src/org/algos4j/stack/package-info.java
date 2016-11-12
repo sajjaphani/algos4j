@@ -1,5 +1,5 @@
 /**
- * This package contains classes related Stack data structure.
+ * This package contains classes/utilities related to Stack data structure.
  * 
  * @author psajja
  *
