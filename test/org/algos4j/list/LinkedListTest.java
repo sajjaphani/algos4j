@@ -40,5 +40,6 @@ public class LinkedListTest {
 		list.deleteAt(6);
 		list.print();
 		System.out.println();
+		System.out.println(list);
 	}
 }

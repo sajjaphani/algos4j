@@ -130,4 +130,26 @@ public class CircularList extends LinkedList {
 		
 		return -1;
 	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		Node temp = getHead();
+		if (temp == null)
+			return "[]";
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("[");
+		sb.append(temp.data);
+		temp = temp.next;
+		while (temp != getHead()) {
+			sb.append(", " + temp.getData());
+			temp = temp.next;
+		}
+		sb.append("]");
+		
+		return sb.toString();
+	}
 }

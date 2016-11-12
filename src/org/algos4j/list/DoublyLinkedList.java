@@ -1,40 +1,31 @@
 package org.algos4j.list;
 
 /**
- * Represents a single LinkedList. If the linked list contains duplicates, some
- * methods acts on the first occurrence.
+ * Doubly linked list.
  * 
  * @author psajja
  * 
  */
-public class LinkedList {
+public class DoublyLinkedList {
 
-	private Node head;
-
-	public LinkedList() {
-		head = null;
-	}
-
-	LinkedList(Node head) {
-		this.head = head;
-	}
+	private DoublyNode head;
 
 	/**
-	 * Return the head node.
+	 * Get the head node.
 	 * 
 	 * @return the head
 	 */
-	public Node getHead() {
+	public DoublyNode getHead() {
 		return head;
 	}
 
 	/**
-	 * Set the head of the list.
+	 * set the head node.
 	 * 
 	 * @param head
 	 *            the head to set
 	 */
-	void setHead(Node head) {
+	void setHead(DoublyNode head) {
 		this.head = head;
 	}
 
@@ -51,11 +42,11 @@ public class LinkedList {
 	/**
 	 * Get the tail node.
 	 * 
-	 * @return tail node if found, null otherwise
+	 * @return tail node
 	 */
-	public Node getTail() {
+	public DoublyNode getTail() {
 
-		Node head = getHead();
+		DoublyNode head = getHead();
 		if (head == null)
 			return null;
 		while (head.next != null)
@@ -68,42 +59,21 @@ public class LinkedList {
 	 * Creates a new node with the given element value.
 	 * 
 	 * @param data
-	 *            data to create
+	 *            element's data
 	 */
-	static Node createNode(int data) {
-		return new Node(data);
+	public static DoublyNode createNode(int data) {
+		return new DoublyNode(data);
 	}
 
 	/**
-	 * Print the data from the current linked list. O(n) for time, O(1) for space.
+	 * Print the data from the current linked list.
 	 */
 	void print() {
-		Node temp = getHead();
-		while (temp != null) {
-			System.out.print(temp.getData() + " ");
-			temp = temp.next;
+		DoublyNode current = getHead();
+		while (current != null) {
+			System.out.print(current.getData() + " ");
+			current = current.next;
 		}
-	}
-
-	/**
-	 * Prints the list in reverse order. O(n) for time, O(n) for stack space.
-	 */
-	void printReverse() {
-		Node head = getHead();
-		printReverse(head);
-	}
-	
-	/**
-	 * Recursively print the list.
-	 * 
-	 * @param head
-	 * 		current head
-	 */
-	private void printReverse(Node head) {
-		if(head == null)
-			return;
-		printReverse(head.next);
-		System.out.print(head.getData() + " ");
 	}
 
 	/**
@@ -113,12 +83,15 @@ public class LinkedList {
 	 *            data to insert
 	 */
 	public void insertFront(int data) {
-		Node temp = new Node(data);
+		DoublyNode temp = new DoublyNode(data);
 
-		if (getHead() == null)
+		DoublyNode head = getHead();
+
+		if (head == null)
 			setHead(temp);
 		else {
-			temp.next = getHead();
+			head.prev = temp;
+			temp.next = head;
 			setHead(temp);
 		}
 	}
@@ -130,15 +103,17 @@ public class LinkedList {
 	 *            data to insert
 	 */
 	public void insertLast(int data) {
-		Node temp = new Node(data);
+		DoublyNode temp = new DoublyNode(data);
 
-		if (getHead() == null)
+		DoublyNode current = getHead();
+
+		if (current == null)
 			setHead(temp);
 		else {
-			Node current = getHead();
 			while (current.next != null)
 				current = current.next;
 			current.next = temp;
+			temp.prev = current;
 		}
 	}
 
@@ -146,28 +121,32 @@ public class LinkedList {
 	 * This method inserts the data after a given value.
 	 * 
 	 * @param data
-	 * 		data to insert
+	 *            data to insert
 	 * @param afterData
-	 * 		after node data
+	 *            after node data
 	 * 
 	 * @throws IllegalStateException
-	 *             if the linked list is empty
+	 *             if the linked list is empty.
 	 * @throws IllegalArgumentException
-	 *             if the 'afterData' element is not found
+	 *             if either the linked list is empty or the 'afterData' element
+	 *             is not found
 	 */
 	public void insertAfter(int data, int afterData) {
 		if (getHead() == null)
 			throw new IllegalStateException("LinkedList is empty.");
-		Node current = getHead();
+		DoublyNode current = getHead();
 		while (current != null) {
 			if (current.getData() == afterData)
 				break;
 			current = current.next;
 		}
 		if (current != null) {
-			Node temp = new Node(data);
+			DoublyNode temp = new DoublyNode(data);
 			temp.next = current.next;
 			current.next = temp;
+			temp.prev = current;
+			if (temp.next != null)
+				temp.next.prev = temp;
 		} else {
 			throw new IllegalArgumentException("The element " + afterData
 					+ " does not exist.");
@@ -178,32 +157,36 @@ public class LinkedList {
 	 * This method inserts the data before a given value.
 	 * 
 	 * @param data
-	 * 		data to insert
+	 *            data to insert
 	 * @param beforeData
-	 * 		before node data
+	 *            before node data
 	 * 
 	 * @throws IllegalStateException
-	 *             if the linked list is empty
+	 *             if the linked list is empty.
 	 * @throws IllegalArgumentException
-	 *             if the 'beforeData' element is not found
+	 *             if either the linked list is empty or the 'beforeData'
+	 *             element is not found
 	 */
 	public void insertBefore(int data, int beforeData) {
 		if (getHead() == null)
 			throw new IllegalStateException("LinkedList is empty.");
-		Node current = getHead();
+		DoublyNode current = getHead();
 		// base case, head is the element itself
 		if (current.getData() == beforeData) {
 			insertFront(data);
 		} else {
-			while (current.next != null) {
-				if (current.next.getData() == beforeData)
+			current = current.next;
+			while (current != null) {
+				if (current.getData() == beforeData)
 					break;
 				current = current.next;
 			}
 			if (current != null) {
-				Node temp = new Node(data);
-				temp.next = current.next;
-				current.next = temp;
+				DoublyNode temp = new DoublyNode(data);
+				temp.next = current;
+				temp.prev = current.prev;
+				current.prev.next = temp;
+				current.prev = temp;
 			} else {
 				throw new IllegalArgumentException("The element " + beforeData
 						+ " does not exist.");
@@ -216,19 +199,24 @@ public class LinkedList {
 	 * data is not found.
 	 * 
 	 * @param data
-	 *            data to delete
+	 *            node data to delete
 	 */
 	public void delete(int data) {
-		Node current = getHead();
+		DoublyNode current = getHead();
 		if (current == null)
 			return;
 		// base case, head is the element itself
 		if (current.getData() == data) {
 			setHead(current.next);
+			if (current.next != null)
+				current.next.prev = null;
 		}
 		while (current.next != null) {
 			if (current.next.getData() == data) {
 				current.next = current.next.next;
+				current.next.prev = null;
+				if (current.next.next != null)
+					current.next.next.prev = current;
 				return;
 			}
 			current = current.next;
@@ -239,10 +227,10 @@ public class LinkedList {
 	 * Delete an element at the given position. Zero based index.
 	 * 
 	 * @param pos
-	 *            position of the node
+	 *            node position
 	 * 
 	 * @throws IllegalStateException
-	 *             if the linked list is empty
+	 *             if the linked list is empty.
 	 * @throws IllegalArgumentException
 	 *             if either the index is under or over the range of the linked
 	 *             list
@@ -250,13 +238,15 @@ public class LinkedList {
 	public void deleteAt(int pos) {
 		if (pos < 0)
 			throw new IllegalArgumentException("Invalid index, must be >= 0.");
-		Node current = getHead();
+		DoublyNode current = getHead();
 
 		if (current == null)
 			throw new IllegalStateException("Linked list is empty.");
 
 		if (pos == 0) {
 			setHead(current.next);
+			if (current.next != null)
+				current.next.prev = null;
 			return;
 		}
 		current = current.next;
@@ -268,16 +258,18 @@ public class LinkedList {
 			throw new IllegalArgumentException("No such element with index "
 					+ pos);
 		current.next = current.next.next;
+		if (current.next != null)
+			current.next.prev = current;
 	}
 
 	/**
 	 * Returns the size of the linked list.
 	 * 
-	 * @return current size of the linked list
+	 * @return current list size
 	 */
 	public int size() {
 		int count = 0;
-		Node current = getHead();
+		DoublyNode current = getHead();
 		while (current != null) {
 			count++;
 			current = current.next;
@@ -290,12 +282,12 @@ public class LinkedList {
 	 * Search for an element with the given data.
 	 * 
 	 * @param data
-	 *            item to search
+	 *            node data to find
 	 * 
-	 * @return true if the data is found, false otherwise.
+	 * @return true if found, false otherwise
 	 */
 	public boolean contains(int data) {
-		Node current = getHead();
+		DoublyNode current = getHead();
 		while (current != null) {
 			if (current.getData() == data)
 				return true;
@@ -307,17 +299,16 @@ public class LinkedList {
 	 * Get the value of the nth node in the linked list.
 	 * 
 	 * @param n
-	 *            position of node
+	 *            node's position
 	 * 
-	 * @return the node value at the given position
+	 * @return the data if found
 	 * 
 	 * @throws IllegalArgumentException
-	 *             if the position is invalid or not found.
+	 *             if no elements exists with the given position.
+	 * 
 	 */
 	public int getNth(int n) {
-		if (n < 0)
-			throw new IllegalArgumentException("Invalid position " + n);
-		Node current = getHead();
+		DoublyNode current = getHead();
 		for (int i = 0; i < n; i++) {
 			if (current == null)
 				break;
@@ -333,30 +324,29 @@ public class LinkedList {
 	 * For the given input data, gets the position in the linked list.
 	 * 
 	 * @param data
-	 * 		element data to find
+	 *            element data to find
 	 * 
-	 * @return
-	 * 		position if the element is found, -1 otherwise
+	 * @return position if the element is found, -1 otherwise
 	 */
 	public int getPosition(int data) {
-		Node temp = getHead();
+		DoublyNode temp = getHead();
 		int pos = 0;
-		while(temp != null) {
-			if(temp.getData() == data)
+		while (temp != null) {
+			if (temp.getData() == data)
 				return pos;
 			pos += 1;
 			temp = temp.next;
 		}
-		
+
 		return -1;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		Node temp = getHead();
+		DoublyNode temp = getHead();
 		if (temp == null)
 			return "[]";
 
@@ -369,22 +359,22 @@ public class LinkedList {
 			temp = temp.next;
 		}
 		sb.append("]");
-		
 		return sb.toString();
 	}
 	
 	/**
-	 * Node in a linked list.
+	 * Node in a doubly linked list.
 	 * 
 	 * @author psajja
 	 * 
 	 */
-	static class Node {
+	static class DoublyNode {
 
-		int data;
-		public Node next;
+		private int data;
+		public DoublyNode prev;
+		public DoublyNode next;
 
-		public Node(int data) {
+		public DoublyNode(int data) {
 			this.data = data;
 		}
 

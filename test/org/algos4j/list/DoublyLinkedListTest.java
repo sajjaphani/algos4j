@@ -1,12 +1,12 @@
 package org.algos4j.list;
 
 /**
- * A test class on single circular linked list.
+ * A test class on double linked list.
  * 
  * @author psajja
  * 
  */
-public class CircularListTest {
+public class DoublyLinkedListTest {
 
 	/**
 	 * 
@@ -14,7 +14,7 @@ public class CircularListTest {
 	 */
 	public static void main(String[] args) {
 		int[] array = { 10, 5, 20, 15 };
-		LinkedList list = new CircularList();
+		DoublyLinkedList list = new DoublyLinkedList();
 		for (int elt : array) {
 			list.insertLast(elt);
 		}
@@ -32,12 +32,11 @@ public class CircularListTest {
 		System.out.println();
 		list.insertBefore(9, 20);
 		list.print();
-		System.out.println("\nDeleting item: " + 20);
+		System.out.println();
 		list.delete(20);
 		list.print();
 		System.out.println();
 		System.out.println("Size: " + list.size());
-		System.out.println("Deleting item at : " + 6);
 		list.deleteAt(6);
 		list.print();
 		System.out.println();
