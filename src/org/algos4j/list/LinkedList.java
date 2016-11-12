@@ -260,7 +260,7 @@ public class LinkedList {
 			return;
 		}
 		current = current.next;
-		for (int i = 1; i < pos && current != null; i++) {
+		for (int i = 1; i < pos - 1 && current != null; i++) {
 			current = current.next;
 		}
 
