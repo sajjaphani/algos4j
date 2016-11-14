@@ -41,5 +41,7 @@ public class DoublyLinkedListTest {
 		list.print();
 		System.out.println();
 		System.out.println(list);
+		list.insertBefore(19, 200);
+		list.print();
 	}
 }

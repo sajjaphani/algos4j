@@ -250,11 +250,11 @@ public class DoublyLinkedList {
 			return;
 		}
 		current = current.next;
-		for (int i = 1; i < pos - 1 && current != null; i++) {
+		for (int i = 1; i < pos - 1 && current.next != null; i++) {
 			current = current.next;
 		}
 
-		if (current == null || current.next == null)
+		if (current.next == null)
 			throw new IllegalArgumentException("No such element with index "
 					+ pos);
 		current.next = current.next.next;
