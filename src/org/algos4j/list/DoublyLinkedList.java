@@ -371,6 +371,7 @@ public class DoublyLinkedList {
 	static class DoublyNode {
 
 		int data;
+	
 		public DoublyNode prev;
 		public DoublyNode next;
 

@@ -16,10 +16,8 @@ public class CircularDoublyList extends DoublyLinkedList {
 		DoublyNode current = getHead();
 		if (current == null)
 			return null;
-		while (current.next != getHead())
-			current = current.next;
 
-		return current;
+		return current.prev;
 	}
 	
 	/* (non-Javadoc)
@@ -97,8 +95,10 @@ public class CircularDoublyList extends DoublyLinkedList {
 				setHead(null);
 			else {
 				DoublyNode tail = getTail();
+				DoublyNode nxtHead = current.next;
 				current.next.prev = tail;
 				tail.next = current.next;
+				setHead(nxtHead);
 			}
 		} else {
 			while (current.next != getHead()) {
