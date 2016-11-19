@@ -306,7 +306,7 @@ public class BinaryTree {
 
 			BTNode current = queue.remove();
 
-			System.out.print(current.getData());
+			System.out.print(current.getData() + " ");
 
 			if (current.left != null)
 				queue.add(current.left);
