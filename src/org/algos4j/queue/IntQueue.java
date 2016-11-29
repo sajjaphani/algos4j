@@ -144,6 +144,6 @@ public class IntQueue {
 		
 		sb.append("]");
 		
-		return sb.toString();
+		return "Front ->" + sb.toString();
 	}
 }

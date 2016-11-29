@@ -120,6 +120,6 @@ public class IntStack {
 		
 		sb.append("]");
 		
-		return sb.toString();
+		return sb.toString() + "<- Top";
 	}
 }
