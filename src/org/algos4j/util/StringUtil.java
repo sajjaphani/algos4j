@@ -24,6 +24,7 @@ public class StringUtil {
 	public static boolean isNullOrEmpty(String string) {
 		if (string == null || string.isEmpty())
 			return true;
+		
 		return false;
 	}
 	
@@ -214,5 +215,43 @@ public class StringUtil {
 	 */
 	private static char ithLetter(int i) {
 		return (char) (((int) 'a') + i);
+	}
+	
+	/**
+	 * This method will test whether the given pattern is existing in the text.
+	 * It considers the first occurrence of the match.
+	 * This is not 'regex' pattern, simple search for the match.
+	 * 
+	 * @param text
+	 * 		given text
+	 * @param pattern
+	 * 		pattern string to find
+	 * 
+	 * @return
+	 * 		starting index, -1 if not found
+	 * 
+	 * @throws NullPointerException
+	 * 		if the text is null
+	 */
+	public static int findMatch(String text, String pattern) {
+		if (text == null)
+			throw new NullPointerException("Input text cannot be null.");
+		if (pattern == null || "".equals(pattern))
+			return -1;
+
+		int n = text.length();
+		int m = pattern.length();
+
+		for (int i = 0; i <= (n - m); i++) {
+			int j = 0;
+			
+			while ((j < m) && text.charAt(i + j) == pattern.charAt(j))
+				j = j + 1;
+			
+			if (j == m)
+				return i;
+		}
+		
+		return -1;
 	}
 }
