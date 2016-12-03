@@ -71,7 +71,7 @@ public class QueueUtil {
 	
 	/**
 	 * Given a queue, rearrange the queue elements of the two half in interleaved fashion. 
-	 * For example, {1, 2, 3, 4, 5, 6} becomes {1, 4, 3, 5, 3, 6}.
+	 * For example, {1, 2, 3, 4, 5, 6} becomes {1, 4, 2, 5, 3, 6}.
 	 * <p>If the size of the queue is not multiple of 2 then 
 	 * the above condition will not hold and results in a different sequence than expected.</p>
 	 * 
