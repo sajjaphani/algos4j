@@ -1,5 +1,7 @@
 package org.algos4j.stack;
 
+import java.util.Arrays;
+
 import org.algos4j.util.StringUtil;
 
 /**
@@ -444,5 +446,334 @@ public class StackUtil {
 		}
 		
 		return sortedStack;
+	}
+	
+	/**
+	 * Given an array, it computes the next greater element
+	 * for each of the input element.
+	 * 
+	 * @param elements
+	 * 		input array
+	 * 
+	 * @return 
+	 * 		array containing the next greater elements
+	 * 
+	 * @throws NullPointerException
+	 * 		if the given array is null
+	 */
+	public static int[] computeNextGreaterElements(int[] elements) {
+		if (elements == null || elements.length == 0)
+			throw new NullPointerException(
+					"Input array should not be null or empty");
+
+		int[] nextElements = new int[elements.length];
+		if(elements.length == 0)
+			return nextElements;
+		
+		IntStack stack = new IntStack(elements.length);
+
+		stack.push(0);
+		int index, next;
+
+		for (int i = 1; i < elements.length; i++) {
+			next = elements[i];
+			if (!stack.isEmpty()) {
+				index = stack.pop();
+				while (elements[index] < next) {
+					nextElements[index] = next;
+					if (stack.isEmpty())
+						break;
+					index = stack.pop();
+				}
+				if (elements[index] > next)
+					stack.push(index);
+			}
+			stack.push(i);
+		}
+
+		while (!stack.isEmpty())
+			nextElements[stack.pop()] = -1;
+		
+		return nextElements;
+	}
+	
+	/**
+	 * The stock span problem is where we have a series of n daily price quotes for a stock 
+	 * and we need to calculate span of stock’s price for all n days. 
+	 * Computes in linear time with additional n space.
+	 * <p>
+	 * The span Si of the stock’s price on a given day 'i' is defined as the
+	 * maximum number of consecutive days just before the given day, for which
+	 * the price of the stock on the current day is less than or equal to its
+	 * price on the given day.
+	 * </p>
+	 * 
+	 * @param price
+	 * 		input price array
+	 * @return
+	 * 		the span array for each day
+	 *  
+	 * @throws NullPointerException
+	 * 		if the given array is null
+	 */
+	public static int[] computeStockSpan(int[] price) {
+		if (price == null)
+			throw new NullPointerException("Price array cannot be null.");
+		if (price.length == 0)
+			return new int[0];
+
+		int[] span = new int[price.length];
+	
+		IntStack stack = new IntStack(price.length);
+		stack.push(0);
+	
+		span[0] = 1;
+
+		for (int i = 1; i < price.length; i++) {
+
+			while (!stack.isEmpty() && price[stack.peek()] <= price[i])
+				stack.pop();
+
+			span[i] = (stack.isEmpty()) ? (i + 1) : (i - stack.peek());
+
+			stack.push(i);
+		}
+
+		return span;
+	}
+	
+	/**
+	 * Given a string containing only opening and closing parenthesis ('(' and ')'), find the
+	 * maximum valid length based on matching sequence.
+	 * 
+	 * @param string
+	 * 		input string
+	 * 
+	 * @return
+	 * 		the valid length
+	 */
+	public static int maxValidParenLength(String string) {
+		if (string == null)
+			throw new NullPointerException("Input string cannot be null.");
+		if (string.length() == 0)
+			return 0;
+
+		int n = string.length();
+
+		IntStack stack = new IntStack(string.length());
+		stack.push(-1);
+
+		int result = 0;
+
+		for (int i = 0; i < n; i++) {
+			if (string.charAt(i) == '(')
+				stack.push(i);
+			else if (string.charAt(i) == ')') {
+				stack.pop();
+				if (!stack.isEmpty())
+					result = Math.max(result, i - stack.peek());
+				else
+					stack.push(i);
+			} else {
+				throw new IllegalArgumentException("Invalid character found: " + string.charAt(i));
+			}
+		}
+
+		return result;
+	}
+	
+	/**
+	 * Given a string containing a combination of opening ('{' or '[' or '(') and closing
+	 * ('}' or ']' or ')') braces only, find the number of minimal parenthesis reversal to make it
+	 * balanced.
+	 * 
+	 * @param string
+	 * 		input string
+	 * @param brace
+	 * 		brace to be used, '{' or '[' or '('
+	 * 
+	 * @return
+	 * 		number of reversals needed, -1 if not possible, 0 if for already balanced
+	 */
+	public static int minBracketReversals(String string, char brace) {
+		if (string == null)
+			throw new NullPointerException("Input string should not be null");
+		if (brace != '{' && brace != '[' && brace != '(')
+			throw new IllegalArgumentException("Not a valid brace: " + brace);
+		int length = string.length();
+		if (length == 0)
+			return 0;
+
+		// We cannot make odd length to be balanced
+		if (length % 2 != 0)
+			return -1;
+
+		char closeBrace = getClosingBrace(brace);
+
+		CharStack stack = new CharStack(length);
+		for (int i = 0; i < length; i++) {
+			if (string.charAt(i) == closeBrace && !stack.isEmpty()) {
+				if (stack.peek() == brace)
+					stack.pop();
+				else
+					stack.push(string.charAt(i));
+			} else if (string.charAt(i) == brace || string.charAt(i) == closeBrace) {
+				stack.push(string.charAt(i));
+			} else {
+				throw new IllegalArgumentException("Input string contains an illegal character: " + string.charAt(i));
+			}
+		}
+
+		// Remaining length
+		int reducedLength = stack.size();
+
+		// Opening brackets at the end 
+		int count = 0;
+		while (!stack.isEmpty() && stack.peek() == brace) {
+			stack.pop();
+			count++;
+		}
+
+		return (reducedLength / 2 + count % 2);
+	}
+	
+	/**
+	 * Get the corresponding closing brace.
+	 * 
+	 * @param brace
+	 * 		opening brace
+	 * 
+	 * @return
+	 * 		closing brace
+	 */
+	private static char getClosingBrace(char brace) {
+		if (brace == '{')
+			return '}';
+		if (brace == '[')
+			return ']';
+		if (brace == '(')
+			return ')';
+		return 0;
+	}
+
+	/**
+	 * Given a histogram of n bars, finds the maximum rectangle area.
+	 * 
+	 * @param histogram
+	 * 		given histogram
+	 * 
+	 * @return
+	 * 		the maximum area
+	 * 
+	 * @throws NullPointerException
+	 * 		if the input array is null
+	 */
+	public static int getMaxRectangleArea(int[] histogram) {
+	
+		if (histogram == null)
+			throw new NullPointerException("Input array should not be null.");
+
+		// stack holds the indices of histogram, which are always in increasing order of their heights.
+		IntStack stack = new IntStack(histogram.length);
+
+		int top;
+		int currentMaxArea;
+		int maxArea = 0;
+
+		int index = 0;
+		while (index < histogram.length) {
+
+			// Push the current bar is it higher than the bar on top
+			if (stack.isEmpty() || histogram[stack.peek()] <= histogram[index])
+				stack.push(index++);
+			else {
+				top = stack.pop();
+
+				// Calculate the area with histogram[top] stack as smallest bar
+				currentMaxArea = histogram[top]	* (stack.isEmpty() ? index : index - stack.peek() - 1);
+
+				maxArea = Math.max(maxArea, currentMaxArea);
+			}
+		}
+
+		// For the remaining bars on the stack, calculate the area
+		while (stack.isEmpty() == false) {
+			top = stack.pop();
+		
+			currentMaxArea = histogram[top]	* (stack.isEmpty() ? index : index - stack.peek() - 1);
+
+			maxArea = Math.max(maxArea, currentMaxArea);
+		}
+
+		return maxArea;
+	}
+	
+	/**
+	 * Find the maximum of minimum for every window size in a given array.
+	 * For every window of size from 1 to n, we  need to first compute 
+	 * the window mins and finally we need to compute the max of these mins.
+	 * 
+	 * Time: O(n), Space: O(n)
+	 * 
+	 * @param array
+	 *            input array
+	 *            
+	 * @return array contains the sizes
+	 * 
+	 * @throws NullPointerException
+	 * 		if the input array is null
+	 */
+	public static int[] maxOfMinWindow(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Input array cannot be null.");
+
+		int n = array.length;
+
+		int[] result = new int[n + 1];
+
+		int[] left = new int[n + 1];
+		int[] right = new int[n + 1];
+
+		IntStack stack = new IntStack(n);
+
+		for (int i = 0; i < n; i++) {
+			left[i] = -1;
+			right[i] = n;
+		}
+
+		// fill left such that left[i] holds the max till
+		for (int i = 0; i < n; i++) {
+			while (!stack.isEmpty() && array[stack.peek()] >= array[i])
+				stack.pop();
+
+			if (!stack.isEmpty())
+				left[i] = stack.peek();
+
+			stack.push(i);
+		}
+
+		while (!stack.isEmpty())
+			stack.pop();
+
+		// fill right such that right[i] holds the max
+		for (int i = n - 1; i >= 0; i--) {
+			while (!stack.isEmpty() && array[stack.peek()] >= array[i])
+				stack.pop();
+
+			if (!stack.isEmpty())
+				right[i] = stack.peek();
+
+			stack.push(i);
+		}
+
+		for (int i = 0; i < n; i++) {
+			int len = right[i] - left[i] - 1;
+			result[len] = Math.max(result[len], array[i]);
+		}
+
+		for (int i = n - 1; i >= 1; i--)
+			result[i] = Math.max(result[i], result[i + 1]);
+
+		return Arrays.copyOfRange(result, 1, result.length);
 	}
 }
