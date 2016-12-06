@@ -1,7 +1,5 @@
 package org.algos4j.util;
 
-import org.algos4j.stack.StackUtil;
-
 /**
  * Some puzzles.
  * 
@@ -11,10 +9,13 @@ import org.algos4j.stack.StackUtil;
 public class PuzzleUtil {
 
 	/**
-	 * A recursive version of hanoi puzzle. See other variant at
-	 * {@link StackUtil#hanoi(int)}
+	 * A recursive version of hanoi puzzle. 
 	 * 
 	 * @param disks
+	 * 		number of disks
+	 * 
+	 * @throws IllegalArgumentException
+	 * 		if the number of disks is not valid (<=0)
 	 */
 	public static void hanoi(int disks) {
 		if (disks <= 0)
@@ -23,19 +24,24 @@ public class PuzzleUtil {
 	}
 
 	/**
+	 * Recursively moves the disks from source to destination.
+	 * 
 	 * @param disks
-	 * @param c
-	 * @param d
-	 * @param e
+	 * 		disk number
+	 * @param from
+	 * 		from disk
+	 * @param aux
+	 * 		auxiliary disk
+	 * @param to
+	 * 		to disk
 	 */
-	private static void hanoi(int disks, char from, char inter, char to) {
+	private static void hanoi(int disks, char from, char aux, char to) {
 		if (disks == 1) {
 			System.out.println("Disk 1 from " + from + " to " + to);
 		} else {
-			hanoi(disks - 1, from, to, inter);
+			hanoi(disks - 1, from, to, aux);
 			System.out.println("Disk " + disks + " from " + from + " to " + to);
-			hanoi(disks - 1, inter, from, to);
+			hanoi(disks - 1, aux, from, to);
 		}
 	}
-
 }
