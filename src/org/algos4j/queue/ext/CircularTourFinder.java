@@ -86,7 +86,7 @@ public class CircularTourFinder {
 	 * 
 	 * @return starting point, -1 if tour is not possible
 	 */
-	public int findStartingPoint(PetrolStationData[] stationData) {
+	private int findStartingPoint(PetrolStationData[] stationData) {
 
 		// Start and end index of virtual queue
 		int start = 0;
