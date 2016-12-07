@@ -115,6 +115,7 @@ public class StringUtil {
 			if (array[i - 1].compareTo(array[i]) > 0)
 				return false;
 		}
+		
 		return true;
 	}
 	
