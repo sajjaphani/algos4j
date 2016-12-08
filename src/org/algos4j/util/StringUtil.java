@@ -255,4 +255,104 @@ public class StringUtil {
 		
 		return -1;
 	}
+	
+	/**
+	 * Generate and prints all the strings of n bits. Backtracking problem. 
+	 * Time: O(2^n)
+	 * 
+	 * @param n
+	 * 		number of bits
+	 * 
+	 * @throws IllegalArgumentException
+	 * 		if the number of bits is negative
+	 */
+	public static void printBinaryStrings(int n) {
+		if (n < 0)
+			throw new IllegalArgumentException("Input size must be positive");
+	
+		int[] array = new int[n];
+	
+		printBinaryStrings(n, array);
+	}
+
+	/**
+	 * Recursively generate and print all the binary strings of length n.
+	 * 
+	 * @param n
+	 * 		array index to set or reset the bit
+	 * @param array
+	 * 		contains current digits
+	 */
+	private static void printBinaryStrings(int n, int[] array) {
+		if (n < 1)
+			System.out.println(toString(array));
+		else {
+			array[n - 1] = 0;
+			printBinaryStrings(n - 1, array);
+			array[n - 1] = 1;
+			printBinaryStrings(n - 1, array);
+		}
+	}
+	
+	/**
+	 * Convert digit array to string.
+	 * 
+	 * @param array
+	 * 		digit array
+	 * 
+	 * @return
+	 * 		string of digits
+	 */
+	private static String toString(int[] array) {
+		String digitString = "";
+		
+		for(int digit : array) 
+			digitString += digit;
+		
+		return digitString;
+	}
+
+	/**
+	 * Generate all the strings of length n drawn from 0...k-1.
+	 * Backtracking problem. 
+	 * Time: O(k^n)
+	 * 
+	 * @param n
+	 * 		length of the string
+	 * 
+	 * @param k
+	 * 		digits from 0 to k-1
+	 * 
+	 * @throws IllegalArgumentException
+	 * 		if the supplied n or k is negative
+	 */
+	public static void printNumericStrings(int n, int k) {
+		if (n < 0 || k < 0)
+			throw new IllegalArgumentException("Input must be positive");
+	
+		int[] array = new int[n];
+		
+		printNumericStrings(n, k, array);
+	}
+
+	/**
+	 * Recursively generate the numeric strings.
+	 * 
+	 * @param n
+	 * 		current n
+	 * @param k
+	 * 		current k
+	 * @param array
+	 * 		contains current digits
+	 */
+	private static void printNumericStrings(int n, int k, int[] array) {
+		if (n < 1)
+			System.out.println(toString(array));
+		else {
+			for (int i = 0; i < k; i++) {
+				array[n - 1] = i;
+				printNumericStrings(n - 1, k, array);
+			}
+		}
+	}
 }
