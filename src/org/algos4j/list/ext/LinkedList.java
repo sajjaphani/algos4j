@@ -11,7 +11,8 @@ package org.algos4j.list.ext;
 public class LinkedList<E> {
 
 	private Node<E> head;
-
+	// TODO test it
+	
 	/**
 	 * Initialize the list
 	 */
@@ -360,6 +361,28 @@ public class LinkedList<E> {
 		return -1;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		Node<E> temp = getHead();
+		if (temp == null)
+			return "[]";
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("[");
+		sb.append(temp.getData());
+		temp = temp.next;
+		while (temp != null) {
+			sb.append(", " + temp.getData());
+			temp = temp.next;
+		}
+		sb.append("]");
+		
+		return sb.toString();
+	}
+	
 	/**
 	 * Generic Node in a single linked list.
 	 * 
