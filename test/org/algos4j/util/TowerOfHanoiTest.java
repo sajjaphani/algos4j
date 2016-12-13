@@ -1,4 +1,4 @@
-package org.algos4j.list;
+package org.algos4j.util;
 
 import org.algos4j.util.PuzzleUtil;
 

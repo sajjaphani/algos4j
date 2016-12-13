@@ -10,7 +10,8 @@ package org.algos4j.list;
 public class LinkedList {
 
 	private Node head;
-
+	// TODO add size
+	
 	public LinkedList() {
 		head = null;
 	}
@@ -379,7 +380,7 @@ public class LinkedList {
 	 * @author psajja
 	 * 
 	 */
-	static class Node {
+	static class Node implements Cloneable{
 
 		int data;
 		public Node next;
@@ -405,6 +406,14 @@ public class LinkedList {
 		 */
 		public void setData(int data) {
 			this.data = data;
+		}
+		
+		/* (non-Javadoc)
+		 * @see java.lang.Object#clone()
+		 */
+		@Override
+		protected Object clone() throws CloneNotSupportedException {
+			return super.clone();
 		}
 	}
 }

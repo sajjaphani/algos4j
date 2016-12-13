@@ -9,7 +9,8 @@ package org.algos4j.list;
 public class DoublyLinkedList {
 
 	private DoublyNode head;
-
+	// TODO add size
+	
 	/**
 	 * Get the head node.
 	 * 

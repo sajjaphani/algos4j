@@ -7,7 +7,9 @@ package org.algos4j.list;
  *
  */
 public class CircularList extends LinkedList {
-
+	
+	// TODO add size
+	
 	/* (non-Javadoc)
 	 * @see org.algos4j.list.LinkedList1#getTail()
 	 */

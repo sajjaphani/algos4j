@@ -8,6 +8,8 @@ package org.algos4j.list;
  */
 public class CircularDoublyList extends DoublyLinkedList {
 	
+	// TODO add size
+	
 	/* (non-Javadoc)
 	 * @see org.algos4j.list.DoublyLinkedList#getTail()
 	 */
