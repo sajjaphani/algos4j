@@ -156,7 +156,7 @@ public class CircularListUtil {
 	
 	/**
 	 * Swaps the node references in the given linked list represented by data items.
-	 * If the given two data items are same, it does nothing
+	 * If the given two data items are same, it does nothing.
 	 * 
 	 * @param linkedList
 	 * 			  circular linked list
@@ -175,11 +175,12 @@ public class CircularListUtil {
 			throw new NullPointerException("Linked list cannot be null.");
 	
 		Node head = linkedList.getHead();
-		if(head == head.next)
-			throw new IllegalStateException("Linked list has only one element.");
 		
 		if (data1 == data2)
 			return;
+
+		if(head == head.next)
+			throw new IllegalStateException("Linked list has only one element.");
 		
 		Node prev1 = null, current1 = head;
 		Node prev2 = null, current2 = head;

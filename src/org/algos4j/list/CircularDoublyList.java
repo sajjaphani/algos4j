@@ -44,17 +44,17 @@ public class CircularDoublyList extends DoublyLinkedList {
 	public void insertFront(int data) {
 		DoublyNode temp = new DoublyNode(data);
 		DoublyNode head = getHead();
-		
+
 		if (head == null) {
 			temp.next = temp;
 			temp.prev = temp;
 			setHead(temp);
 		} 	else {
-			head.prev = temp;
-			temp.next = head;
 			DoublyNode tail = getTail();
-			tail.next = temp;
+			temp.next = head;
 			temp.prev = tail;
+			head.prev = temp;
+			tail.next = temp;
 			setHead(temp);
 		}
 	}
@@ -67,17 +67,17 @@ public class CircularDoublyList extends DoublyLinkedList {
 		
 		DoublyNode temp = new DoublyNode(data);
 		DoublyNode current = getHead();
-		
+
 		if (current == null) {
 			temp.next = temp;
 			temp.prev = temp;
 			setHead(temp);
 		} else {
 			DoublyNode tail = getTail();
-			tail.next = temp;
 			temp.prev = tail;
 			temp.next = current;
-			current.prev = tail;
+			tail.next = temp;
+			current.prev = temp;
 		}
 	}
 
