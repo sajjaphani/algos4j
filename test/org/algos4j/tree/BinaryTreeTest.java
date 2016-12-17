@@ -31,5 +31,8 @@ public class BinaryTreeTest {
 	
 		System.out.println("Levelorder");
 		bt.levelorder();
+		
+		System.out.println();
+		System.out.println("Binary Tree size: " + BinaryTreeUtil.size(bt));
 	}
 }

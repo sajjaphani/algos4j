@@ -1,5 +1,8 @@
 package org.algos4j.tree;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 import org.algos4j.tree.BinaryTree.BTNode;
 
 /**
@@ -91,5 +94,45 @@ public class BinaryTreeUtil {
 			binaryTree.insert(elt);
 		
 		return binaryTree;
+	}
+	
+	/**
+	 * Computes the size of the given binary tree without recursion.
+	 * It uses Level order traversal.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @return
+	 * 		the size of the tree
+	 * 
+	 * @throws NullPointerException
+	 * 		if the given binary tree is null
+	 */
+	public static int size(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("BinaryTree can not be null.");
+
+		BTNode root = bt.getRootNode();
+		if (root == null)
+			return 0;
+
+		int size = 0;
+
+		Queue<BTNode> queue = new LinkedList<>();
+		queue.add(root);
+		BTNode current = null;
+
+		while (!queue.isEmpty()) {
+			current = queue.remove();
+			size += 1;
+			if (current.left != null)
+				queue.add(current.left);
+
+			if (current.right != null)
+				queue.add(current.right);
+		}
+
+		return size;
 	}
 }
