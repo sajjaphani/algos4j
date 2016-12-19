@@ -18,6 +18,10 @@ public class BinaryTreePathsTest {
 		BinaryTreeUtil.printPaths(bt);
 		
 		System.out.println();
+		System.out.println("Binary Tree Paths");
+		BinaryTreeUtil.printPaths1(bt);
+		
+		System.out.println();
 		System.out.println("Has Path Sum (25): " + BinaryTreeUtil.hasPathSum(bt, 25));
 		
 		System.out.println();

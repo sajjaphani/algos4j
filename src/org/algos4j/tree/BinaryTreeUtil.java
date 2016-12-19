@@ -614,6 +614,63 @@ public class BinaryTreeUtil {
 	}
 
 	/**
+	 * Given a binary tree, it print all paths from root to each leaf node.
+	 * A variant of {@link #printPaths(BinaryTree)}
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @throws NullPointerException
+	 * 		if the given binary tree is null
+	 */
+	static void printPaths1(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+
+		int[] array = new int[bt.size()];
+		printPaths1(bt.getRootNode(), array, 0);
+	}
+
+	/**
+	 * Recursively append the node to the path and print.
+	 * 
+	 * @param node
+	 * 		current node to process
+	 * @param path
+	 * 		path array to print
+	 * @param pathLen
+	 * 		path length
+	 */
+	private static void printPaths1(BTNode node, int[] path, int pathLen) {
+		if (node == null)
+			return;
+
+		path[pathLen] = node.getData();
+		pathLen++;
+
+		if (node.left == null && node.right == null) {
+			printPath(path, pathLen);
+		} else {
+			printPaths1(node.left, path, pathLen);
+			printPaths1(node.right, path, pathLen);
+		}
+	}
+	
+	/**
+	 * Print the path in array.
+	 * 
+	 * @param path
+	 * 		path array
+	 * @param pathLen
+	 * 		path length
+	 */
+	private static void printPath(int[] path, int pathLen) {
+		for (int i = 0; i < pathLen; i++)
+			System.out.print(path[i] + " ");
+		System.out.println();
+	}
+
+	/**
 	 * Given a binary tree, convert it to child sum property tree. Child sum
 	 * property is that at any node the node's value is equal to the sum of left
 	 * and right node's value.
