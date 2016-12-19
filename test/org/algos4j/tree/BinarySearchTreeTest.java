@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.algos4j.tree;
 
 /**
