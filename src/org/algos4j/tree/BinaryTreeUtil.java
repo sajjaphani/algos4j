@@ -5,6 +5,7 @@ import java.util.Queue;
 import java.util.Stack;
 
 import org.algos4j.tree.BinaryTree.BTNode;
+import org.algos4j.util.ArrayUtil;
 
 /**
  * Holds some of the utility method on Binary trees including binary search tree.
@@ -175,7 +176,7 @@ public class BinaryTreeUtil {
 	}
 	
 	/**
-	 * Given a binary tree, it computes the diameter (width) of the tree. The
+	 * Given a binary tree, it computes the diameter of the tree. The
 	 * diameter of a tree is the number of nodes on the longest path between two
 	 * leaves in the tree. Time: O(n^2)
 	 * 
@@ -283,6 +284,93 @@ public class BinaryTreeUtil {
 		height[0] = Math.max(leftHeight[0], rightHeight[0]) + 1;
 
 		return Math.max(leftHeight[0] + rightHeight[0] + 1, Math.max(leftDiameter, rightDiameter));
+	}
+	
+	/**
+	 * Given a binary tree, it returns the maximum width. Max width is the
+	 * maximum number of nodes in a level. Time: O(n).
+	 * 
+	 * @param bt
+	 *   	given binary tree
+	 * 
+	 * @throws NullPointerException
+	 *    	if the given binary tree is null
+	 */
+	public static int maxLevelWidth(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("BinaryTree can not be null.");
+	
+		BTNode current = bt.root;
+
+		if (current == null)
+			return 0;
+
+		int maxWidth = 0;
+		Queue<BTNode> queue = new LinkedList<>();
+		queue.add(current);
+
+		while (!queue.isEmpty()) {
+			int nodeCount = queue.size();
+			if(nodeCount > maxWidth)
+				maxWidth = nodeCount;
+			while (nodeCount > 0) {
+				current = queue.remove();
+				if (current.left != null)
+					queue.add(current.left);
+				if (current.right != null)
+					queue.add(current.right);
+				nodeCount--;
+			}
+		}
+		
+		return maxWidth;
+	}
+	
+	/**
+	 * Given a binary tree find the maximum level width.
+	 * A variant of {@link #maxLevelWidth(BinaryTree)}
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @throws NullPointerException
+	 *    	if the given binary tree is null
+	 */
+	public static int maxLevelWidth1(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+
+		BTNode node = bt.root;
+		if(node == null)
+			return 0;
+		
+		int h = height(node);
+
+		int[] width = new int[h];
+
+		int level = 0;
+
+		maxLevelWidth1(node, width, level);
+
+		return ArrayUtil.getMax(width);
+	}
+
+	/**
+	 * Recursively compute the nodes in each level.
+	 * 
+	 * @param node
+	 * 		the current root node
+	 * @param width
+	 * 		array to hold the node count in each level
+	 * @param level
+	 * 		current level
+	 */
+	private static void maxLevelWidth1(BTNode node, int[] width, int level) {
+		if (node != null) {
+			width[level]++;
+			maxLevelWidth1(node.left, width, level + 1);
+			maxLevelWidth1(node.right, width, level + 1);
+		}
 	}
 	
 	/**
@@ -410,7 +498,7 @@ public class BinaryTreeUtil {
 	/**
 	 * Given a binary tree, it prints the tree in level order without any additional memory.
 	 * It prints each level in a new line.
-	 * Time: O(n^2).
+	 * Time: O(n).
 	 * 
 	 * @param bt
 	 * 		given binary tree
@@ -604,6 +692,7 @@ public class BinaryTreeUtil {
 	private static void printPaths(BTNode node, String path) {
 		if (node == null)
 			return;
+	
 		if (node.left == null && node.right == null) {
 			System.out.println(path + " " + node.getData());
 			return;
@@ -937,4 +1026,151 @@ public class BinaryTreeUtil {
 		return hasPathSum;
 	}
 	
+	/**
+	 * This method converts the given binary tree into its double tree. A double
+	 * tree of the given tree is produced by creating a new duplicate for each
+	 * node, and is inserted to the left child of the original node.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @throws NullPointerException
+	 * 		if the given binary tree is null
+	 */
+	public static void doubleTree(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+		
+		doubleTree(bt.getRootNode());
+	}
+
+	/**
+	 * Recursively convert each subtree to its double tree.
+	 * 
+	 * @param node
+	 * 		current subtree root
+	 */
+	private static void doubleTree(BTNode node) {
+
+		if (node == null)
+			return;
+
+		BTNode left = null;
+
+		doubleTree(node.left);
+		doubleTree(node.right);
+
+		// Duplicate node to its left
+		left = node.left;
+		node.left = new BTNode(node.getData());
+		node.left.left = left;
+	}
+	
+	/**
+	 * Given a binary tree check whether the tree is foldable. A tree is
+	 * foldable if the left and right subtrees are structure wise mirror image
+	 * of each other.
+	 * 
+	 * @param bt
+	 *   	given binary tree
+	 * 
+	 * @throws NullPointerException
+	 *    	if the given binary tree is null
+	 */
+	public static boolean isFoldable(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+		
+		return isFoldable(bt.getRootNode());
+	}
+
+	/**
+	 * Check the tree is foldable at root.
+	 * 
+	 * @param node
+	 * 		given root node
+	 * 
+	 * @return
+	 * 		true if it is foldable, false otherwise
+	 */
+	private static boolean isFoldable(BTNode node) {
+		boolean isFoldable = false;
+
+		if (node == null)
+			return true;
+
+		// Mirror of left
+		mirror(node.left);
+
+		isFoldable = hasSameStructure(node.left, node.right);
+
+		// Restore the structure back
+		mirror(node.left);
+
+		return isFoldable;
+	}
+	
+	/**
+	 * Recursively check the two subtrees are foldable.
+	 * 
+	 * @param node1
+	 * 		first subtree
+	 * @param node2
+	 * 		second subtree
+	 * 
+	 * @return
+	 * 		true if both subtrees are foldable, false otherwise
+	 */
+	private static boolean hasSameStructure(BTNode node1, BTNode node2) {
+		if (node1 == null && node2 == null)
+			return true;
+	
+		if (node1 != null && node2 != null && hasSameStructure(node1.left, node2.left) && hasSameStructure(node1.right, node2.right))
+			return true;
+
+		return false;
+	}
+	
+	/**
+	 * Given a binary tree check whether the tree is foldable. A variant of 
+	 * {@link #isFoldable(BinaryTree)}
+	 * 
+	 * @param bt
+	 *   	given binary tree
+	 * 
+	 * @throws NullPointerException
+	 *    	if the given binary tree is null
+	 */
+	static boolean isFoldable1(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+		
+		BTNode node = bt.root;
+		if (node == null)
+            return true;
+		
+		return isFoldable(node.left, node.right);
+	}
+	
+	/**
+	 * Recursively verifies the two subtrees for mirror.
+	 * 
+	 * @param node1
+	 * 		first subtree
+	 * @param node2
+	 * 		second subtree
+	 * 
+	 * @return
+	 * 		if both subtrees are mirror of each other
+	 */
+	private static boolean isFoldable(BTNode node1, BTNode node2) {
+
+		if (node1 == null && node2 == null)
+			return true;
+
+		if (node1 == null || node2 == null)
+			return false;
+
+		return isFoldable(node1.left, node2.right) && isFoldable(node1.right, node2.left);
+	}
 }

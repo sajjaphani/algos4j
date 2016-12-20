@@ -27,6 +27,12 @@ public class BinaryTreePropertyTest {
 		System.out.println("Diameter Optimized: " + BinaryTreeUtil.diameterOptimized(bt));
 		
 		System.out.println();
+		System.out.println("Max Width: " + BinaryTreeUtil.maxLevelWidth(bt));
+		
+		System.out.println();
+		System.out.println("Max Width: " + BinaryTreeUtil.maxLevelWidth1(bt));
+		
+		System.out.println();
 		System.out.println("Height Balanced: " + BinaryTreeUtil.hasBalancedHeight(bt));
 		
 		System.out.println();
