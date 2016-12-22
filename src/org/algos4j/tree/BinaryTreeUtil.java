@@ -1173,4 +1173,415 @@ public class BinaryTreeUtil {
 
 		return isFoldable(node1.left, node2.right) && isFoldable(node1.right, node2.left);
 	}
+	
+	/**
+	 * Given a binary tree and a distance k (in its path), it prints the nodes
+	 * that are k distant from the root. Time: O(n)
+	 * 
+	 * @param bt
+	 *     	given binary tree
+	 * @param k
+	 *     	distance from root
+	 * 
+	 * @throws NullPointerException
+	 *     	if the given binary tree is null
+	 * @throws IllegalArgumentException
+	 *     	if the distance is <= 0
+	 */
+	static void printNodes(BinaryTree bt, int k) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+		if (k <= 0)
+			throw new IllegalArgumentException("Distance should be > 0.");
+
+		printNodes(bt.getRootNode(), k);
+	}
+
+	/**
+	 * Recursively print the nodes that can be reached from the given distance.
+	 * 
+	 * @param node
+	 * 		current subtree root
+	 * @param k
+	 * 		current distance from root
+	 */
+	private static void printNodes(BTNode node, int k) {
+		if (node == null)
+			return;
+
+		if (k == 0)
+			System.out.print(node.getData() + " ");
+		else {
+			printNodes(node.left, k - 1);
+			printNodes(node.right, k - 1);
+		}
+	}
+	
+	/**
+	 * Given a binary tree and a value, it prints the ancestor node values of the given node.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * @param value
+	 * 		node value
+	 * 
+	 * @throws NullPointerException
+	 * 		if the given binary tree is null
+	 */
+	static void printAncestors(BinaryTree bt, int value) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+
+		if (!printAncestors(bt.getRootNode(), value))
+			System.out.println("The value " + value + " is not found.");
+	}
+
+	/**
+	 * Recursively traverse the tree and print all its ancestors.
+	 * 
+	 * @param node
+	 * 		current subtree root
+	 * @param value
+	 * 		node value to find
+	 * 
+	 * @return
+	 * 		returns true if node is found with the value, false otherwise
+	 */
+	private static boolean printAncestors(BTNode node, int value) {
+		if (node == null)
+			return false;
+
+		if (node.getData() == value)
+			return true;
+
+		if (printAncestors(node.left, value) || printAncestors(node.right, value)) {
+			System.out.print(node.getData() + " ");
+			return true;
+		}
+
+		return false;
+	}
+	
+	/**
+	 * Given a binary tree and  a value, it returns the level of the given node.
+	 * Root node at level 1.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * @param value
+	 * 		node value
+	 * 
+	 * @return
+	 * 		level of the node if found, -1 otherwise
+	 * 
+	 * @throws NullPointerException
+	 *     	if the given binary tree is null
+	 */
+	public static int getLevel(BinaryTree bt, int value) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+
+		return getLevel(bt.getRootNode(), value, 1);
+	}
+
+	/**
+	 * Recursively traverse the tree and find the node level.
+	 * 
+	 * @param node
+	 * 		current subtree root
+	 * @param value
+	 * 		node value
+	 * @param level
+	 * 		current level
+	 * 
+	 * @return
+	 * 		level of the node if found, -1 otherwise
+	 */
+	private static int getLevel(BTNode node, int value, int level) {
+
+		if (node == null)
+	        return -1;
+	 
+	    if (node.getData() == value)
+	        return level;
+	 
+	    int downlevel = getLevel(node.left, value, level+1);
+	    if (downlevel != -1)
+	        return downlevel;
+	 
+	    return getLevel(node.right, value, level+1);
+	}
+	
+	/**
+	 * Given a binary tree, it checks whether the tree is sum tree. At each
+	 * node, the node value equal to the sum of its left and right subtree.
+	 * Time: O(n^2)
+	 * 
+	 * @param bt
+	 *    	given binary tree
+	 * 
+	 * @throws NullPointerException
+	 *     	if the given binary tree is null
+	 */
+	public static boolean isSumTree(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+		
+		return isSumTree(bt.getRootNode());
+	}
+
+	/**
+	 * Recursively check each node for sum tree property.
+	 * 
+	 * @param node
+	 * 		current root
+	 * 
+	 * @return
+	 * 		true if the subtree is sum tree, false otherwise
+	 */
+	private static boolean isSumTree(BTNode node) {
+		int leftSum, rightSum;
+
+		if ((node == null) || (node.left == null && node.right == null))
+			return true;
+
+		leftSum = sumTree(node.left);
+		rightSum = sumTree(node.right);
+
+		if (node.getData() == leftSum + rightSum && isSumTree(node.left) && isSumTree(node.right))
+			return true;
+
+		return false;
+	}
+	
+	/**
+	 * Compute the current subtree sum.
+	 * 
+	 * @param node
+	 * 		current subtree root
+	 * 
+	 * @return
+	 * 		sum of the nodes in subtree
+	 */
+	private static int sumTree(BTNode node) {
+		if (node == null)
+			return 0;
+
+		return sumTree(node.left) + node.getData() + sumTree(node.right);
+	}
+	
+	/**
+	 * Given a binary tree, it checks whether the tree is sum tree. An optimized
+	 * version for {@link #isSumTree(BinaryTree)}. 1) If the current node is a
+	 * leaf node then sum of subtree rooted at this node is equal to itself. 
+	 * 2) If the current node is a non-leaf node then sum of subtree rooted
+	 * at this node must be equal to twice the value of this node.
+	 * Time: O(n)
+	 * 
+	 * @param bt
+	 *   	given binary tree
+	 * 
+	 * @throws NullPointerException
+	 *     	if the given binary tree is null
+	 */
+	public static boolean isSumTreeOptimized(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+		
+		return isSumTreeOptimized(bt.getRootNode());
+	}
+	
+	/**
+	 * Recursively check each node for sum tree property.
+	 * 
+	 * @param node
+	 * 		current root
+	 * 
+	 * @return
+	 * 		true if the subtree is sum tree, false otherwise
+	 */
+	private static boolean isSumTreeOptimized(BTNode node) {
+		int leftSum;
+		int rightSum;
+
+		if (node == null || isLeaf(node))
+			return true;
+
+		if (isSumTree(node.left) && isSumTree(node.right)) {
+			if (node.left == null)
+				leftSum = 0;
+			else if (isLeaf(node.left))
+				leftSum = node.left.getData();
+			else
+				leftSum = 2 * node.left.getData();
+
+			if (node.right == null)
+				rightSum = 0;
+			else if (isLeaf(node.right))
+				rightSum = node.right.getData();
+			else
+				rightSum = 2 * node.right.getData();
+
+			if (node.getData() == rightSum + leftSum)
+				return true;
+			else
+				return false;
+		}
+
+		return false;
+	}
+	
+	/**
+	 * Check whether the given node is a leaf.
+	 * 
+	 * @param node
+	 * 		node to check
+	 * 
+	 * @return
+	 * 		true if it is leaf, false otherwise
+	 */
+	private static boolean isLeaf(BTNode node) {
+		if (node.left == null && node.right == null)
+			return true;
+		
+		return false;
+	}
+	
+	/**
+	 * Given two binary trees, check if the second tree is a subtree of the first one. 
+	 * Time: O(m*n)
+	 * 
+	 * @param bt1
+	 * 		first binary tree
+	 * @param bt2
+	 * 		second binary tree
+	 * 
+	 * @return
+	 * 		true if second is a subtree of first
+	 */
+	static boolean isSubTree(BinaryTree bt1, BinaryTree bt2) {
+		if (bt1 == null || bt2 == null)
+			throw new NullPointerException("Binary tree should not be null");
+
+		return isSubTree(bt1.getRootNode(), bt2.getRootNode());
+	}
+	
+	/**
+	 * Recursively check corresponding subtrees of each tree.
+	 * 
+	 * @param node1
+	 * 		first subtree
+	 * @param node2
+	 * 		second subtree
+	 * 
+	 * @return
+	 * 		true if second is subtree, false otherwise
+	 */
+	private static boolean isSubTree(BTNode node1, BTNode node2) {
+		if (node2 == null)
+			return true;
+
+		if (node1 == null)
+			return false;
+
+		if (areIdentical(node1, node2))
+			return true;
+
+		return isSubTree(node1.left, node2) || isSubTree(node1.right, node2);
+	}
+	
+	/**
+	 * Given two binary trees, check if the second tree is a subtree of the
+	 * first one. Optimized version of {@link #isSubTree(BinaryTree, BinaryTree)}. 
+	 * Tree S is a subtree of T if both inorder and preorder traversals of 
+	 * S are sub-traversals of inorder and preorder of T respectively. 
+	 * Time: O(n), Space: O(n)
+	 * 
+	 * @param bt1
+	 *    	first binary tree
+	 * @param bt2
+	 *    	second binary tree
+	 * 
+	 * @return 
+	 * 		true if second is a subtree of first
+	 */
+	public static boolean isSubTreeOptimized(BinaryTree bt1, BinaryTree bt2) {
+		if (bt1 == null || bt2 == null)
+			throw new NullPointerException("Binary tree should not be null");
+
+		return isSubTreeOptimized(bt1.getRootNode(), bt2.getRootNode());
+	}
+	
+	/**
+	 * It checks for subtree by computing inorder and preorder traversals of each tree.
+	 * 
+	 * @param node1
+	 * 		first subtree
+	 * @param node2
+	 * 		second subtree
+	 * 
+	 * @return
+	 * 		true if second is subtree, false otherwise
+	 */
+	private static boolean isSubTreeOptimized(BTNode node1, BTNode node2) {
+		if (node2 == null)
+			return true;
+
+		if (node1 == null)
+			return false;
+
+		String inorder1 = getInorder(node1, "");
+		String inorder2 = getInorder(node2, "");
+
+		if (inorder1.indexOf(inorder2) == -1)
+			return false;
+
+		String preorder1 = getPreorder(node1, "");
+		String preorder2 = getPreorder(node2, "");
+
+		return preorder1.indexOf(preorder2) != -1;
+	}
+
+	/**
+	 * Get the inorder string from the given node.
+	 * 
+	 * @param node
+	 * 		the current node
+	 * @param inorder
+	 * 		current inorder
+	 * 
+	 * @return
+	 * 		inorder string
+	 */
+	private static String getInorder(BTNode node, String inorder) {
+		if (node == null)
+			return inorder;
+
+		String inorderLeft = getInorder(node.left, inorder);
+		inorderLeft += " " + node.getData();
+	
+		return getInorder(node.right, inorderLeft);
+
+	}
+	
+	/**
+	 * Get the preorder string from the given node.
+	 * 
+	 * @param node
+	 * 		the current node
+	 * @param inorder
+	 * 		current preorder
+	 * 
+	 * @return
+	 * 		preorder string
+	 */
+	private static String getPreorder(BTNode node, String preorder) {
+		if (node == null)
+			return preorder;
+
+		preorder += " " + node.getData();
+		String preorderLeft = getPreorder(node.left, preorder);
+
+		return getPreorder(node.right, preorderLeft);
+	}
 }

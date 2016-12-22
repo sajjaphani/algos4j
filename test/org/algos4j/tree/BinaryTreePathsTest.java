@@ -26,5 +26,13 @@ public class BinaryTreePathsTest {
 		
 		System.out.println();
 		System.out.println("Has Path Sum (19): " + BinaryTreeUtil.hasPathSum(bt, 19));
+		
+		System.out.println();
+		System.out.println("Printing Nodes at distance 2:");
+		BinaryTreeUtil.printNodes(bt, 2);
+		
+		System.out.println();
+		System.out.println("Printing Ancestors of node 9:");
+		BinaryTreeUtil.printAncestors(bt, 9);
 	}
 }
