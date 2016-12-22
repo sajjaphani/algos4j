@@ -34,5 +34,9 @@ public class BinaryTreePathsTest {
 		System.out.println();
 		System.out.println("Printing Ancestors of node 9:");
 		BinaryTreeUtil.printAncestors(bt, 9);
+		
+		System.out.println();
+		System.out.println("Printing Vertical sum");
+		BinaryTreeUtil.printVerticalSum(bt);
 	}
 }

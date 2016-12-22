@@ -1,6 +1,8 @@
 package org.algos4j.tree;
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Stack;
 
@@ -1432,6 +1434,48 @@ public class BinaryTreeUtil {
 	}
 	
 	/**
+	 * Given a binary tree it converts the tree to a special sum tree which satisfies
+	 * 1. Each node's value is the sum of the left and right sub trees in its original tree
+	 * 2. Value in leaves will be zero.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @throws NullPointerException
+	 * 		if the given binary tree is null
+	 */
+	static void convertToSumTree(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+
+		BTNode root = bt.root;
+		if (root == null)
+			return;
+
+		convertToSumTree(root);
+	}
+	
+	/**
+	 * Recursively compute the sum tree.
+	 * 
+	 * @param node
+	 * 		current root node
+	 * 
+	 * @return
+	 * 		computed sum
+	 */
+	private static int convertToSumTree(BTNode node) {
+		if (node == null)
+			return 0;
+
+		int oldData = node.getData();
+
+		node.setData(convertToSumTree(node.left) + convertToSumTree(node.right));
+
+		return node.getData() + oldData;
+	}
+	
+	/**
 	 * Check whether the given node is a leaf.
 	 * 
 	 * @param node
@@ -1583,5 +1627,48 @@ public class BinaryTreeUtil {
 		String preorderLeft = getPreorder(node.left, preorder);
 
 		return getPreorder(node.right, preorderLeft);
+	}
+	
+	/**
+	 * Given a binary tree it prints the vertical sum of nodes, where the nodes
+	 * are are at same horizontal distance. The horizontal distance of root is
+	 * at zero. When we move right we increment the distance by one and when we
+	 * move left we decrement the distance by one.
+	 * 
+	 * @param bt
+	 *    	given binary tree
+	 * 
+	 * @throws NullPointerException
+	 *    	if the given binary tree is null
+	 */
+	static void printVerticalSum(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+		
+		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+		computeVerticalSum(bt.getRootNode(), map, 0);
+		System.out.println(map.values());
+	}
+	
+	/**
+	 * Recursively compute the vertical sum.
+	 * 
+	 * @param node
+	 * 		current node
+	 * @param map
+	 * 		map holding the sum data
+	 * @param distance
+	 * 		current distance
+	 */
+	private static void computeVerticalSum(BTNode node, Map<Integer, Integer> map, int distance) {
+		if (node == null)
+			return;
+
+		computeVerticalSum(node.left, map, distance - 1);
+
+		int prevSum = (map.get(distance) == null) ? 0 : map.get(distance);
+		map.put(distance, prevSum + node.getData());
+
+		computeVerticalSum(node.right, map, distance + 1);
 	}
 }

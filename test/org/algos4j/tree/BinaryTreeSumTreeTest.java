@@ -32,5 +32,10 @@ public class BinaryTreeSumTreeTest {
 			System.out.println("Binary Tree is satisfies sum tree");
 		else
 			System.out.println("Binary Tree does not satisfies sum tree");
+		
+		BinaryTreeUtil.convertToSumTree(bt);
+		System.out.println();
+		System.out.println("Levelorder in lines");
+		BinaryTreeUtil.printLevelOrderInLines(bt);
 	}
 }
