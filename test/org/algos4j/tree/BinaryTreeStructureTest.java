@@ -1,5 +1,7 @@
 package org.algos4j.tree;
 
+import org.algos4j.tree.BinaryTree.BTNode;
+
 /**
  * A test class to test structure of any binary tree.
  * 
@@ -30,5 +32,26 @@ public class BinaryTreeStructureTest {
 		else
 			System.out.println("Binary Tree is not foldable");
 		
+		System.out.println();
+		
+		BinaryTree bt1 = BinaryTreeUtil.createBinaryTree();
+		
+		boolean isomorphic = BinaryTreeUtil.areIsomorphic(bt, bt1);
+		if(isomorphic)
+			System.out.println("Binary trees are isomorphic");
+		else
+			System.out.println("Binary trees are not isomorphic");
+		
+		BinaryTree bt2 = BinaryTreeUtil.createBinaryTree();
+		// Change the structure
+		BTNode temp = bt2.root.left;
+		bt2.root.left = bt2.root.right;
+		bt2.root.right = temp;
+		
+		boolean quasiIsomorphic = BinaryTreeUtil.areQuasiIsomorphic(bt1, bt2);
+		if(quasiIsomorphic)
+			System.out.println("Binary trees are quasi isomorphic");
+		else
+			System.out.println("Binary trees are not quasi isomorphic");
 	}
 }

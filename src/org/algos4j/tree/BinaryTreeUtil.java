@@ -1288,6 +1288,96 @@ public class BinaryTreeUtil {
 		return isFoldable(node1.left, node2.right) && isFoldable(node1.right, node2.left);
 	}
 	
+    /**
+     * Given two binary trees, check whether they are isomorphic.
+     * Two trees are called isomorphic if they have the same structure.
+     * The values does not affect whether the two trees are isomorphic.
+     * 
+     * @param bt1
+     * 		first binary tree
+     * @param bt2
+     * 		second binary tree
+     * 
+     * @return
+     * 		true if they are isomorphic, false otherwise
+     * 
+     * @throws NullPointerException
+	 *    	if the given binary tree is null
+     */
+	public static boolean areIsomorphic(BinaryTree bt1, BinaryTree bt2) {
+		if (bt1 == null || bt2 == null)
+			throw new NullPointerException("Binary tree should not be null");
+		
+		return areIsomorphic(bt1.getRootNode(), bt2.getRootNode());
+	}
+
+	/**
+	 * Recursively check tree nodes for isomorphism.
+	 * 
+	 * @param node1
+	 * 		first tree subtree node
+	 * @param node2
+	 * 		second tree subtree node
+	 * 
+	 * @return
+	 * 		true if they are isomorphic, false otherwise
+	 */
+	private static boolean areIsomorphic(BTNode node1, BTNode node2) {
+		if (node1 == null && node2 == null)
+			return true;
+
+		if (node1 == null || node2 == null)
+			return false;
+
+		return areIsomorphic(node1.left, node2.left) && areIsomorphic(node1.right, node2.right);
+	}
+
+	/**
+	 * Given two binary trees, check whether they are quasi isomorphic. Two
+	 * trees are called quasi isomorphic if one tree can be transformed into
+	 * another by swapping the children. The shape is important in determining
+	 * quasi isomorphism.
+	 * 
+	 * @param bt1
+     * 		first binary tree
+     * @param bt2
+     * 		second binary tree
+     * 
+     * @return
+     * 		true if they are isomorphic, false otherwise
+     * 
+     * @throws NullPointerException
+	 *    	if the given binary tree is null
+	 */
+	public static boolean areQuasiIsomorphic(BinaryTree bt1, BinaryTree bt2) {
+		if (bt1 == null || bt2 == null)
+			throw new NullPointerException("Binary tree should not be null");
+		
+		return areQuasiIsomorphic(bt1.getRootNode(), bt2.getRootNode());
+	}
+	
+	/**
+	 * Recursively check tree nodes for quasi isomorphism.
+	 * 
+	 * @param node1
+	 * 		first tree subtree node
+	 * @param node2
+	 * 		second tree subtree node
+	 * 
+	 * @return
+	 * 		true if they are isomorphic, false otherwise
+	 */
+	private static boolean areQuasiIsomorphic(BTNode node1, BTNode node2) {
+		if (node1 == null && node2 == null)
+			return true;
+
+		if (node1 == null || node2 == null)
+			return false;
+
+		return (areIsomorphic(node1.left, node2.left) && areIsomorphic(node1.right, node2.right))
+				|| (areIsomorphic(node1.left, node2.right) && areIsomorphic(node1.right, node2.left));
+	}
+	
 	/**
 	 * Given a binary tree and a distance k (in its path), it prints the nodes
 	 * that are k distant from the root. Time: O(n)
