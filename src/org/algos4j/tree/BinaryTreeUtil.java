@@ -459,6 +459,80 @@ public class BinaryTreeUtil {
 	}
 	
 	/**
+	 * Given a binary tree, it prints the nodes in preorder traversal of binary tree. 
+	 * Iterative approach.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @throws NullPointerException
+	 * 		if the binary tree is null
+	 */
+	public static void preorder(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("BinaryTree can not be null.");
+
+		BTNode node = bt.getRootNode();
+
+		if (node == null)
+			return;
+
+		Stack<BTNode> stack = new Stack<BTNode>();
+		stack.push(node);
+
+		while (!stack.isEmpty()) {
+			BTNode top = stack.pop();
+			System.out.print(top.getData() + " ");
+
+			if (top.right != null)
+				stack.push(top.right);
+
+			if (top.left != null)
+				stack.push(top.left);
+		}
+	}
+	
+	/**
+	 * Given a binary tree, it prints the nodes in postorder traversal of binary tree. 
+	 * Iterative approach.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @throws NullPointerException
+	 * 		if the binary tree is null
+	 */
+	public static void postorder(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("BinaryTree can not be null.");
+
+		BTNode current = bt.getRootNode();
+
+		if (current == null)
+			return;
+
+		Stack<BTNode> stack1 = new Stack<BTNode>();
+		Stack<BTNode> stack2 = new Stack<BTNode>();
+
+		stack1.push(current);
+
+		while (!stack1.isEmpty()) {
+			current = stack1.pop();
+			stack2.push(current);
+
+			if (current.left != null)
+				stack1.push(current.left);
+			if (current.right != null)
+				stack1.push(current.right);
+		}
+
+		while (!stack2.isEmpty()) {
+			current = stack2.pop();
+			System.out.print(current.getData() + " ");
+		}
+	}
+	
+	/**
 	 * Given a binary tree, it prints the tree in level order without any additional memory.
 	 * Time: O(n^2).
 	 * 
@@ -474,6 +548,7 @@ public class BinaryTreeUtil {
 		BTNode root = bt.root;
 
 		int h = bt.height();
+		// If we iterate from h to 1, we can obtain reverse level order traversal
 		for (int i = 1; i <= h; i++)
 			printGivenLevel(root, i);
 	}
@@ -583,6 +658,43 @@ public class BinaryTreeUtil {
 				nextLevel = temp;
 			}
 		}
+	}
+	
+	/**
+	 * Print the level order in reverse. Prints in order of last level first, first level last.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 	
+	 * @throws NullPointerException
+	 * 		if the given binary tree is null
+	 */
+	static void printLevelOrderReverse(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("BinaryTree can not be null.");
+
+		BTNode root = bt.getRootNode();
+		if (root == null)
+			return;
+
+		Queue<BTNode> queue = new LinkedList<>();
+		Stack<BTNode> stack = new Stack<>();
+		queue.add(root);
+		BTNode current = null;
+
+		while (!queue.isEmpty()) {
+			current = queue.remove();
+			stack.push(current);
+			
+			if (current.right != null)
+				queue.add(current.right);
+			
+			if (current.left != null)
+				queue.add(current.left);
+		}
+
+		while (!stack.isEmpty())
+			System.out.print(stack.pop().getData() + " ");
 	}
 	
 	/**
@@ -1670,5 +1782,290 @@ public class BinaryTreeUtil {
 		map.put(distance, prevSum + node.getData());
 
 		computeVerticalSum(node.right, map, distance + 1);
+	}
+	
+	/** 
+	 * Given a binary tree, this method prints the max sum in its path from root to leaf.
+	 * It prints the path from leaf to root.
+	 * 
+	 * @param bt
+	 *    	given binary tree
+	 * 
+	 * @throws NullPointerException
+	 *    	if the given binary tree is null
+	 */
+	static void printMaxSumPath(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+		
+		printMaxSumPath(bt.root);
+	}
+
+	/**
+	 * This prints by first identifying the corresponding leaf node and 
+	 * then traverses to print the path.
+	 * 
+	 * @param root
+	 * 		root node
+	 */
+	private static void printMaxSumPath(BTNode root) {
+        if (root == null)
+            return;
+ 
+        int[] max = new int[]{0};
+        BTNode targetLeaf = null;
+        
+        targetLeaf = getMaxSumPathLeaf(root, max, 0);
+ 
+        System.out.println("Maximum sum in its path: " + max[0]);
+        
+        printMaxSumPath(root, targetLeaf);
+	}
+
+	/**
+	 * Get the leaf node that is on the max sum path.
+	 * 
+	 * @param node
+	 * 		current root node
+	 * @param max
+	 * 		holds the max computed
+	 * @param currentMax
+	 * 		current max
+	 * 
+	 * @return
+	 * 		the leaf node in its max sum path
+	 */
+	private static BTNode getMaxSumPathLeaf(BTNode node, int[] max, int currentMax) {
+		if (node == null)
+			return null;
+
+		currentMax = currentMax + node.getData();
+
+		if (node.left == null && node.right == null) {
+			if (currentMax > max[0]) {
+				max[0] = currentMax;
+				return node;
+			}
+		}
+
+		BTNode leftLeaf = null;
+		BTNode rightLeaf = null;
+
+		int leftMax = 0;
+
+		leftLeaf = getMaxSumPathLeaf(node.left, max, currentMax);
+		leftMax = max[0];
+		rightLeaf = getMaxSumPathLeaf(node.right, max, currentMax);
+
+		if (leftMax >= max[0])
+			return leftLeaf;
+
+		return rightLeaf;
+	}
+
+	/**
+	 * Print the max sum path nodes.
+	 * 
+	 * @param root
+	 * 		root node
+	 * @param targetLeaf
+	 * 		target leaf node
+	 */
+	private static boolean printMaxSumPath(BTNode root, BTNode targetLeaf) {
+		if (root == null)
+			return false;
+
+		if (root == targetLeaf || printMaxSumPath(root.left, targetLeaf) || printMaxSumPath(root.right, targetLeaf)) {
+			System.out.print(root.getData() + " ");
+			return true;
+		}
+
+		return false;
+	}
+	
+	/**
+	 * Checks whether the given binary tree is complete or not. A binary tree
+	 * with n levels is complete if all levels except possibly the last are
+	 * completely full, and the last level has all its nodes to the left side.
+	 * 
+	 * @param bt
+	 *    	given binary tree
+	 * 
+	 * @return
+	 * 		true if it is complete binary tree, false otherwise
+	 * 
+	 * @throws NullPointerException
+	 *    	if the given binary tree is null
+	 */
+	public static boolean isCompleteBinaryTree(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("BinaryTree can not be null.");
+	
+		BTNode root = bt.getRootNode();
+		if (root == null)
+			return true;
+
+		Queue<BTNode> queue = new LinkedList<>();
+		queue.add(root);
+
+		boolean flag = false;
+
+		while (!queue.isEmpty()) {
+			BTNode current = queue.remove();
+			if (current.left != null) {
+				if (flag == true)
+					return false;
+				queue.add(current.left);
+			} else
+				flag = true;
+
+			if (current.right != null) {
+				if (flag == true)
+					return false;
+				queue.add(current.right);
+			} else
+				flag = true;
+		}
+
+		return true;
+	}
+	
+	/**
+	 * Checks whether the given binary tree is complete or not. If we represent
+	 * a binary tree in an array, if the parent node is at index 'i', the left
+	 * child is at index of '2*i + 1' and the right child is assigned an index
+	 * of '2*i + 2. Recursive version of {@link #isCompleteBinaryTree(BinaryTree)}.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @return
+	 * 		true if it is complete binary tree, false otherwise
+	 * 
+	 * @throws NullPointerException
+	 *    	if the given binary tree is null
+	 */
+	static boolean isCompleteBinaryTreeRecursive(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("BinaryTree can not be null.");
+		BTNode root = bt.getRootNode();
+
+		return isCompleteBinaryTreeRecursive(root, 0, bt.size());
+	}
+	
+	/**
+	 * Recursively check whether the current tree is binary tree. 
+	 * If index goes beyond the number of nodes, it is not complete binary tree.
+	 * 
+	 * @param node
+	 * 		current node to verify
+	 * @param index
+	 * 		current index
+	 * @param size
+	 * 		total no of nodes
+	 * 
+	 * @return
+	 * 		true if it is complete binary tree, false otherwise
+	 */
+	private static boolean isCompleteBinaryTreeRecursive(BTNode node, int index, int size) {
+		if (node == null)
+			return true;
+
+		if (index >= size)
+			return false;
+
+		return (isCompleteBinaryTreeRecursive(node.left, 2 * index + 1, size)
+				&& isCompleteBinaryTreeRecursive(node.right, 2 * index + 2, size));
+	}
+	
+	/**
+	 * Given a binary tree, it prints the boundary nodes
+	 * in counter-clock wise starting from root.
+	 *  Time: O(n)
+	 * 
+	 * @param bt
+	 *     	given binary tree
+	 * @param k
+	 *     	distance from root
+	 * 
+	 * @throws NullPointerException
+	 *     	if the given binary tree is null
+	 * @throws IllegalArgumentException
+	 *     	if the distance is <= 0
+	 */
+	static void printBoundaryNodes(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+
+		BTNode node = bt.root;
+
+		if (node != null) {
+			System.out.print(node.getData() + " ");
+
+			// Left boundary
+			printBoundaryLeft(node.left);
+
+			printLeaves(node.left);
+			printLeaves(node.right);
+
+			// Right boundary
+			printBoundaryRight(node.right);
+		}
+	}
+	
+	/**
+	 * Print boundary nodes on the left.
+	 * 
+	 * @param node
+	 * 		current node
+	 */
+	private static void printBoundaryLeft(BTNode node) {
+		if (node == null)
+			return;
+
+		if (node.left != null) {
+			System.out.print(node.getData() + " ");
+			printBoundaryLeft(node.left);
+		} else if (node.right != null) {
+			System.out.print(node.getData() + " ");
+			printBoundaryLeft(node.right);
+		}
+	}
+
+	/**
+	 * Print boundary nodes on the right.
+	 * 
+	 * @param node
+	 * 		current node
+	 */
+	private static void printBoundaryRight(BTNode node) {
+		if (node == null)
+			return;
+	
+		if (node.right != null) {
+			printBoundaryRight(node.right);
+			System.out.print(node.getData() + " ");
+		} else if (node.left != null) {
+			printBoundaryRight(node.left);
+			System.out.print(node.getData() + " ");
+		}
+	}
+
+	/**
+	 * Print leaf nodes.
+	 * 
+	 * @param node
+	 * 		current node
+	 */
+	private static void printLeaves(BTNode node) {
+		if (node == null)
+			return;
+
+		printLeaves(node.left);
+
+		if (node.left == null && node.right == null)
+			System.out.print(node.getData() + " ");
+
+		printLeaves(node.right);
 	}
 }

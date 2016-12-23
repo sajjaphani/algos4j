@@ -38,5 +38,9 @@ public class BinaryTreePathsTest {
 		System.out.println();
 		System.out.println("Printing Vertical sum");
 		BinaryTreeUtil.printVerticalSum(bt);
+		
+		System.out.println();
+		System.out.println("Printing Max Sum Path (root to leaf)");
+		BinaryTreeUtil.printMaxSumPath(bt);
 	}
 }
