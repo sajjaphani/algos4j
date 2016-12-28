@@ -18,6 +18,9 @@ public class BinaryTreeSumTreeTest {
 		BinaryTreeUtil.printLevelOrderInLines(bt);
 		
 		System.out.println();
+		System.out.println("Sum of paths: " + BinaryTreeUtil.sumPaths(bt));
+		
+		System.out.println();
 		System.out.println("Approach 1");
 		boolean hasChildSum = BinaryTreeUtil.isSumTree(bt);
 		if(hasChildSum) 

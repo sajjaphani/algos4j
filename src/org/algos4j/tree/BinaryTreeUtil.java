@@ -1,8 +1,11 @@
 package org.algos4j.tree;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.Stack;
 
@@ -141,6 +144,48 @@ public class BinaryTreeUtil {
 	}
 	
 	/**
+	 * Given a binary tree, this method compute the height of the tree. 
+	 * Iterative approach.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @return
+	 * 		the height of the tree
+	 * 
+	 * @throws NullPointerException
+	 * 		if the given binary tree is null
+	 */
+	public static int height(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("BinaryTree can not be null.");
+
+		BTNode node = bt.root;
+		if (node == null)
+			return 0;
+
+		Queue<BTNode> queue = new LinkedList<>();
+
+		queue.add(node);
+		int height = 0;
+
+		while (!queue.isEmpty()) {
+			height++;
+			int nodeCount = queue.size();
+			while (nodeCount > 0) {
+				BTNode current = queue.remove();
+				if (current.left != null)
+					queue.add(current.left);
+				if (current.right != null)
+					queue.add(current.right);
+				nodeCount--;
+			}
+		}
+		
+		return height;
+	}
+	
+	/**
 	 * Given a binary tree, this method counts the leaf nodes.
 	 * 
 	 * @param bt
@@ -175,6 +220,140 @@ public class BinaryTreeUtil {
 			return 1;
 		else
 			return countLeafNodes(node.left) + countLeafNodes(node.right);
+	}
+	
+	/**
+	 * Given a binary tree, this method computes the difference of node sum of
+	 * odd and even level nodes. This can also be achieved using level order
+	 * traversal.
+	 * 
+	 * @param bt
+	 *    	given binary tree
+	 * 
+	 * @return 
+	 * 		number of leaf nodes
+	 * 
+	 * @throws NullPointerException
+	 *      if the binary tree is null
+	 */
+	static int getLevelDifference(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+		
+		return getLevelDifference(bt.getRootNode());
+	}
+	
+	/**
+	 * Recursively compute the level difference.
+	 * 
+	 * @param node
+	 * 		current subtree node
+	 * 
+	 * @return
+	 * 		the difference
+	 */
+	private static int getLevelDifference(BTNode node) {
+		if (node == null)
+			return 0;
+
+		return node.getData() - getLevelDifference(node.left) - getLevelDifference(node.right);
+	}
+
+	/**
+	 * Given a binary tree, this method computes the depth of the deepest node in odd level.
+	 * 
+	 *  @param bt
+	 *    	given binary tree
+	 * 
+	 * @return 
+	 * 		depth of the deepest odd level node
+	 * 
+	 * @throws NullPointerException
+	 *      if the binary tree is null
+	 */
+	static int getDeepestOddLevel(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+		
+		return getDeepestOddLevel(bt.root, 1);
+	 }
+	
+	/**
+	 * Recursively check the subtree for deepest node.
+	 * 
+	 * @param node
+	 * 		subtree root
+	 * @param level
+	 * 		current level
+	 * 
+	 * @return
+	 * 		depth of the deepest odd level node		
+	 */
+	private static int getDeepestOddLevel(BTNode node, int level) {
+		if (node == null)
+			return 0;
+
+		if (node.left == null && node.right == null && (level & 1) != 0)
+			return level;
+
+		return Math.max(getDeepestOddLevel(node.left, level + 1), getDeepestOddLevel(node.right, level + 1));
+	}
+
+	/**
+	 * Given a binary tree it finds the deepest left node.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @throws NullPointerException
+	 *     	if the given binary tree is null
+	 */
+	static BTNode deepestLeftLeaf(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+		BTNode node = bt.root;
+		int[] level = new int[] { 0 };
+		
+		return deepestLeftLeaf(node, level, 0, false);
+	}
+
+	/**
+	 * Recursively traverse the tree to find the left leave node.
+	 * 
+	 * @param node
+	 * 		current subtree node
+	 * @param level
+	 * 		contains processed level
+	 * @param currentLevel
+	 * 		current level to process
+	 * @param leftNode
+	 * 		indicates whether this is left node or not
+	 * 
+	 * @return
+	 * 		returns the left most node
+	 */
+	private static BTNode deepestLeftLeaf(BTNode node, int[] level, int currentLevel, boolean leftNode) {
+		if (node == null)
+			return null;
+
+		if (leftNode != false && node.left == null && node.right == null && currentLevel > level[0]) {
+			level[0] = currentLevel;
+			return node;
+		}
+
+		BTNode leftLeaf = null;
+		BTNode rightLeaf = null;
+
+		int leftLevel = 0;
+
+		leftLeaf = deepestLeftLeaf(node.left, level, currentLevel + 1, true);
+		leftLevel = level[0];
+		rightLeaf = deepestLeftLeaf(node.right, level, currentLevel + 1, false);
+
+		if (leftLevel >= level[0])
+			return leftLeaf;
+
+		return rightLeaf;
 	}
 	
 	/**
@@ -1093,6 +1272,69 @@ public class BinaryTreeUtil {
 	}
 	
 	/**
+	 * Given a binary tree, this method checks that the tree height is red-black
+	 * tree balanced. Tree is red-black balanced if for every node, the length
+	 * of the longest path has not more than twice length of shortest path from
+	 * node to leaf.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @return
+	 * 		true if the height is balanced, false otherwise
+	 * 
+	 * @throws NullPointerException
+	 * 		if the given binary tree is null
+	 */
+	public static boolean isRedBlackBalanced(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+		
+		return isRedBlackBalanced(bt.root, new int[] {0}, new int[] {0});
+		
+	}
+	
+	/**
+	 * Recursively check for balance of height.
+	 * 
+	 * @param root
+	 * 		current subtree root
+	 * @param maxHeight
+	 * 		holds maximum height
+	 * @param minHeight
+	 * 		holds minimum height
+	 * 
+	 * @return
+	 * 		true if height is balenced, false otherwise
+	 */
+	private static boolean isRedBlackBalanced(BTNode root, int[] maxHeight, int[] minHeight) {
+		if (root == null) {
+			maxHeight[0] = minHeight[0] = 0;
+			return true;
+		}
+
+		int[] leftMax = new int[] { 0 };
+		int[] leftMin = new int[] { 0 };
+
+		int[] rightMax = new int[] { 0 };
+		int[] rightMin = new int[] { 0 };
+
+		if (!isRedBlackBalanced(root.left, leftMax, leftMin))
+			return false;
+
+		if (!isRedBlackBalanced(root.right, rightMax, rightMin))
+			return false;
+
+		maxHeight[0] = Math.max(leftMax[0], rightMax[0]) + 1;
+		minHeight[0] = Math.min(leftMin[0], rightMin[0]) + 1;
+
+		if (maxHeight[0] <= 2 * minHeight[0])
+			return true;
+
+		return false;
+	}
+
+	/**
 	 * Checks whether there is a path from root to leaf with the given sum.
 	 * 
 	 * @param bt
@@ -1102,6 +1344,9 @@ public class BinaryTreeUtil {
 	 * 
 	 * @return
 	 * 		true if there is a path with the given sum, false otherwise
+	 * 
+	 * @throws NullPointerException
+	 * 		if the given binary tree is null
 	 */
 	public static boolean hasPathSum(BinaryTree bt, int sum) {
 		if (bt == null)
@@ -1422,6 +1667,164 @@ public class BinaryTreeUtil {
 	}
 	
 	/**
+	 * Given a binary tree and a distance k (in its path), it prints the nodes
+	 * that are k distant from the leaf. Time: O(n)
+	 * 
+	 * @param bt
+	 *     	given binary tree
+	 * @param k
+	 *     	distance from root
+	 * 
+	 * @throws NullPointerException
+	 *     	if the given binary tree is null
+	 * @throws IllegalArgumentException
+	 *     	if the distance is <= 0
+	 */
+	static void printNodesFromLeaf(BinaryTree bt, int k) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+		if (k <= 0)
+			throw new IllegalArgumentException("Distance should be > 0.");
+
+		int h = bt.size();
+		boolean[] visited = new boolean[h];
+		int[] path = new int[h];
+		
+		printNodesFromLeaf(bt.getRootNode(), path, visited, 0, k);
+	}
+	
+	/**
+	 * Recursively traverse the tree and print the nodes that are k distance from leaf.
+	 * 
+	 * @param node
+	 * 		current subtree node
+	 * @param path
+	 * 		stores the path
+	 * @param visited
+	 * 		indicates whether the node is already visiteed
+	 * @param pathLen
+	 * 		length of the current path from root
+	 * @param k
+	 */
+	private static void printNodesFromLeaf(BTNode node, int[] path, boolean[] visited, int pathLen, int k) {
+		if (node == null)
+			return;
+
+		path[pathLen] = node.getData();
+		visited[pathLen] = false;
+		pathLen++;
+
+		// Print the ancestor of this leaf
+		if (node.left == null && node.right == null && pathLen - k - 1 >= 0 && visited[pathLen - k - 1] == false) {
+			System.out.print(path[pathLen - k - 1] + " ");
+			visited[pathLen - k - 1] = true;
+			return;
+		}
+
+		printNodesFromLeaf(node.left, path, visited, pathLen, k);
+		printNodesFromLeaf(node.right, path, visited, pathLen, k);
+	}
+
+	/**
+	 * Given a binary tree, a target node and a distance k (in its path), it
+	 * prints the nodes that are k distant from the given target node found in
+	 * the binary tree. We not only need to look for descendants of target, we
+	 * also need to consider the nodes which are also ancestors of the target.
+	 * Time: O(n)
+	 * 
+	 * @param bt
+	 *   	given binary tree
+	 * @param target
+	 *      target node
+	 * @param k
+	 *     	distance from root
+	 * 
+	 * @throws NullPointerException
+	 *    	if the given binary tree is null or given target node is null
+	 * @throws IllegalArgumentException
+	 *     	if the distance is <= 0
+	 */
+	static void printNodes(BinaryTree bt, BTNode target, int k) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+		if (target == null)
+			throw new NullPointerException("Target node should not be null");
+		if (k <= 0)
+			throw new IllegalArgumentException("Distance should be > 0.");
+
+	
+		printNodes(bt.getRootNode(), target, k);
+	}
+	
+	/**
+	 * Recursively print the k distant nodes of the given target.
+	 * 
+	 * @param node
+	 * 		current subtree root
+	 * @param target
+	 * 		target node
+	 * @param k
+	 * 		the distance of nodes
+	 * 
+	 * @return
+	 * 		distance of root from target node, -1 otherwise
+	 */
+	private static int printNodes(BTNode node, BTNode target, int k) {
+		if (node == null)
+			return -1;
+
+		if (node == target) {
+			printDistanntNodes(node, k);
+			return 0;
+		}
+
+		// Process left subtree
+		int distance = printNodes(node.left, target, k);
+		if (distance != -1) {
+			if (distance + 1 == k)
+				System.out.print(node.getData() + " ");
+			else
+				printDistanntNodes(node.right, k - distance - 2); // Right child is 2 edges away from left
+
+			return 1 + distance;
+		}
+
+		// Process right subtree
+		distance = printNodes(node.right, target, k);
+		if (distance != -1) {
+			if (distance + 1 == k)
+				System.out.print(node.getData() + " ");
+			else
+				printDistanntNodes(node.left, k - distance - 2); // Left child is 2 edges away from right
+
+			return 1 + distance;
+		}
+
+		return -1;
+	}
+    
+    /**
+     * Prints the nodes down to the given node with the given distance.
+     * 
+     * @param node
+     * 		current subtree
+     * @param k
+     * 		distance of nodes
+     */
+	private static void printDistanntNodes(BTNode node, int k) {
+		if (node == null || k < 0)
+			return;
+
+		if (k == 0) {
+			System.out.print(node.getData() + " ");
+			return;
+		}
+
+		printDistanntNodes(node.left, k - 1);
+		printDistanntNodes(node.right, k - 1);
+	}
+    
+	/**
 	 * Given a binary tree and a value, it prints the ancestor node values of the given node.
 	 * 
 	 * @param bt
@@ -1449,7 +1852,7 @@ public class BinaryTreeUtil {
 	 * 		node value to find
 	 * 
 	 * @return
-	 * 		returns true if node is found with the value, false otherwise
+	 * 		true if node is found with the value, false otherwise
 	 */
 	private static boolean printAncestors(BTNode node, int value) {
 		if (node == null)
@@ -1464,6 +1867,243 @@ public class BinaryTreeUtil {
 		}
 
 		return false;
+	}
+	
+	/**
+	 * Given a binary tree and a key, print the ancestors of the given key. The
+	 * idea is to use iterative postorder traversal till we reach the
+	 * corresponding node.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * @param value
+	 * 		node value
+	 * 
+	 * @throws NullPointerException
+	 * 		if the given binary tree is null
+	 */
+	static void printAncestorsIterative(BinaryTree bt, int value) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+
+		BTNode node = bt.getRootNode();
+		if (node == null)
+			throw new IllegalStateException("Binary tree is empty.");
+
+		Stack<BTNode> stack = new Stack<>();
+		boolean found = false;
+
+		while (node != null) {
+			while (node != null && node.getData() != value) {
+				stack.push(node);
+				node = node.left;
+			}
+
+			// We found the node
+			if (node != null && node.getData() == value) {
+				found = true;
+				break;
+			}
+
+			// Remove node of top which does not have right child
+			if (stack.peek().right == null) {
+				node = stack.pop();
+
+				// remove right children of top element
+				while (!stack.isEmpty() && stack.peek().right == node)
+					node = stack.pop();
+			}
+
+			node = stack.isEmpty() ? null : stack.peek().right;
+		}
+
+		if (found)
+			while (!stack.isEmpty())
+				System.out.print(stack.pop().getData() + " ");
+		else
+			System.out.println("There is no node with the value: " + value);
+	}
+	
+	/**
+	 * Given a binary tree and two node values, it returns the least common
+	 * ancestor node of the two nodes. The least common ancestor between two
+	 * nodes defined as the lowest node in the tree that has both nodes as
+	 * descendants.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * @param value1
+	 * 		first node value
+	 * @param value2
+	 * 		second node value
+	 * 
+	 * @return
+	 * 		least common ancestor node, null otherwise
+	 * 
+	 * @throws NullPointerException
+	 *     	if the given binary tree is null
+	 */
+	static BTNode leastCommonAncestor(BinaryTree bt, int value1, int value2) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+
+		BTNode node = bt.root;
+		boolean[] exists = new boolean[] { false, false };
+
+		BTNode ancestor = leastCommonAncestor(node, value1, value2, exists);
+		if (exists[0] && exists[1])
+			return ancestor;
+
+		return null;
+	}
+	
+	/**
+	 * Recursively find the ancestor node by looking at each node.
+	 * 
+	 * @param node
+	 * 		current node
+	 * @param value1
+	 * 		first node value
+	 * @param value2
+	 * 		second node value
+	 * @param exists
+	 * 		stores the existence of node
+	 * 
+	 * @return
+	 * 		return the common ancestor node
+	 */
+	private static BTNode leastCommonAncestor(BTNode node, int value1, int value2, boolean[] exists) {
+		if (node == null)
+			return null;
+
+		if (node.getData() == value1) {
+			exists[0] = true;
+			return node;
+		}
+		
+		if (node.getData() == value2) {
+			exists[1] = true;
+			return node;
+		}
+
+		BTNode leftAncestor = leastCommonAncestor(node.left, value1, value2, exists);
+		BTNode rightAncestor = leastCommonAncestor(node.right, value1, value2, exists);
+
+		if (leftAncestor != null && rightAncestor != null)
+			return node;
+
+		return leftAncestor != null ? leftAncestor : rightAncestor;
+	}
+
+	/**
+	 * Given a binary tree and two node values, it returns the distance between the two nodes.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * @param value1
+	 * 		first node value
+	 * @param value2
+	 * 		second node value
+	 * 
+	 * @return
+	 * 		the distance between the nodes, -1 otherwise
+	 * 
+	 * @throws NullPointerException
+	 *     	if the given binary tree is null
+	 */
+	static int distance(BinaryTree bt, int value1, int value2) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+
+		BTNode node = bt.root;
+		int[] distances = new int[] { -1, -1 };
+		int[] distance = new int[] { 0 };
+
+		BTNode ancestor = distance(node, value1, value2, distances, distance, 1);
+
+		if (distances[0] != -1 && distances[1] != -1)
+			return distance[0];
+
+		// value1 is ancestor of value2
+		if (distances[0] != -1)
+			return findLevel(ancestor, value2, 0);
+
+		// value2 is ancestor of value1
+		if (distances[1] != -1)
+			return findLevel(ancestor, value1, 0);
+
+		return -1;
+	}
+	
+	/**
+	 * Recursively traverse the tree and compute the distance.
+	 * 
+	 * @param node
+	 * 		current subtree node
+	 * @param value1
+	 * 		first node value
+	 * @param value2
+	 * 		second node value
+	 * @param distances
+	 * 		holds left right distances
+	 * @param distance
+	 * 		computed distance
+	 * @param lvl
+	 * 		current level
+	 * 
+	 * @return
+	 * 		the common ancestor node
+	 */
+	private static BTNode distance(BTNode node, int value1, int value2, int[] distances, int[] distance, int lvl) {
+		if (node == null)
+			return null;
+
+		if (node.getData() == value1) {
+			distances[0] = lvl;
+			return node;
+		}
+
+		if (node.getData() == value2) {
+			distances[1] = lvl;
+			return node;
+		}
+
+		BTNode leftAncestor = distance(node.left, value1, value2, distances, distance, lvl + 1);
+		BTNode rightAncestor = distance(node.right, value1, value2, distances, distance, lvl + 1);
+
+		if (leftAncestor != null && rightAncestor != null) {
+			distance[0] = distances[0] + distances[1] - 2 * lvl;
+			return node;
+		}
+
+		return leftAncestor != null ? leftAncestor : rightAncestor;
+	}
+
+	/**
+	 * Get the level of node given by value.
+	 * 
+	 * @param node
+	 * 		current subtree node
+	 * @param value
+	 * 		node value
+	 * @param level
+	 * 		current level
+	 * 
+	 * @return
+	 * 		the level of value, -1 if not exists
+	 */
+	private static int findLevel(BTNode node, int value, int level) {
+		if (node == null)
+			return -1;
+
+		if (node.getData() == value)
+			return level;
+
+		int lvl = findLevel(node.left, value, level + 1);
+		if(lvl != -1)
+			return lvl;
+		
+		return findLevel(node.right, value, level + 1);
 	}
 	
 	/**
@@ -1516,6 +2156,53 @@ public class BinaryTreeUtil {
 	    return getLevel(node.right, value, level+1);
 	}
 	
+	/**
+	 * Given a binary tree this method checks whether all the leaves are at the same level or not.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @return
+	 * 		true if the leaves are at same level, false otherwise
+	 * 
+	 * @throws NullPointerException
+	 *     	if the given binary tree is null
+	 */
+	public static boolean areLeavesAtSameLevel(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+
+		BTNode node = bt.root;
+		if (node == null)
+			return true;
+
+		return areLeavesAtSameLevel(bt.getRootNode(), height(node), 1);
+	}
+	
+	/**
+	 * Recursively check leaves are at the same level.
+	 * 
+	 * @param node
+	 * 		current node
+	 * @param level
+	 * 		max level
+	 * @param currentLevel
+	 * 		current level
+	 * 
+	 * @return
+	 * 		true if leaves are at the same level, false otherwise
+	 */
+	private static boolean areLeavesAtSameLevel(BTNode node, int level, int currentLevel) {
+		if (node == null)
+			return true;
+		
+		if (node.left == null && node.right == null && level != currentLevel)
+			return false;
+
+		return areLeavesAtSameLevel(node.left, level, currentLevel + 1)
+				&& areLeavesAtSameLevel(node.right, level, currentLevel + 1);
+	}
+
 	/**
 	 * Given a binary tree, it checks whether the tree is sum tree. At each
 	 * node, the node value equal to the sum of its left and right subtree.
@@ -1677,6 +2364,48 @@ public class BinaryTreeUtil {
 		return node.getData() + oldData;
 	}
 	
+	/**
+	 * Given a binary tree, it returns the sum of paths. The path is the integer formed by appending each digit in the node while computing the path.
+	 * Assumption: the node values are single digits.
+	 * 
+	 * @param bt
+	 * 		binary tree
+	 * 
+	 * @return
+	 * 		the path sum
+	 */
+	static int sumPaths(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+
+		BTNode node = bt.root;
+		
+		return sumPaths(node, 0);
+	}
+	
+	/**
+	 * Recursively traverse the tree and compute the path sum.
+	 * 
+	 * @param node
+	 * 		current node
+	 * @param value
+	 * 		value till now
+	 * 
+	 * @return
+	 * 		computed sum
+	 */
+	private static int sumPaths(BTNode node, int value) {
+		if (node == null)
+			return 0;
+
+		value = value * 10 + node.getData();
+
+		if (node.left == null && node.right == null)
+			return value;
+
+		return sumPaths(node.left, value) + sumPaths(node.right, value);
+	}
+
 	/**
 	 * Check whether the given node is a leaf.
 	 * 
@@ -1874,6 +2603,129 @@ public class BinaryTreeUtil {
 		computeVerticalSum(node.right, map, distance + 1);
 	}
 	
+	/**
+	 * Given a binary tree it prints the nodes in vertical traversal. In
+	 * vertical order, root is at level 0 and when we move left it decrements
+	 * the vertical level by 1 and when we move to the right we increment the
+	 * level by 1. Time: O(n^2)
+	 * 
+	 * @param bt
+	 *    	given binary tree
+	 * 
+	 * @throws NullPointerException
+	 *    	if the given binary tree is null
+	 */
+	static void printVerticalTraversal(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+
+		BTNode node = bt.root;
+		int[] levels = new int[] { 0, 0 };
+	
+		findLevels(node, levels, 0);
+
+		// From min to max level
+		for (int level = levels[0]; level <= levels[1]; level++) {
+			printVerticalTraversal(node, level, 0);
+			System.out.println();
+		}
+	}
+	
+	/**
+	 * Find the min and max levels in vertical order.
+	 * 
+	 * @param node
+	 * 		current subtree node
+	 * @param levels
+	 * 		holds min max levels
+	 * @param level
+	 * 		current level
+	 */
+	private static void findLevels(BTNode node, int[] levels, int level) {
+		if (node == null)
+			return;
+
+		if (level < levels[0])
+			levels[0] = level;
+		else if (level > levels[1])
+			levels[1] = level;
+
+		findLevels(node.left, levels, level - 1);
+		findLevels(node.right, levels, level + 1);
+	}
+
+	/**
+	 * Print the node for the given level.
+	 * 
+	 * @param node
+	 * 		current subtree node
+	 * @param expectedLevel
+	 * 		expected level for the node to print
+	 * @param level
+	 * 		current level
+	 */
+	private static void printVerticalTraversal(BTNode node, int expectedLevel, int level) {
+		if (node == null)
+			return;
+
+		if (level == expectedLevel)
+			System.out.print(node.getData() + " ");
+
+		printVerticalTraversal(node.left, expectedLevel, level - 1);
+		printVerticalTraversal(node.right, expectedLevel, level + 1);
+	}
+	
+	/**
+	 * Given a binary tree it prints the nodes in vertical traversal. An
+	 * optimized version of {@link #printVerticalTraversal(BinaryTree)}.
+	 * Time: O(n), Space: O(n)
+	 * 
+	 * @param bt
+	 *    	given binary tree
+	 * 
+	 * @throws NullPointerException
+	 *    	if the given binary tree is null
+	 */
+	static void printVerticalTraversalOptimal(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+
+		Map<Integer, List<Integer>> map = new HashMap<Integer, List<Integer>>();
+		computeVerticalNodes(bt.getRootNode(), map, 0);
+		
+		for(Entry<Integer, List<Integer>> entry : map.entrySet()) {
+			System.out.println("Level: " + entry.getKey());
+			for(Integer value : entry.getValue())
+				System.out.print(value + " ");
+			System.out.println();
+		}
+	}
+	
+	/**
+	 * Recursively compute the vertical nodes.
+	 * 
+	 * @param node
+	 * 		current node
+	 * @param map
+	 * 		map holding the level entries
+	 * @param distance
+	 * 		current distance
+	 */
+	private static void computeVerticalNodes(BTNode node, Map<Integer, List<Integer>> map, int distance) {
+		if (node == null)
+			return;
+
+		computeVerticalNodes(node.left, map, distance - 1);
+
+		List<Integer> entries = map.get(distance);
+		if (entries == null)
+			entries = new ArrayList<>();
+		entries.add(node.getData());
+		map.put(distance, entries);
+
+		computeVerticalNodes(node.right, map, distance + 1);
+	}
+	
 	/** 
 	 * Given a binary tree, this method prints the max sum in its path from root to leaf.
 	 * It prints the path from leaf to root.
@@ -1888,17 +2740,7 @@ public class BinaryTreeUtil {
 		if (bt == null)
 			throw new NullPointerException("Binary tree should not be null");
 		
-		printMaxSumPath(bt.root);
-	}
-
-	/**
-	 * This prints by first identifying the corresponding leaf node and 
-	 * then traverses to print the path.
-	 * 
-	 * @param root
-	 * 		root node
-	 */
-	private static void printMaxSumPath(BTNode root) {
+		BTNode root = bt.root;
         if (root == null)
             return;
  
@@ -1971,6 +2813,62 @@ public class BinaryTreeUtil {
 		}
 
 		return false;
+	}
+	
+	/**
+	 * Given a binary tree, this method returns the maximum path sum between two leaf nodes.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @throws NullPointerException
+	 *     	if the given binary tree is null
+	 * @throws IllegalStateException
+	 *  	if there is no such path sum exists because of tree
+	 */
+	public static int maxPathSum(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+
+		BTNode node = bt.root;
+		int[] max = new int[] { Integer.MIN_VALUE };
+
+		maxPathSum(node, max);
+
+		if (max[0] == Integer.MAX_VALUE)
+			throw new IllegalStateException("There is no such path exists.");
+
+		return max[0];
+	}
+	
+	/**
+	 * Recursively compute max path sum.
+	 * 
+	 * @param node
+	 * 		current subtree root
+	 * @param max
+	 * 		holds max path some between leaves
+	 * 
+	 * @return
+	 * 		max sum root to leaf node
+	 */
+	private static int maxPathSum(BTNode node, int[] max) {
+		if (node == null)
+			return 0;
+	
+		if (node.left == null && node.right == null)
+			return node.getData();
+
+		int leftSum = maxPathSum(node.left, max);
+		int rightSum = maxPathSum(node.right, max);
+
+		if (node.left != null && node.right != null) {
+			max[0] = Math.max(max[0], leftSum + rightSum + node.getData());
+
+			return Math.max(leftSum, rightSum) + node.getData();
+		}
+
+		return node.left == null ? rightSum + node.getData() : leftSum + node.getData();
 	}
 	
 	/**
@@ -2075,13 +2973,9 @@ public class BinaryTreeUtil {
 	 * 
 	 * @param bt
 	 *     	given binary tree
-	 * @param k
-	 *     	distance from root
 	 * 
 	 * @throws NullPointerException
 	 *     	if the given binary tree is null
-	 * @throws IllegalArgumentException
-	 *     	if the distance is <= 0
 	 */
 	static void printBoundaryNodes(BinaryTree bt) {
 		if (bt == null)
@@ -2157,5 +3051,157 @@ public class BinaryTreeUtil {
 			System.out.print(node.getData() + " ");
 
 		printLeaves(node.right);
+	}
+	
+	/**
+	 * Given a binary tree, it prints the left view of the tree.
+	 * The left view is the view that contains all nodes that are first nodes in each level.
+	 *  Time: O(n)
+	 * 
+	 * @param bt
+	 *     	given binary tree
+	 * 
+	 * @throws NullPointerException
+	 *     	if the given binary tree is null
+	 */
+	static void printLeftView(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+
+		BTNode node = bt.root;
+		int[] level = new int[] { 0 };
+
+		printLeftView(node, level, 1);
+	}
+	
+	/**
+	 * Recursively traverse the tree and print the left most node in each level.
+	 * 
+	 * @param node
+	 * 		current node
+	 * @param level
+	 * 		single element array contains the previous handled level
+	 * @param currentLevel
+	 * 		current level
+	 */
+	private static void printLeftView(BTNode node, int[] level, int currentLevel) {
+		if (node == null)
+			return;
+
+		// Process and update the handled level
+		if (level[0] < currentLevel) {
+			System.out.print(" " + node.getData());
+			level[0] = currentLevel;
+		}
+
+		printLeftView(node.left, level, currentLevel + 1);
+		printLeftView(node.right, level, currentLevel + 1);
+	}
+	
+	/**
+	 * Given a binary tree and a path sum, this method removes the path nodes 
+	 * that does not add up the sum path (complete path).
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * @param pathSum
+	 * 		given path sum
+	 * 
+	 * @throws NullPointerException
+	 *     	if the given binary tree is null
+	 */
+	public static void pruneTree(BinaryTree bt, int pathSum) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+		BTNode node = bt.root;
+		int[] sum = new int[] { 0 };
+		
+		bt.setRoot(pruneTree(node, sum, pathSum));
+	}
+	
+	/**
+	 * Recursively prune the tree, which nodes does not sum up the path sum.
+	 * 
+	 * @param node
+	 * 		current root
+	 * @param sum
+	 * 		sum till now
+	 * @param pathSum
+	 * 		path sum
+	 * 
+	 * @return
+	 * 		new root after pruning
+	 */
+	private static BTNode pruneTree(BTNode node, int[] sum, int pathSum) {
+		if (node == null)
+			return null;
+
+		int[] leftSum = new int[] { sum[0] + node.getData() };
+		int[] rightSum = new int[] { sum[0] + node.getData() };
+
+		node.left = pruneTree(node.left, leftSum, pathSum);
+		node.right = pruneTree(node.right, rightSum, pathSum);
+
+		sum[0] = Math.max(leftSum[0], rightSum[0]);
+
+		if (sum[0] < pathSum)
+			node = null;
+
+		return node;
+	}
+	
+	/**
+	 * Given a binary tree, it finds the right node corresponding to the given
+	 * node to its right. Right node is the one where it is at the same level of
+	 * the given node.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * @param value
+	 * 		the node velue
+	 * 
+	 * @return
+	 * 		the right node, or null
+	 * 
+	 * @throws NullPointerException
+	 *     	if the given binary tree is null
+	 */
+	static BTNode findNextRight(BinaryTree bt, int value) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+		BTNode first = bt.root;
+		if (first == null)
+			return null;
+
+		Queue<BTNode> nodeQueue = new LinkedList<>();
+		Queue<Integer> levelQueue = new LinkedList<Integer>();
+
+		int level = 0;
+
+		nodeQueue.add(first);
+		levelQueue.add(level);
+
+		while (!nodeQueue.isEmpty()) {
+			BTNode current = nodeQueue.remove();
+			level = levelQueue.remove();
+
+			if (current.getData() == value) {
+				if (levelQueue.size() == 0 || levelQueue.peek() != level)
+					return null;
+
+				return nodeQueue.peek();
+			}
+
+			if (current.left != null) {
+				nodeQueue.add(current.left);
+				levelQueue.add(level + 1);
+			}
+			if (current.right != null) {
+				nodeQueue.add(current.right);
+				levelQueue.add(level + 1);
+			}
+		}
+
+		return null;
 	}
 }

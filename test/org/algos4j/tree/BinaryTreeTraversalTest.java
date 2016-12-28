@@ -49,5 +49,21 @@ public class BinaryTreeTraversalTest {
 		System.out.println();
 		System.out.println("Bouondary Traversal ");
 		BinaryTreeUtil.printBoundaryNodes(bt);
+		
+		System.out.println();
+		System.out.println("Left View");
+		BinaryTreeUtil.printLeftView(bt);
+		
+		System.out.println();
+		System.out.println("Printing Vertical sum");
+		BinaryTreeUtil.printVerticalSum(bt);
+		
+		System.out.println();
+		System.out.println("Vertical Traversal");
+		BinaryTreeUtil.printVerticalTraversal(bt);
+		
+		System.out.println();
+		System.out.println("Vertical Traversal Optimized");
+		BinaryTreeUtil.printVerticalTraversalOptimal(bt);
 	}
 }
