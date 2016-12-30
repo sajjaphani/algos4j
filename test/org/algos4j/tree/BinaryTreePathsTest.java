@@ -38,6 +38,9 @@ public class BinaryTreePathsTest {
 		BinaryTreeUtil.printNodesFromLeaf(bt, 2);
 		
 		System.out.println();
+		System.out.println("Distance of closest leaf node for 5 : " + BinaryTreeUtil.getClosestNodeDistance(bt, 5));
+		
+		System.out.println();
 		System.out.println("Printing Nodes at distance 3 (from a given node 3):");
 		BTNode target = bt.root.right;
 		// target.right = null;

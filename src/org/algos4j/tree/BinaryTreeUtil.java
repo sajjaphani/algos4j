@@ -2,12 +2,15 @@ package org.algos4j.tree;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Queue;
+import java.util.Set;
 import java.util.Stack;
+import java.util.TreeMap;
 
 import org.algos4j.tree.BinaryTree.BTNode;
 import org.algos4j.util.ArrayUtil;
@@ -874,6 +877,64 @@ public class BinaryTreeUtil {
 
 		while (!stack.isEmpty())
 			System.out.print(stack.pop().getData() + " ");
+	}
+	
+	/**
+	 * Given a binary tree and start and end levels, it prints the corresponding level nodes.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * @param startLevel
+	 * 		starting level
+	 * @param endLevel
+	 * 		ending level
+	 * 
+	 * @throws NullPointerException
+	 * 		if the given binary tree is null
+	 * @throws IllegalArgumentException
+	 * 		if the start/end levels are not valid
+	 */
+	static void printLevelNodes(BinaryTree bt, int startLevel, int endLevel) {
+		if (bt == null)
+			throw new NullPointerException("BinaryTree can not be null.");
+		if(startLevel <= 0 || endLevel <= 0)
+			throw new IllegalArgumentException("Invalid start/end level, must be > 0");
+		if(startLevel >= endLevel)
+			throw new IllegalArgumentException("Start level must be less than end level");
+		if(endLevel > bt.height())
+			throw new IllegalArgumentException("End level beyond max level");
+		
+		BTNode node = bt.getRootNode();
+		if (node == null)
+			return;
+		
+		Queue<BTNode> queue = new LinkedList<>();
+		  
+        int level = 0;
+  
+        queue.add(node);
+  
+		while (!queue.isEmpty()) {
+			level ++;
+			
+			if(level > endLevel)
+				break;
+			
+			int nodeCount = queue.size();
+
+			while (nodeCount > 0) {
+				node = queue.remove();
+				if(level >= startLevel)
+					System.out.print(node.getData() + " ");
+				if (node.left != null)
+					queue.add(node.left);
+				if (node.right != null)
+					queue.add(node.right);
+				nodeCount--;
+			}
+			if(level >= startLevel)
+				System.out.println();
+		}
 	}
 	
 	/**
@@ -1774,7 +1835,7 @@ public class BinaryTreeUtil {
 			return -1;
 
 		if (node == target) {
-			printDistanntNodes(node, k);
+			printDistantNodes(node, k);
 			return 0;
 		}
 
@@ -1784,7 +1845,7 @@ public class BinaryTreeUtil {
 			if (distance + 1 == k)
 				System.out.print(node.getData() + " ");
 			else
-				printDistanntNodes(node.right, k - distance - 2); // Right child is 2 edges away from left
+				printDistantNodes(node.right, k - distance - 2); // Right child is 2 edges away from left
 
 			return 1 + distance;
 		}
@@ -1795,7 +1856,7 @@ public class BinaryTreeUtil {
 			if (distance + 1 == k)
 				System.out.print(node.getData() + " ");
 			else
-				printDistanntNodes(node.left, k - distance - 2); // Left child is 2 edges away from right
+				printDistantNodes(node.left, k - distance - 2); // Left child is 2 edges away from right
 
 			return 1 + distance;
 		}
@@ -1811,7 +1872,7 @@ public class BinaryTreeUtil {
      * @param k
      * 		distance of nodes
      */
-	private static void printDistanntNodes(BTNode node, int k) {
+	private static void printDistantNodes(BTNode node, int k) {
 		if (node == null || k < 0)
 			return;
 
@@ -1820,8 +1881,82 @@ public class BinaryTreeUtil {
 			return;
 		}
 
-		printDistanntNodes(node.left, k - 1);
-		printDistanntNodes(node.right, k - 1);
+		printDistantNodes(node.left, k - 1);
+		printDistantNodes(node.right, k - 1);
+	}
+    
+	/**
+	 * Given a binary tree and a node value, this method finds the closest node to the given node value.
+	 * The closest node can either be a descendant of given key or can be reached through one of the ancestors.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * @param value
+	 * 		node value
+	 * 
+	 * @return
+	 * 		the closest node or null if not found
+	 */
+	static int getClosestNodeDistance(BinaryTree bt, int value) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+		
+		BTNode[] ancestors = new BTNode[bt.height()];
+		
+		return closestDistance(bt.root, value, ancestors, 0);
+	}
+	
+	/**
+	 * Returns the closest distance for the given node.
+	 * 
+	 * @param node
+	 * 		current subtree node
+	 * @param value
+	 * 		corresponding node
+	 * @param ancestors
+	 * 		keeps track of ancestors of current node
+	 * @param index
+	 * 		current index of ancestor
+	 * 
+	 * @return
+	 * 		the closest distance
+	 */
+	private static int closestDistance(BTNode node, int value, BTNode ancestors[], int index) {
+		if (node == null)
+			return Integer.MAX_VALUE;
+
+		if (node.getData() == value) {
+			int distance = distanceDown(node);
+
+			// Update if there is any ancestor's path leads to min distance
+			for (int i = index - 1; i >= 0; i--)
+				distance = Math.min(distance, index - i + distanceDown(ancestors[i]));
+
+			return distance;
+		}
+
+		ancestors[index] = node;
+
+		return Math.min(closestDistance(node.left, value, ancestors, index + 1), closestDistance(node.right, value, ancestors, index + 1));
+	}
+    
+	/**
+	 * Find the closest distance down.
+	 * 
+	 * @param node
+	 *    	current subtree node
+	 * 
+	 * @return 
+	 * 		distance of the closest node down
+	 */
+	private static int distanceDown(BTNode node) {
+		if (node == null)
+			return Integer.MAX_VALUE;
+
+		if (node.left == null && node.right == null)
+			return 0;
+
+		return 1 + Math.min(distanceDown(node.left), distanceDown(node.right));
 	}
     
 	/**
@@ -2201,6 +2336,82 @@ public class BinaryTreeUtil {
 
 		return areLeavesAtSameLevel(node.left, level, currentLevel + 1)
 				&& areLeavesAtSameLevel(node.right, level, currentLevel + 1);
+	}
+
+	/**
+	 * Given a binary tree and two nodes, it checks whether the nodes are
+	 * cousins. Cousins are those which are at the same level and do not share
+	 * same parent.
+	 * 
+	 * @param bt
+	 *     	given binary tree
+	 * @param node1
+	 * 		first node
+	 * @param node2
+	 * 		second node
+	 * 
+	 * @throws NullPointerException
+	 *     	if the given binary tree is null or any given node is null
+	 */
+	static boolean areCousins(BinaryTree bt, BTNode node1, BTNode node2) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+		if (node1 == null || node2 == null)
+			throw new NullPointerException("Tree node(s) should not be null");
+
+		BTNode node = bt.root;
+		if (node == null)
+			return false;
+
+		return level(node, node1, 1) == level(node, node2, 1) && !areSibling(node, node1, node2);
+	}
+	
+	/**
+	 * Recursively find the level of the given node.
+	 * 
+	 * @param node
+	 * 		current subtree root
+	 * @param target
+	 * 		node to find
+	 * @param level
+	 * 		current level
+	 * 
+	 * @return
+	 * 		level of the target node
+	 */
+	private static int level(BTNode node, BTNode target, int level) {
+		if (node == null)
+            return -1;
+ 
+        if (node == target)
+            return level;
+ 
+        int lvl = level(node.left, target, level + 1);
+        if (lvl != -1)
+            return lvl;
+ 
+        return level(node.right, target, level + 1);
+	}
+
+	/**
+	 * Check whether the given two nodes are siblings.
+	 * 
+	 * @param node
+	 * 		current subtree root
+	 * @param node1
+	 * 		first sibling
+	 * @param node2
+	 * 		second sibling
+	 * 
+	 * @return
+	 * 		true if they are siblings, false otherwise
+	 */
+	private static boolean areSibling(BTNode node, BTNode node1, BTNode node2) {
+		if (node == null)
+			return false;
+
+		return node.left == node1 && node.right == node2 || node.left == node2 && node.right == node1
+				|| areSibling(node.left, node1, node2) || areSibling(node.right, node1, node2);
 	}
 
 	/**
@@ -3056,7 +3267,7 @@ public class BinaryTreeUtil {
 	/**
 	 * Given a binary tree, it prints the left view of the tree.
 	 * The left view is the view that contains all nodes that are first nodes in each level.
-	 *  Time: O(n)
+	 * Time: O(n)
 	 * 
 	 * @param bt
 	 *     	given binary tree
@@ -3096,6 +3307,104 @@ public class BinaryTreeUtil {
 
 		printLeftView(node.left, level, currentLevel + 1);
 		printLeftView(node.right, level, currentLevel + 1);
+	}
+	
+	/**
+	 * Given a binary tree, it prints the top view of the tree.
+	 * The top view of a binary tree is the set of nodes visible from the top.
+	 * A node is a top node if it is the first node in its horizontal distance.
+	 * Time: O(n)
+	 * 
+	 * @param bt
+	 *     	given binary tree
+	 * 
+	 * @throws NullPointerException
+	 *     	if the given binary tree is null
+	 */
+	static void printTopView(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+
+		BTNode node = bt.root;
+		if (node == null)
+			return;
+
+		Set<Integer> distanceSet = new HashSet<>();
+
+		Queue<BTNode> nodeQueue = new LinkedList<>();
+		Queue<Integer> distanceQueue = new LinkedList<Integer>();
+
+		nodeQueue.add(node);
+		distanceQueue.add(0);
+
+		while (!nodeQueue.isEmpty()) {
+			BTNode current = nodeQueue.remove();
+			int horizontalDistance = distanceQueue.remove();
+
+			// First node with horizontal distance
+			if (!distanceSet.contains(horizontalDistance)) {
+				distanceSet.add(horizontalDistance);
+				System.out.print(current.getData() + " ");
+			}
+
+			if (current.left != null) {
+				nodeQueue.add(current.left);
+				distanceQueue.add(horizontalDistance - 1);
+			}
+			if (current.right != null) {
+				nodeQueue.add(current.right);
+				distanceQueue.add(horizontalDistance + 1);
+			}
+		}
+	}
+	
+	/**
+	 * Given a binary tree, it prints the top view of the tree.
+	 * The bottom view of a binary tree is the set of nodes visible from the bottom.
+	 * A node a bottom node if it is the bottom most(last) node in its horizontal distance.
+	 * Time: O(n)
+	 * 
+	 * @param bt
+	 *     	given binary tree
+	 * 
+	 * @throws NullPointerException
+	 *     	if the given binary tree is null
+	 */
+	static void printBottomView(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+
+		BTNode node = bt.root;
+		if (node == null)
+			return;
+
+		Map<Integer, Integer> distanceMap = new TreeMap<>();
+
+		Queue<BTNode> nodeQueue = new LinkedList<>();
+		Queue<Integer> distanceQueue = new LinkedList<Integer>();
+
+		nodeQueue.add(node);
+		distanceQueue.add(0);
+
+		while (!nodeQueue.isEmpty()) {
+			BTNode temp = nodeQueue.remove();
+			int horizontalDistance = distanceQueue.remove();
+
+			distanceMap.put(horizontalDistance, temp.getData());
+
+			if (temp.left != null) {
+				nodeQueue.add(temp.left);
+				distanceQueue.add(horizontalDistance - 1);
+			}
+			if (temp.right != null) {
+				nodeQueue.add(temp.right);
+				distanceQueue.add(horizontalDistance + 1);
+			}
+		}
+
+		for (Entry<Integer, Integer> distanceEntry : distanceMap.entrySet()) {
+			System.out.print(distanceEntry.getValue() + " ");
+		}
 	}
 	
 	/**

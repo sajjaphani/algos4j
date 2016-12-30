@@ -47,12 +47,24 @@ public class BinaryTreeTraversalTest {
 		BinaryTreeUtil.printLevelOrderSpiral(bt);
 		
 		System.out.println();
+		System.out.println("Print Chosen Levels");
+		BinaryTreeUtil.printLevelNodes(bt, 2, 3);
+		
+		System.out.println();
 		System.out.println("Bouondary Traversal ");
 		BinaryTreeUtil.printBoundaryNodes(bt);
 		
 		System.out.println();
-		System.out.println("Left View");
+		System.out.println("BinaryTree Left View");
 		BinaryTreeUtil.printLeftView(bt);
+		
+		System.out.println();
+		System.out.println("BinaryTree Top View");
+		BinaryTreeUtil.printTopView(bt);
+		
+		System.out.println();
+		System.out.println("BinaryTree Bottom View");
+		BinaryTreeUtil.printBottomView(bt);
 		
 		System.out.println();
 		System.out.println("Printing Vertical sum");

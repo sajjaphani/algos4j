@@ -42,6 +42,11 @@ public class BinaryTreeLevelTest {
 		System.out.println("Are Leaves at same level: " + BinaryTreeUtil.areLeavesAtSameLevel(bt));
 		
 		System.out.println();
+		BTNode node1 = bt.root.left.right.left;
+		BTNode node2 = bt.root.right.right.left;
+		System.out.println("Are cousins (7 and 9): " + BinaryTreeUtil.areCousins(bt, node1, node2));
+		
+		System.out.println();
 		BTNode rightNode = BinaryTreeUtil.findNextRight(bt, 5);
 		if( rightNode == null)
 			System.out.println("There is no such right node for : " + 5);
