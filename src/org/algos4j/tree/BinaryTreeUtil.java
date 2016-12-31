@@ -16,7 +16,7 @@ import org.algos4j.tree.BinaryTree.BTNode;
 import org.algos4j.util.ArrayUtil;
 
 /**
- * Holds some of the utility method on Binary trees including binary search tree.
+ * Holds some of the utility methods on Binary trees.
  * 
  * @author psajja
  *

@@ -4,7 +4,9 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 /**
- * Represents a complete binary tree.
+ * This class represents a complete binary tree. A complete binary tree is a
+ * binary tree where every level, except possibly the last, is completely
+ * filled, and all nodes in the last level are as far left as possible.
  * 
  * @author psajja
  * 

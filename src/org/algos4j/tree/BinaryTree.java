@@ -4,8 +4,9 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 /**
- * A binary tree representation.
- * This tree holds integer values.
+ * A binary tree representation. A binary tree is a tree data structure in which
+ * each node has at most two children referred to as the left and the right
+ * child. This tree holds integer values.
  * 
  * @author psajja
  * 
@@ -14,6 +15,9 @@ public class BinaryTree {
 
 	protected BTNode root;
 
+	/**
+	 * Default constructor
+	 */
 	public BinaryTree() {
 		root = null;
 	}
@@ -362,14 +366,32 @@ public class BinaryTree {
 		BTNode right;
 		private int data;
 
+		/**
+		 * Initialize node with the given data.
+		 * 
+		 * @param data
+		 * 		node data
+		 */
 		public BTNode(int data) {
 			this.data = data;
 		}
 
+		/**
+		 * Get the node data.
+		 * 
+		 * @return
+		 * 		node data
+		 */
 		public int getData() {
 			return data;
 		}
 
+		/**
+		 * Set new data to the node.
+		 * 
+		 * @param data
+		 * 		the node data
+		 */
 		public void setData(int data) {
 			this.data = data;
 		}
