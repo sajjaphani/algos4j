@@ -70,14 +70,27 @@ public class BinaryTreePathsTest {
 		BinaryTreeUtil.printMaxSumPath(bt);
 		
 		System.out.println();
+		BTNode root = new BTNode(10);
+		root.left = new BTNode(5);
+		BinaryTree btx = new BinaryTree();
+		btx.setRoot(root);
 		System.out.println("Max Path Sum (leaf to leaf): " + BinaryTreeUtil.maxPathSum(bt));
 		
+		System.out.println("Max Path Sum (node to node): " + BinaryTreeUtil.maxPathSum1(btx));
+		
 		System.out.println();
-		System.out.println("Pruning Tree (based on path sum)");
-		System.out.println("Paths before pruning");
-		BinaryTreeUtil.printPaths(bt);
-		BinaryTreeUtil.pruneTree(bt, 15);
-		System.out.println("Paths after pruning");
-		BinaryTreeUtil.printPaths(bt);
+		System.out.println("Left Leaves Sum: " + BinaryTreeUtil.getLeftLeaveSum(bt));
+		
+		System.out.println();
+		System.out.println("Multiplicaiton of Level Leaf sum: " + BinaryTreeUtil.getMultiplicaitonOfLevelSum(bt));
+		
+		System.out.println();
+		System.out.println("Before updating left sum");
+		BinaryTreeUtil.printLevelOrderInLines(bt);
+		
+		System.out.println();
+		BinaryTreeUtil.addLeftSum(bt);
+		System.out.println("After updating left sum");
+		BinaryTreeUtil.printLevelOrderInLines(bt);		
 	}
 }

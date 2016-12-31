@@ -145,6 +145,46 @@ public class BinaryTreeUtil {
 
 		return size;
 	}
+
+	/**
+	 * Search for an element in the given binary tree.
+	 * Iterative solution.
+	 * 
+	 * @param key
+	 *   	the key to check
+	 * 
+	 * @return 
+	 * 		the node with matching key, null otherwise
+	 * 
+	 * @throws NullPointerException
+	 * 		if the given binary tree is null
+	 */
+	static BTNode search(BinaryTree bt, int key) {
+		if (bt == null)
+			throw new NullPointerException("BinaryTree can not be null.");
+
+		BTNode root = bt.getRootNode();
+		if (root == null)
+			return null;
+
+		Queue<BTNode> queue = new LinkedList<>();
+
+		queue.add(root);
+
+		while (!queue.isEmpty()) {
+			BTNode current = queue.remove();
+			if (current.getData() == key)
+				return current;
+
+			if (current.left != null)
+				queue.add(current.left);
+
+			if (current.right != null)
+				queue.add(current.right);
+		}
+
+		return null;
+	}
 	
 	/**
 	 * Given a binary tree, this method compute the height of the tree. 
@@ -189,6 +229,51 @@ public class BinaryTreeUtil {
 	}
 	
 	/**
+	 * Given a binary tree, this method compute the minimum height of the tree. 
+	 * We can also use level order traversal and return the height when a first leaf node encountered.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @return
+	 * 		the minimum height of the tree
+	 * 
+	 * @throws NullPointerException
+	 * 		if the given binary tree is null
+	 */
+	public static int minHeight(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Input binary tree should not be null");
+		
+		return minHeight(bt.getRootNode());
+	}
+	
+	/**
+	 * Recursively check the height.
+	 * 
+	 * @param node
+	 * 		current subtree root
+	 * 
+	 * @return
+	 * 		minimum height
+	 */
+	private static int minHeight(BTNode node) {
+		if (node == null)
+			return 0;
+
+		if (node.left == null && node.right == null)
+			return 1;
+
+		if (node.left == null)
+			return minHeight(node.right) + 1;
+
+		if (node.right == null)
+			return minHeight(node.left) + 1;
+
+		return Math.min(minHeight(node.left), minHeight(node.right)) + 1;
+	}
+	
+	/**
 	 * Given a binary tree, this method counts the leaf nodes.
 	 * 
 	 * @param bt
@@ -225,6 +310,62 @@ public class BinaryTreeUtil {
 			return countLeafNodes(node.left) + countLeafNodes(node.right);
 	}
 	
+	/**
+	 * Given a binary tree, this method count the univalued( single value) subtrees.
+	 * All the nodes in the subtree contains the same value.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @return
+	 * 		number of univalued subtrees
+	 * 
+	 * @throws NullPointerException
+	 * 		if the binary tree is null
+	 */
+	public static int countUnivaluedSubtrees(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+		
+		int[] count = new int[]{0};
+		
+		countUnivaluedSubtrees(bt.getRootNode(), count);
+		
+		return count[0];
+	}
+	
+	/**
+	 * Recursively check subtree for univalue.
+	 * 
+	 * @param node
+	 * 		current subtree root
+	 * @param count
+	 * 		count of univalued subtrees
+	 * 
+	 * @return
+	 * 		true if subtree is univalue, false otherwise
+	 */
+	private static boolean countUnivaluedSubtrees(BTNode node, int[] count) {
+		if (node == null)
+			return true;
+
+		boolean isLeftUnivalued = countUnivaluedSubtrees(node.left, count);
+		boolean isRightUnivalued = countUnivaluedSubtrees(node.right, count);
+
+		if (isLeftUnivalued == false || isRightUnivalued == false)
+			return false;
+
+		if (node.left != null && node.getData() != node.left.getData())
+			return false;
+
+		if (node.right != null && node.getData() != node.right.getData())
+			return false;
+
+		count[0] = count[0] + 1;
+		
+		return true;
+	}
+
 	/**
 	 * Given a binary tree, this method computes the difference of node sum of
 	 * odd and even level nodes. This can also be achieved using level order
@@ -985,6 +1126,51 @@ public class BinaryTreeUtil {
 	}
 	
 	/**
+	 * Given a binary tree, it check whether it is symmetric tree.
+	 * It checks whether the tree is mirror to itself.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @return
+	 * 		true if it is symmetric, false otherwise
+	 * 
+	 * @throws NullPointerException
+	 * 		if the given binary tree is null
+	 */
+	public static boolean isSymmetric(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+	
+		BTNode node = bt.root;
+		if(node == null)
+			return true;
+		
+		return isSymmetric(bt.root.left, bt.root.right);
+	}
+	
+	/**
+	 * Recursively check the subtrees for symmetry.
+	 * 
+	 * @param node1
+	 * 		first subtree root
+	 * @param node2
+	 * 		second subtree root
+	 * 
+	 * @return
+	 * 		true if they are symmetric, false otherwise
+	 */
+	private static boolean isSymmetric(BTNode node1, BTNode node2) {
+		if (node1 == null && node2 == null)
+			return true;
+
+		if (node1 != null && node2 != null && node1.getData() == node2.getData())
+			return (isSymmetric(node1.left, node2.right) && isSymmetric(node1.right, node2.left));
+
+		return false;
+	}
+	
+	/**
 	 * Given a binary tree, it converts the tree to its mirror image.
 	 * 
 	 * @param bt
@@ -995,8 +1181,8 @@ public class BinaryTreeUtil {
 	 */
 	public static void mirror(BinaryTree bt) {
 		if (bt == null)
-			throw new NullPointerException(
-					"Input binary tree should not be null");
+			throw new NullPointerException("Binary tree should not be null");
+		
 		mirror(bt.getRootNode());
 	}
 
@@ -2627,6 +2813,9 @@ public class BinaryTreeUtil {
 	 * 		true if it is leaf, false otherwise
 	 */
 	private static boolean isLeaf(BTNode node) {
+		if(node == null)
+			return false;
+		
 		if (node.left == null && node.right == null)
 			return true;
 		
@@ -3046,7 +3235,7 @@ public class BinaryTreeUtil {
 
 		maxPathSum(node, max);
 
-		if (max[0] == Integer.MAX_VALUE)
+		if (max[0] == Integer.MIN_VALUE)
 			throw new IllegalStateException("There is no such path exists.");
 
 		return max[0];
@@ -3080,6 +3269,207 @@ public class BinaryTreeUtil {
 		}
 
 		return node.left == null ? rightSum + node.getData() : leftSum + node.getData();
+	}
+	
+	/**
+	 * Given a binary tree, this method returns the maximum path sum
+	 * where the nodes need not be leaves.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @throws NullPointerException
+	 *     	if the given binary tree is null
+	 * @throws IllegalStateException
+	 *  	if there is no such path sum exists because of tree
+	 */
+	public static int maxPathSum1(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+
+		BTNode node = bt.root;
+		
+		int[] sum = new int[] { 0 };
+		
+        maxPathSum1(node, sum);
+        
+        return sum[0];
+	}
+	
+	/**
+	 * Recursively find the max path sum.
+	 * 
+	 * @param node
+	 * 		current subtree root
+	 * @param sum
+	 * 		max path sum till now
+	 * 
+	 * @return
+	 * 		maximum sum path
+	 */
+	private static int maxPathSum1(BTNode node, int[] sum) {
+		if (node == null)
+			return 0;
+
+		int leftSum = maxPathSum1(node.left, sum);
+		int rightSum = maxPathSum1(node.right, sum);
+
+		// One of the path (left or right)
+		int maxHere = Math.max(Math.max(leftSum, rightSum) + node.getData(), node.getData());
+
+		// No possibility of including its ancestors in the path, E.g, node is root
+		int maxRoot = Math.max(maxHere, leftSum + rightSum + node.getData());
+
+		sum[0] = Math.max(sum[0], maxRoot);
+
+		return maxHere;
+	}
+	
+	/**
+	 * Given a binary tree it computes the sum of left leaves in the tree.
+	 * It recursively traverses the tree to find all the left leaf nodes.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @return
+	 * 		sum of all left leaves
+	 * 
+	 * @throws NullPointerException
+	 *    	if the given binary tree is null
+	 */
+	public static int getLeftLeaveSum(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("BinaryTree can not be null.");	
+		
+		return getLeftLeaveSum(bt.root);
+	}
+	
+	/**
+	 * Recursively compute the leaves sum.
+	 * 
+	 * @param node
+	 * 		current subtree root
+	 * 
+	 * @return
+	 * 		sum of left leaves
+	 */
+	private static int getLeftLeaveSum(BTNode node) {
+		if (node == null)
+			return 0;
+
+		int sum = 0;
+
+		if (isLeaf(node.left))
+			sum += node.left.getData();
+		else
+			sum += getLeftLeaveSum(node.left);
+
+		sum += getLeftLeaveSum(node.right);
+
+		return sum;
+	}
+
+	/**
+	 * Given a binary tree it adds the left sum to each node.
+	 * It traverses the tree for each node it adds the left subtree sum.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @throws NullPointerException
+	 *    	if the given binary tree is null
+	 */
+	static void addLeftSum(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("BinaryTree can not be null.");	
+		
+		BTNode node = bt.root;
+		if (node == null)
+			return;
+		
+		addLeftSum(node);
+	}
+	
+	/**
+	 * Recursively update the left sum for each node.
+	 * 
+	 * @param node
+	 * 		current subtree root
+	 * 
+	 * @return
+	 * 		the subtree sum
+	 */
+	private static int addLeftSum(BTNode node) {
+		if (node == null)
+			return 0;
+
+		if (node.left == null && node.right == null)
+			return node.getData();
+
+		int leftSum = addLeftSum(node.left);
+		int rightSum = addLeftSum(node.right);
+
+		node.setData(node.getData() + leftSum);
+
+		return node.getData() + rightSum;
+	}
+	
+	/**
+	 * Given a binary tree it finds the multiplication of sum of leaf nodes in each level.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @return
+	 * 		multiplication of level sum
+	 * 
+	 * @throws NullPointerException
+	 *    	if the given binary tree is null
+	 */
+	static int getMultiplicaitonOfLevelSum(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("BinaryTree can not be null.");
+
+		BTNode node = bt.root;
+		if (node == null)
+			return 0;
+
+		int result = 1;
+		Queue<BTNode> queue = new LinkedList<>();
+		queue.add(node);
+
+		while (!queue.isEmpty()) {
+
+			int nodeCount = queue.size();
+
+			int levelSum = 0;
+			boolean hasLeaf = false;
+
+			while (nodeCount > 0) {
+				BTNode current;
+				current = queue.remove();
+
+				if (isLeaf(current)) {
+					hasLeaf = true;
+					levelSum += current.getData();
+				}
+
+				if (current.left != null)
+					queue.add(current.left);
+
+				if (current.right != null)
+					queue.add(current.right);
+
+				nodeCount--;
+			}
+
+			if (hasLeaf) {
+				result *= levelSum;
+			}
+		}
+
+		return result;
 	}
 	
 	/**
@@ -3175,6 +3565,48 @@ public class BinaryTreeUtil {
 
 		return (isCompleteBinaryTreeRecursive(node.left, 2 * index + 1, size)
 				&& isCompleteBinaryTreeRecursive(node.right, 2 * index + 2, size));
+	}
+	
+	/** 
+	 * Given a binary tree check whether it is a full binary tree or not.
+	 * A full binary tree is a binary tree where each node has either zero or two children.
+	 * 
+	 * @param bt
+	 *    	given binary tree
+	 * 
+	 * @return
+	 * 		true if it is full binary tree, false otherwise
+	 * 
+	 * @throws NullPointerException
+	 *    	if the given binary tree is null
+	 */
+	public static boolean isFullBinaryTree(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("BinaryTree can not be null.");
+	
+		return isFullBinaryTree(bt.root);
+	 }
+	
+	/**
+	 * Recursively check for full binary tree.
+	 * 
+	 * @param node
+	 * 		current subtree root
+	 * 
+	 * @return
+	 * 		true if it is full binary tree, false otherwise
+	 */
+	private static boolean isFullBinaryTree(BTNode node) {
+		if (node == null)
+			return true;
+
+		if (node.left == null && node.right == null)
+			return true;
+
+		if ((node.left != null) && (node.right != null))
+			return isFullBinaryTree(node.left) && isFullBinaryTree(node.right);
+
+		return false;
 	}
 	
 	/**
@@ -3408,6 +3840,51 @@ public class BinaryTreeUtil {
 	}
 	
 	/**
+	 * Given a binary tree, this method removes the half nodes from the tree.
+	 * Half nodes have only one child. Uses post-order traversal.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @throws NullPointerException
+	 *     	if the given binary tree is null
+	 */
+	public static void removeHalfNodes(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+
+		bt.setRoot(removeHalfNodes(bt.root));
+	}
+	
+	/**
+	 * Recursively remove the half nodes.
+	 * 
+	 * @param node
+	 * 		current subtree root
+	 * 
+	 * @return
+	 * 		new root after removing
+	 */
+	private static BTNode removeHalfNodes(BTNode node) {
+		if (node == null)
+			return null;
+
+		node.left = removeHalfNodes(node.left);
+		node.right = removeHalfNodes(node.right);
+
+		if (node.left == null && node.right == null)
+			return node;
+
+		if (node.left == null)
+			return node.right;
+
+		if (node.right == null)
+			return node.left;
+
+		return node;
+	}
+	
+	/**
 	 * Given a binary tree and a path sum, this method removes the path nodes 
 	 * that does not add up the sum path (complete path).
 	 * 
@@ -3460,6 +3937,52 @@ public class BinaryTreeUtil {
 	}
 	
 	/**
+	 * Given a binary tree and a path length, this method removes the path nodes 
+	 * that does not add up the path length (complete path).
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * @param pathLength
+	 * 		given path length
+	 * 
+	 * @throws NullPointerException
+	 *     	if the given binary tree is null
+	 */
+	public static void prunePaths(BinaryTree bt, int pathLength) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+		BTNode node = bt.root;
+		
+		bt.setRoot(prunePaths(node, 1, pathLength));
+	}
+	
+	/**
+	 * Recursively prune the paths which are less then the given length
+	 * 
+	 * @param node
+	 * 		current subtree node
+	 * @param level
+	 * 		current level
+	 * @param pathLength
+	 * 		expected length
+	 * 
+	 * @return
+	 * 		the new tree node after pruning
+	 */
+	private static BTNode prunePaths(BTNode node, int level, int pathLength) {
+		if (node == null)
+			return null;
+
+		node.left = prunePaths(node.left, level + 1, pathLength);
+		node.right = prunePaths(node.right, level + 1, pathLength);
+
+		if (node.left == null && node.right == null && level < pathLength)
+			return null;
+
+		return node;
+	}
+
+	/**
 	 * Given a binary tree, it finds the right node corresponding to the given
 	 * node to its right. Right node is the one where it is at the same level of
 	 * the given node.
@@ -3467,7 +3990,7 @@ public class BinaryTreeUtil {
 	 * @param bt
 	 * 		given binary tree
 	 * @param value
-	 * 		the node velue
+	 * 		the node value
 	 * 
 	 * @return
 	 * 		the right node, or null

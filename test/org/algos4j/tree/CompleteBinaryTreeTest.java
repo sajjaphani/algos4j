@@ -63,5 +63,13 @@ public class CompleteBinaryTreeTest {
 			System.out.println("Binary tree 1 is complete binary tree");
 		else
 			System.out.println("Binary tree 1 is not a complete binary tree");
+		
+		System.out.println();
+		bt1.root.right.right = null;
+		boolean isFull = BinaryTreeUtil.isFullBinaryTree(bt1);
+		if(isFull)
+			System.out.println("Binary tree is a full binary tree");
+		else
+			System.out.println("Binary tree is not a full binary tree");
 	}
 }

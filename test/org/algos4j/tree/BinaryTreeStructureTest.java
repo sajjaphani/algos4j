@@ -53,5 +53,19 @@ public class BinaryTreeStructureTest {
 			System.out.println("Binary trees are quasi isomorphic");
 		else
 			System.out.println("Binary trees are not quasi isomorphic");
+		
+		BinaryTree bt01 = BinaryTreeUtil.createBinaryTree();
+		BinaryTree bt02 = BinaryTreeUtil.createBinaryTree();
+		BinaryTreeUtil.mirror(bt02);
+		BTNode root = new BTNode(Integer.MIN_VALUE);
+		root.left = bt01.root;
+		root.right = bt02.root;
+		BinaryTree tree = new BinaryTree();
+		tree.setRoot(root);
+		boolean isSymmetric = BinaryTreeUtil.isSymmetric(tree);
+		if(isSymmetric)
+			System.out.println("Binary tree is symmetric");
+		else
+			System.out.println("Binary tree is not symmetric");
 	}
 }

@@ -19,11 +19,30 @@ public class BinaryTreePropertyTest {
 		System.out.println("Binary Tree Properties");
 		System.out.println("Size: " + BinaryTreeUtil.size(bt));
 		
+		System.out.println("Binary Tree Search");
+		BTNode searchNode = BinaryTreeUtil.search(bt, 5);
+		if(searchNode == null)
+			System.out.println("Element 5 is not found in the tree");
+		else
+			System.out.println("Element 5 is found in the tree");
+		
+		searchNode = BinaryTreeUtil.search(bt, 15);
+		if(searchNode == null)
+			System.out.println("Element 15 is not found in the tree");
+		else
+			System.out.println("Element 15 is found in the tree");
+		
 		System.out.println();
 		System.out.println("Height: " + BinaryTreeUtil.height(bt));
 		
 		System.out.println();
+		System.out.println("Min Height/Depth: " + BinaryTreeUtil.minHeight(bt));
+		
+		System.out.println();
 		System.out.println("Leaf Nodes: " + BinaryTreeUtil.countLeafNodes(bt));
+		
+		System.out.println();
+		System.out.println("Univalued (Single value) subtrees: " + BinaryTreeUtil.countUnivaluedSubtrees(bt));
 		
 		System.out.println();
 		BTNode deepestNode = BinaryTreeUtil.deepestLeftLeaf(bt);
