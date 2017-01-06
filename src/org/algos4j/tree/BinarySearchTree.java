@@ -3,10 +3,12 @@ package org.algos4j.tree;
 /**
  * This class represents a Binary Search Tree implementation. 
  * A Binary Search Tree is a binary tree data structure which has the following properties: 
- * The left subtree of a node contains keys less than the node's key. 
- * The right subtree of a node contains keys greater than the node's key.
- * The left and right subtrees must also be a binary search tree. 
- * No duplicate nodes are allowed.
+ * <ul>
+ * <li>The left subtree of a node contains keys less than the node's key.</li>
+ * <li>The right subtree of a node contains keys greater than the node's key.</li>
+ * <li>The left and right subtrees must also be a binary search tree. </li>
+ * <li>No duplicate nodes are allowed.</li>
+ * </ul>
  * 
  * @author psajja
  *
@@ -85,6 +87,7 @@ public class BinarySearchTree extends BinaryTree {
 
 		if (node.right == null)
 			return node;
+		
 		return max(node.right);
 	}
 	
@@ -95,8 +98,10 @@ public class BinarySearchTree extends BinaryTree {
 	protected BTNode min(BTNode node) {
 		if (node == null)
 			return null;
+		
 		if (node.left == null)
 			return node;
+		
 		return min(node.left);
 	}
 }

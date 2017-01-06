@@ -4001,6 +4001,7 @@ public class BinaryTreeUtil {
 	static BTNode findNextRight(BinaryTree bt, int value) {
 		if (bt == null)
 			throw new NullPointerException("Binary tree should not be null");
+	
 		BTNode first = bt.root;
 		if (first == null)
 			return null;
@@ -4035,5 +4036,49 @@ public class BinaryTreeUtil {
 		}
 
 		return null;
+	}
+	
+	/**
+	 * Given a binary tree, this method checks whether it is a binary search tree based on current nodes.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @return
+	 * 		true if it is binary search tree, false otherwise
+	 * 
+	 * @throws NullPointerException
+	 *     	if the given binary tree is null
+	 */
+	public static boolean isBinarySearchTree(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+
+		return isBinarySearchTree(bt.root, Integer.MIN_VALUE, Integer.MAX_VALUE);
+	}
+	
+	/**
+	 * Recursively check for each subtree for binary search tree.
+	 * 
+	 * @param node
+	 * 		current subtree root
+	 * 
+	 * @param min
+	 * 		min permitted value for this subtree
+	 * @param max
+	 * 		max permitted value for this subtree
+	 * 
+	 * @return
+	 * 		true if it is binary search tree, false otherwise
+	 */
+	private static boolean isBinarySearchTree(BTNode node, int min, int max) {
+		if (node == null)
+			return true;
+
+		if (node.getData() < min || node.getData() > max)
+			return false;
+
+		return isBinarySearchTree(node.left, min, node.getData() - 1)
+				&& isBinarySearchTree(node.right, node.getData() + 1, max);
 	}
 }
