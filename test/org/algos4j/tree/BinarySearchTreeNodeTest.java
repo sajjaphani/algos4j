@@ -36,5 +36,41 @@ public class BinarySearchTreeNodeTest {
 			System.out.println("Least common ancestor for 10 and 30 is " + ancestor.getData());
 		else
 			System.out.println("No such ancestor node exists.");
+		
+		BTNode kthSmall = BinarySearchTreeUtil.findKthSmallest(bst, 3);
+		if(kthSmall != null)
+			System.out.println("3rd smallest element " + kthSmall.getData());
+		else
+			System.out.println("No such node exists.");
+		
+		kthSmall = BinarySearchTreeUtil.findKthSmallest1(bst, 3);
+		if(kthSmall != null)
+			System.out.println("3rd smallest element " + kthSmall.getData());
+		else
+			System.out.println("No such node exists.");
+		
+		kthSmall = BinarySearchTreeUtil.findKthSmallestMorris(bst, 3);
+		if(kthSmall != null)
+			System.out.println("3rd smallest element Morris " + kthSmall.getData());
+		else
+			System.out.println("No such node exists.");
+		
+		BTNode kthLarge = BinarySearchTreeUtil.findKthLargest(bst, 3);
+		if(kthLarge != null)
+			System.out.println("3rd largest element " + kthLarge.getData());
+		else
+			System.out.println("No such node exists.");
+		
+		BTNode ceil = BinarySearchTreeUtil.ceil(bst, 32);
+		if(ceil != null)
+			System.out.println("Ceil for 32 is " + ceil.getData());
+		else
+			System.out.println("No such node exists.");
+		
+		BTNode floor = BinarySearchTreeUtil.floor(bst, 32);
+		if(floor != null)
+			System.out.println("Floor for 32 is " + floor.getData());
+		else
+			System.out.println("No such node exists.");
 	}
 }
