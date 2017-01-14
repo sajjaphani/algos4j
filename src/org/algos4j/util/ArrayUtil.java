@@ -81,4 +81,33 @@ public class ArrayUtil {
 
 		printInorder(array, start * 2 + 2, end);
 	}
+	
+	/**
+	 * Given a preorder traversal, this method checks whether the given tree has
+	 * exactly one child at each node. If all nodes have only one child in a
+	 * BST, then for each node, the descendants of it are either smaller or
+	 * larger than the node.
+	 * 
+	 * @param preorder
+	 *     	given preorder traversal
+	 * 
+	 * @return 
+	 * 		true if each node has a single child, false otherwise
+	 * 
+	 * @throws NullPointerException
+	 *       	if the input array is null
+	 */
+	public static boolean hasOneChild(int[] preorder) {
+		if (preorder == null)
+			throw new NullPointerException("Preorder array should not be null");
+
+		int size = preorder.length;
+
+		for (int i = 0; i < size - 1; i++) {
+			if (preorder[i + 1] < preorder[i] && preorder[i] < preorder[size - 1])
+				return false;
+		}
+
+		return true;
+	}
 }

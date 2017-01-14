@@ -788,4 +788,175 @@ public class BinarySearchTreeUtil {
 
 		return (floor != null && floor.getData() <= value) ? floor : node;
 	}
+	
+	/**
+	 * Given a binary search tree, it transforms the tree to greater sum tree.
+	 * After transformation each node contains the sum of all nodes greater than that.
+	 * Reverse inorder.
+	 * 
+	 * @param bst
+	 * 		given binary search tree
+	 * 
+	 * @throws NullPointerException
+	 * 		if the given binary search tree is null
+	 */
+	static void toSumTree(BinarySearchTree bst) {
+		if (bst == null)
+			throw new NullPointerException("Binary search tree should not be null.");
+
+		int[] sum = new int[] { 0 };
+
+		toSumTree(bst.root, sum);
+	}
+	
+	/**
+	 * Recursively update the sum of each node.
+	 * 
+	 * @param node
+	 * 		current subtree root
+	 * @param sum
+	 * 		sum till now
+	 */
+	private static void toSumTree(BTNode node, int[] sum) {
+		if (node == null)
+			return;
+
+		toSumTree(node.right, sum);
+
+		sum[0] = sum[0] + node.getData();
+
+		node.setData(sum[0] - node.getData());
+
+		toSumTree(node.left, sum);
+	}
+	
+	/**
+	 * Given a binary search tree, where two node values are swapped. 
+	 * Corrects the node values to correct the BST.
+	 * 
+	 * @param bst
+	 * 		given binary search tree
+	 * 
+	 * @throws NullPointerException
+	 * 		if the given binary search tree is null
+	 */
+	public static void correctTree(BinarySearchTree bst) {
+		if (bst == null)
+			throw new NullPointerException("Binary search tree should not be null.");
+
+		BTNode[] nodes = new BTNode[3];
+		correctTree(bst.root, nodes, null);
+
+		// Nodes are distant
+		if (nodes[0] != null && nodes[2] != null)
+			swap(nodes[0], nodes[2]);
+		else if (nodes[0] != null && nodes[1] != null) // Nodes are adjacent
+			swap(nodes[0], nodes[1]);
+	}
+
+	/**
+	 * Recursively traverse (inorder) the tree to find the nodes to be swapped.
+	 * If the swapped nodes are adjacent to each other, then nodes[0] and nodes[1]
+	 * contain the nodes otherwise nodes[0] and nodes[2] contain the nodes to be swapped.
+	 * 
+	 * @param node
+	 * 		current subtree root
+	 * @param nodes
+	 * 		the node references contains the nodes to be swapped
+	 * @param prev
+	 * 		previous node in traversal
+	 */
+	private static void correctTree(BTNode node, BTNode[] nodes, BTNode prev) {
+		if (node == null)
+			return;
+
+		correctTree(node.left, nodes, prev);
+
+		// Violation of BST
+		if (prev != null && node.getData() < prev.getData()) {
+			if (nodes[0] == null) {
+				nodes[0] = prev;
+				nodes[1] = node;
+			} else
+				nodes[2] = node;
+		}
+
+		correctTree(node.right, nodes, node);
+	}
+
+	/**
+	 * Swap the data of two nodes.
+	 * 
+	 * @param node1
+	 * 		first node
+	 * @param node2
+	 * 		second node
+	 */
+	private static void swap(BTNode node1, BTNode node2) {
+		int temp = node1.getData();
+		node1.setData(node2.getData());
+		node2.setData(temp);
+	}
+	
+	/**
+	 * Given two binary search trees, it prints the common nodes (intersection).
+	 * Follows iterative inorder traversal. Time: O(n), Space: O(h1 + h2) .
+	 * 
+	 * @param bst1
+	 * 		first binary search tree
+	 * @param bst2
+	 * 		second binary search tree
+	 * 
+	 * @throws NullPointerException
+	 * 		if the given binary search tree is null
+	 */
+	static void printCommonNodes(BinarySearchTree bst1, BinarySearchTree bst2) {
+		if (bst1 == null || bst2 == null)
+			throw new NullPointerException("Binary search tree should not be null.");
+
+		BTNode node1 = bst1.root;
+		BTNode node2 = bst2.root;
+
+		Stack<BTNode> stack1 = new Stack<>();
+		Stack<BTNode> stack2 = new Stack<>();
+
+		pushLeft(node1, stack1);
+		pushLeft(node2, stack2);
+
+		while (!stack1.empty() && !stack2.empty()) {
+			node1 = stack1.peek();
+			node2 = stack2.peek();
+
+			if (node1.getData() == node2.getData()) {
+				System.out.print(node1.getData() + " ");
+				stack1.pop();
+				stack2.pop();
+
+				// Inorder successor
+				pushLeft(node1.right, stack1);
+				pushLeft(node2.right, stack2);
+			} else if (node1.getData() < node2.getData()) {
+				stack1.pop();
+				node1 = node1.right;
+			} else if (node1.getData() > node2.getData()) {
+				stack2.pop();
+				node2 = node2.right;
+			}
+		}
+	}
+
+	/**
+	 * Push the left of the current node elements recursively.
+	 * 
+	 * @param node
+	 * 		current subtree root
+	 * @param stack
+	 * 		stack to push
+	 */
+	private static void pushLeft(BTNode node, Stack<BTNode> stack) {
+		while (node != null) {
+			stack.push(node);
+			node = node.left;
+		}
+	}
 }

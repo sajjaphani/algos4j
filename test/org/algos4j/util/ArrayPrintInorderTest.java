@@ -14,6 +14,7 @@ public class ArrayPrintInorderTest {
 	 */
 	public static void main(String[] args) {
 
+		// Tree
 		int[] elements = new int[] {4, 2, 5, 1, 3};
 		ArrayUtil.printInorder(elements);
 	}
