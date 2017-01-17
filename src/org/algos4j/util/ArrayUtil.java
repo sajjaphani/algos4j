@@ -1,5 +1,9 @@
 package org.algos4j.util;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Some utilities on arrays.
  * 
@@ -109,5 +113,316 @@ public class ArrayUtil {
 		}
 
 		return true;
+	}
+	
+	/**
+	 * Given an array it checks whether the array elements are in sorted order.
+	 * Ascending order.
+	 * 
+	 * @param array
+	 * 		given array
+	 * 
+	 * @return
+	 * 		true if the array elements are in sorted order
+	 * 
+	 * @throws NullPointerException
+	 *       	if the input array is null
+	 */
+	public static boolean isSorted(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Input array should not be null");
+		
+		for (int i = 1; i < array.length; i++) {
+			if (array[i - 1] > array[i])
+				return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Searches for an element in a sorted array with the given key.
+	 * This method does not test whether the array is sorted.
+	 * 
+	 * @param array
+	 *   	input array
+	 * @param key
+	 *    	given key
+	 * 
+	 * @return 
+	 * 		index if element is found, -1 otherwise.
+	 * 
+	 * @throws NullPointerException
+	 *    	if the input array is null
+	 */
+	public static int binarySearch(int[] array, int key) {
+		if (array == null)
+			throw new NullPointerException("Input array should not be null");
+
+		int low = 0;
+		int high = array.length - 1;
+		while (low <= high) {
+			int mid = low + (high - low) / 2;
+			if (key == array[mid])
+				return mid;
+			else if (key < array[mid])
+				high = mid - 1;
+			else
+				low = mid + 1;
+		}
+
+		return -1;
+	}
+	
+	/**
+	 * Given an array and a sum, this method finds whether there is a pair
+	 * exists in the array with the sum. Returns first occurrence.
+	 * 
+	 * This method first sorts the array using Merge sort and then checks from
+	 * left to right for any pairs. Time: O(n log n).
+	 * 
+	 * @param array
+	 *     	the input integer array
+	 * @param sum
+	 *     the sum to find
+	 *     
+	 * @return
+	 *     the array pair if exists, null otherwise
+	 *     
+	 * @throws NullPointerException
+	 *    	if the input array is null
+	 */
+	static int[] getPair0(int[] array, int sum) {
+		if (array == null)
+			throw new NullPointerException("Input array should not be null");
+		
+		Arrays.sort(array);
+
+		int left = 0;
+		int right = array.length - 1;
+		while (left < right) {
+			if (array[left] + array[right] == sum) {
+				return new int[] {array[left], array[right]};
+				// left++;
+				// right--;
+			} else if (array[left] + array[right] < sum)
+				left++;
+			else
+				right--;
+		}
+		
+		return null;
+	}
+
+	/**
+	 * Time optimized version of {@link #hasPair(int[], int)}.
+	 * 
+	 * Uses Map for storing the values. Time: O(n), Space: O(n).
+	 * 
+	 * @param array
+	 *     	the input integer array
+	 * @param sum
+	 *     	the sum to find
+	 * @return 
+	 * 		the array pair if exists, null otherwise
+	 *     
+	 * @throws NullPointerException
+	 *    	if the input array is null
+	 */
+	public static int[] getPair(int[] array, int sum) {
+		if (array == null)
+			throw new NullPointerException("Input array should not be null");
+		
+		int rem;
+		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+
+		for (int i = 0; i < array.length; i++) {
+			rem = sum - array[i];
+			if (map.containsKey(rem)) {
+				//System.out.println(array[i] + " " + temp);
+				return new int[] { array[i], rem };
+			}
+			map.put(array[i], 1);
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Given an integer array it finds the majority element if one exists. A
+	 * majority element in an array is an element that appears more than
+	 * half times. There exists only one such element in any given array.
+	 * Time: O(n), space: O(n)
+	 * 
+	 * @param array
+	 *    	integer array
+	 * 
+	 * @return 
+	 * 		majority element if exists, {@link Integer#MIN_VALUE} otherwise
+	 * 
+	 * @throws NullPointerException
+	 *    	if the input array is null
+	 */
+	static int getMajorityElement0(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Input array should not be null");
+
+		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+		int count = 0;
+		for (int element : array) {
+			count = 0;
+			if (map.containsKey(element))
+				count = map.get(element);
+			count++;
+			if (count > array.length / 2)
+				return element;
+			map.put(element, count);
+		}
+
+		return Integer.MIN_VALUE;
+	}
+	
+	/**
+	 * This method computes the majority element using which is using
+	 * Bayer-Moore’s Voting Algorithm. It is a two phase algorithm and in each
+	 * phase it takes time O(n). The majority vote problem is to determine in
+	 * any given sequence of choices whether there is a choice with more
+	 * occurrences than all the others.
+	 * 
+	 * @param array
+	 *     	integer array
+	 * 
+	 * @return 
+	 * 		majority element if exists, {@link Integer#MIN_VALUE} otherwise
+	 * 
+	 * @throws NullPointerException
+	 *     	if the input array is null
+	 */
+	public static int getMajorityElement(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Input array should not be null");
+
+		int size = array.length;
+		int candidate = 0, count = 0;
+		for (int i = 0; i < size; i++) {
+			if (count == 0) {
+				candidate = array[i];
+				count = 1;
+			} else {
+				if (array[i] == candidate) {
+					count++;
+				} else {
+					count--;
+				}
+			}
+		}
+
+		count = 0;
+		for (int i = 0; i < size; i++) {
+			if (array[i] == candidate)
+				count++;
+		}
+
+		if (count > size / 2)
+			return candidate;
+
+		return Integer.MIN_VALUE;
+	}
+	
+	/**
+	 * Given an array of positive integers, all the numbers occur even number of
+	 * times except one number, which occurs odd number of times. Time: O(n).
+	 * 
+	 * @param array
+	 * 		given integer array
+	 * 
+	 * @return 
+	 * 		the number which occurs odd times, zero if all are even times,
+	 *      unknown if multiple numbers occurs odd times.
+	 *      
+	 * @throws NullPointerException
+	 *     	if the input array is null
+	 */
+	public static int findOddNumber(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Input array should not be null");
+		
+		int oddNumber = 0;
+		for (int num : array)
+			oddNumber = oddNumber ^ num;
+
+		return oddNumber;
+	}
+	
+	/**
+	 * Given an array it computes the maximum of sub-array sum.
+	 * This is based on Kadane's algorithm. While scanning the array values, at
+	 * each position, it computes the maximum of sub-array ending at that
+	 * position. The sub-array can be either empty or consists of one more
+	 * element than the maximum sub-array ending at the previous position.
+	 * Dynamic programming problem. Time: O(n).
+	 * 
+	 * @param array
+	 *      	the given input array.
+	 * 
+	 * @return 
+	 * 		the maximum sub-array sum
+	 * 
+	 * @throws NullPointerException
+	 *     	if the input array is null
+	 */
+	public static int maxSumSubArray(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Input array should not be null");
+
+		int maxHere = array[0];
+		int maxSoFar = array[0];
+
+		for (int i = 1; i < array.length; i++) {
+			maxHere = Math.max(array[i], maxHere + array[i]);
+			maxSoFar = Math.max(maxSoFar, maxHere);
+		}
+
+		return maxSoFar;
+	}
+	
+	/**
+	 * A variant version of {@link #maxSumSubArray(int[])}, which also returns the
+	 * start and end index of the sub-array.
+	 * 
+	 * @param array
+	 *     	the given input array.
+	 * 
+	 * @return 
+	 * 		an array whose values are, {0: max sum, 1: start index, 2: end index}
+	 * 
+	 * @throws NullPointerException
+	 *     	if the input array is null
+	 */
+	static int[] maxSumSubArray1(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Input array should not be null");
+		
+		int maxHere = array[0];
+		int maxSoFar = array[0];
+
+		int[] result = { array[0], 0, 0 };
+		int tmpStart = 0;
+		for (int i = 1; i < array.length; i++) {
+			if (maxHere + array[i] > array[i]) {
+				maxHere = maxHere + array[i];
+			} else {
+				maxHere = array[i];
+				tmpStart = i;
+			}
+			if (maxHere > maxSoFar) {
+				maxSoFar = maxHere;
+				result[0] = maxSoFar;
+				result[1] = tmpStart;
+				result[2] = i;
+			}
+		}
+
+		return result;
 	}
 }
