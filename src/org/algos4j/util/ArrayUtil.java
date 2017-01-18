@@ -425,4 +425,228 @@ public class ArrayUtil {
 
 		return result;
 	}
+	
+	/**
+	 * Given an array of n numbers, which are supposed to be in the range of 
+	 * 1 to n + 1 with no duplicates, find the number that is missing. We can 
+	 * compute the number based on formulae n*(n+1)/2, but integer overflow 
+	 * might occur. This method is based on XOR operation. Eliminates integer 
+	 * overflow. Time: O(n).
+	 * 
+	 * @param array
+	 * 		integer array
+	 * 
+	 * @return
+	 * 		missing number if the array is proper, otherwise unknown for the same reason
+	 * 
+	 * @throws NullPointerException
+	 *     	if the input array is null
+	 */
+	public static int findMissingNumber(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Input array should not be null");
+		
+		int xorArray = array[0];
+		int xorNumbers = 1;
+
+		// XOR of array elements
+		for (int i = 1; i < array.length; i++)
+			xorArray = xorArray ^ array[i];
+
+		// XOR of numbers from 1 to n + 1
+		for (int i = 2; i <= array.length + 1; i++)
+			xorNumbers = xorNumbers ^ i;
+
+		return (xorArray ^ xorNumbers);
+	}
+	
+	/**
+	 * Given an array, which is sorted and rotated, it finds the given number in
+	 * the array. It uses a variant of Binary Search. Based on the fact that one
+	 * sub-array will always be sorted. This approach does not work if the array
+	 * has duplicates as it is not possible to determine the pivoted point.
+	 * 
+	 * Computes in O(log n).
+	 * 
+	 * @param array
+	 * 		the integer array
+	 * 
+	 * @return 
+	 * 		number of times the array is rotated.
+	 * 
+	 * @throws NullPointerException
+	 *  	if the input array is null
+	 */
+	public static int searchPivoted(int[] array, int elt) {
+		if (array == null)
+			throw new NullPointerException("Input array should not be null");
+
+		int low = 0, high = array.length - 1;
+		int mid;
+
+		while (low <= high) {
+			mid = (low + high) / 2;
+			if (elt == array[mid])
+				return mid;
+			if (array[mid] <= array[high]) {
+				if (elt > array[mid] && elt <= array[high])
+					low = mid + 1;
+				else
+					high = mid - 1;
+			} else {
+				if (elt <= array[mid] && elt >= array[low])
+					high = mid - 1;
+				else
+					low = mid + 1;
+			}
+		}
+
+		return -1;
+	}
+	
+	/**
+	 * Given an array, which is sorted and rotated, it finds the number of
+	 * rotations in the array. The number of times the array is rotated towards
+	 * right. It uses a variant of Binary Search, based on the fact that the
+	 * next and previous elements of the pivot element are greater. This
+	 * approach doesn't handle the duplicates in the given array. Time: O(log n).
+	 * 
+	 * @param array
+	 *    	the integer array
+	 * 
+	 * @return 
+	 * 		number of times the array is rotated.
+	 * 
+	 * @throws NullPointerException
+	 *     	if the input array is null
+	 */
+	public static int findRotations(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Input array should not be null");
+
+		int size = array.length;
+		int low = 0, high = size - 1;
+		int next, prev;
+		int mid = 0;
+
+		while (low <= high) {
+			if (array[low] <= array[high])
+				return low;
+		
+			mid = (low + high) / 2;
+			next = (mid + 1) % size;
+			prev = (mid - 1 + size) % size;
+			if (array[mid] < array[next] && array[mid] < array[prev])
+				return mid;
+		
+			if (array[mid] < array[high])
+				high = mid - 1;
+
+			if (array[mid] > array[low])
+				low = mid + 1;
+		}
+
+		return -1;
+	}
+	
+	/**
+	 * Given two arrays, where first one has m + n positions where the empty
+	 * slots are represented by {@link Integer#MIN_VALUE}, this method merges
+	 * the second array elements at alternative positions into first one.
+	 * 
+	 * @param array1
+	 * 		first array (m + n) positions
+	 * @param array2
+	 * 		second array (n) positions
+	 * 
+	 * @throws NullPointerException
+	 *     	if any of the input array is null
+	 */
+	public static void merge(int[] array1, int[] array2) {
+		if (array1 == null || array2 == null)
+			throw new NullPointerException("Input array should not be null");
+
+		// Move empty slots to right end
+		for (int i = array1.length - 1, j = array1.length - 1; i >= 0; i--) {
+			if (array1[i] != Integer.MIN_VALUE) {
+				array1[j] = array1[i];
+				j--;
+			}
+		}
+
+		int i = array2.length;
+		int j = 0, k = 0;
+
+		while (k < (array1.length)) {
+			if ((i < (array1.length) && array1[i] <= array2[j]) || (j == array2.length)) {
+				array1[k] = array1[i];
+				k++;
+				i++;
+			} else {
+				array1[k] = array2[j];
+				k++;
+				j++;
+			}
+		}
+	}
+	
+	/**
+	 * Given an integer array, it reverses the array.
+	 * 
+	 * @param array
+	 *    	the input array
+	 * 
+	 * @throws NullPointerException
+	 *    	if any of the input array is null
+	 */
+	public static void reverse(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Input array should not be null");
+		
+		int size = array.length;
+		for (int i = 0; i < size / 2; i++) {
+			int temp = array[i];
+			array[i] = array[size - i - 1];
+			array[size - i - 1] = temp;
+		}
+	}
+
+	/**
+	 * Reverses the given integer array. Recursive version.
+	 * 
+	 * @param array
+	 *     	the input array to reverse
+	 *     
+	 * @throws NullPointerException
+	 *    	if any of the input array is null
+	 */
+	public static void reverseRecursive(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Input array should not be null");
+		
+		if (array.length <= 1)
+			return;
+		reverse(array, 0, array.length - 1);
+	}
+
+	/**
+	 * Reverse recursively from the given range elements.
+	 * 
+	 * @param arr
+	 * 		integer array
+	 * @param start
+	 * 		start index
+	 * @param end
+	 * 		end index
+	 */
+	private static void reverse(int arr[], int start, int end) {
+		if (start >= end)
+			return;
+
+		int temp;
+		temp = arr[start];
+		arr[start] = arr[end];
+		arr[end] = temp;
+		reverse(arr, start + 1, end - 1);
+	}
 }

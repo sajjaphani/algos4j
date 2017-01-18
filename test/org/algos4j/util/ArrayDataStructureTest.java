@@ -76,5 +76,31 @@ public class ArrayDataStructureTest {
 		System.out.println("Max Sum: " + ArrayUtil.maxSumSubArray(elements5));
 		int[] result = ArrayUtil.maxSumSubArray1(elements5);
 		System.out.println("Max Sum: " + result[0] + ", Start: " + result[1] + ", End: " + result[2]);
+		
+		int[] elements6 = { 1, 2, 4, 5, 6, 3, 8, 7 };
+		System.out.println();
+		System.out.println(Arrays.toString(elements6));
+		System.out.println("Missing Number: " + ArrayUtil.findMissingNumber(elements6));
+		
+		int[] elements7 = { 4, 5, 6, 7, 1, 2, 3};
+		System.out.println();
+		System.out.println(Arrays.toString(elements7));
+		System.out.println("3 Found at: " + ArrayUtil.searchPivoted(elements7, 3));
+		System.out.println("Number of rations: " + ArrayUtil.findRotations(elements7));
+		
+		int[] array1 = {2, 8, Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE, 13, Integer.MIN_VALUE, 15, 20};
+        int[] array2 = {5, 7, 9, 25};
+        System.out.println();
+		System.out.println(Arrays.toString(array1));
+		System.out.println(Arrays.toString(array2));
+		ArrayUtil.merge(array1, array2);
+		System.out.println("Merge: " + Arrays.toString(array1));
+		
+		System.out.println();
+		System.out.println(Arrays.toString(elements7));
+		ArrayUtil.reverse(elements7);
+		System.out.println("Reverse: " + Arrays.toString(elements7));
+		ArrayUtil.reverseRecursive(elements7);
+		System.out.println("Reverse Recursive: " + Arrays.toString(elements7));
 	}
 }
