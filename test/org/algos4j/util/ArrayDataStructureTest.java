@@ -77,6 +77,11 @@ public class ArrayDataStructureTest {
 		int[] result = ArrayUtil.maxSumSubArray1(elements5);
 		System.out.println("Max Sum: " + result[0] + ", Start: " + result[1] + ", End: " + result[2]);
 		
+		int[] elements5x =  {5, 5, 10, 100, 10, 5};
+        System.out.println();
+		System.out.println(Arrays.toString(elements5x));
+		System.out.println("Max Sum (Non consecutive): " + ArrayUtil.maxSumNotAdjacent(elements5x));
+		
 		int[] elements6 = { 1, 2, 4, 5, 6, 3, 8, 7 };
 		System.out.println();
 		System.out.println(Arrays.toString(elements6));
@@ -102,5 +107,11 @@ public class ArrayDataStructureTest {
 		System.out.println("Reverse: " + Arrays.toString(elements7));
 		ArrayUtil.reverseRecursive(elements7);
 		System.out.println("Reverse Recursive: " + Arrays.toString(elements7));
+		
+		int[] elements7x = { 16, 17, 4, 3, 5, 2 };
+		System.out.println();
+		System.out.println(Arrays.toString(elements7x));
+		System.out.print("Leaders: ");
+		ArrayUtil.printLeaders(elements7x);
 	}
 }

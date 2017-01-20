@@ -427,6 +427,36 @@ public class ArrayUtil {
 	}
 	
 	/**
+	 * Given an array, it finds the maximum sum from the array such that 
+	 * no two consecutive elements are not picked to compute the sum.
+	 * 
+	 * @param array
+	 *     	the given input array.
+	 * 
+	 * @return 
+	 * 		an array whose values are, {0: max sum, 1: start index, 2: end index}
+	 * 
+	 * @throws NullPointerException
+	 *     	if the input array is null
+	 */
+	public static int maxSumNotAdjacent(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Input array should not be null");
+
+		int sumInclusive = array[0];
+		int sumExclusive = 0;
+
+		for (int i = 1; i < array.length; i++) {
+			int newExclusive = Math.max(sumInclusive, sumExclusive);
+
+			sumInclusive = sumExclusive + array[i];
+			sumExclusive = newExclusive;
+		}
+
+		return Math.max(sumInclusive, sumExclusive);
+	}
+	
+	/**
 	 * Given an array of n numbers, which are supposed to be in the range of 
 	 * 1 to n + 1 with no duplicates, find the number that is missing. We can 
 	 * compute the number based on formulae n*(n+1)/2, but integer overflow 
@@ -648,5 +678,30 @@ public class ArrayUtil {
 		array[start] = array[end];
 		array[end] = temp;
 		reverse(array, start + 1, end - 1);
+	}
+	
+	/**
+	 * 
+	 * Given an array of integers, this method all the leaders in the array. 
+	 * An element is leader if it is greater than all the elements to its right. 
+	 * 
+	 * @throws NullPointerException
+	 *    	if any of the input array is null
+	 */
+	static void printLeaders(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Input array should not be null");
+
+		int maxFromRight = array[array.length - 1];
+
+		// Right most is always leader
+		System.out.print(maxFromRight);
+
+		for (int i = array.length - 2; i >= 0; i--) {
+			if (maxFromRight < array[i]) {
+				System.out.print(" " + array[i]);
+				maxFromRight = array[i];
+			}
+		}
 	}
 }
