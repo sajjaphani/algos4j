@@ -4081,4 +4081,97 @@ public class BinaryTreeUtil {
 		return isBinarySearchTree(node.left, min, node.getData() - 1)
 				&& isBinarySearchTree(node.right, node.getData() + 1, max);
 	}
+	
+	/**
+	 * Given a binary tree, it converts to a doubly circular linked list. It re
+	 * arranges the internal nodes to make them appear as list. If an ordered
+	 * binary tree is given it produces a sorted linked list. The 'prev' links
+	 * will be stored in the 'left' field and the 'next' links will be stored in
+	 * the 'right' field. The transformed list is equal to inorder traversal.
+	 * Time: O(n).
+	 * 
+	 * @see <a href="http://cslibrary.stanford.edu/109/TreeListRecursion.html">
+	 *      The Great Tree-List Recursion Problem</a>
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @throws NullPointerException
+	 *     	if the given binary tree is null
+	 */
+	static void toList(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+		
+		BTNode root = bt.root;
+		bt.root = toList(root);
+	}
+
+	/**
+	 * Recursively change the tree to circular list.
+	 * 
+	 * @param node
+	 * 		current tree root
+	 * 
+	 * @return
+	 * 		head of the node after transforming the tree to list
+	 */
+	private static BTNode toList(BTNode node) {
+		if (node == null)
+			return null;
+
+		BTNode leftList = toList(node.left);
+		BTNode rightList = toList(node.right);
+
+		// Circular link
+		node.left = node;
+		node.right = node;
+
+		// Append (leftList, node, rightList)
+		leftList = append(leftList, node);
+		leftList = append(leftList, rightList);
+
+		return leftList;
+	}
+
+	/**
+     * Appends the two circular doubly linked lists.
+     * 
+     * @param node1
+     * 		first list
+     * @param node2
+     * 		second list
+     * 
+     * @return
+     * 		resultant circular list
+     */
+	private static BTNode append(BTNode node1, BTNode node2) {
+		if (node1 == null)
+			return node2;
+		if (node2 == null)
+			return node1;
+
+		// Catch the left nodes (prev)
+		BTNode firstLeft = node1.left;
+		BTNode secondLeft = node2.left;
+
+		// Join the two nodes to make it circularly connected
+		join(firstLeft, node2);
+		join(secondLeft, node1);
+
+		return node1;
+	}
+    
+	/**
+	 * Join the two nodes where second immediately follow the first.
+	 * 
+	 * @param node1
+	 * 		first node
+	 * @param node2
+	 * 		second node
+	 */
+	private static void join(BTNode node1, BTNode node2) {
+		node1.right = node2;
+		node2.left = node1;
+	}
 }
