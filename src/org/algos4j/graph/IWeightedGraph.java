@@ -29,6 +29,14 @@ public interface IWeightedGraph {
 	public int edges();
 	
 	/**
+	 * Indicates whether this graph is a directed graph.
+	 * 
+	 * @return
+	 * 		true if it is directed graph, false otherwise
+	 */
+	public boolean isDirected();
+	
+	/**
 	 * Add an edge between fromVertex and toVertex with the given weight.
 	 * 
 	 * @param fromVertex

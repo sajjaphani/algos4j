@@ -28,6 +28,14 @@ public class GraphAdjMatrix extends AbstractGraph {
 		this.adjMatrix = new boolean[vertices][vertices];
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.algos4j.graph.IGraph#isDirected()
+	 */
+	@Override
+	public boolean isDirected() {
+		return false;
+	}
+	
 	/**
 	 * Add an edge between fromVertex and toVertex.
 	 * 

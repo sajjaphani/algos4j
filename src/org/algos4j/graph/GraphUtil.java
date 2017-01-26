@@ -92,8 +92,10 @@ public class GraphUtil {
 		if (graph == null)
 			throw new NullPointerException("Graph can not be null.");
 
-		// TODO - we should restrict the graph to be directed graph.
-
+		// The graph should be directed graph
+		if(!graph.isDirected())
+			throw new IllegalArgumentException("Given graph should be directed graph.");
+		
 		int vertices = graph.vertices();
 		Stack<Integer> stack = new Stack<>();
 
@@ -224,7 +226,6 @@ public class GraphUtil {
 		List<Integer> path = new ArrayList<Integer>();
 
 		if (visited[toVertex]) {
-
 			for (int x = toVertex; x != fromVertex; x = edgeTo[x])
 				path.add(x);
 

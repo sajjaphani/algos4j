@@ -32,6 +32,14 @@ public class DigraphAdjList extends AbstractGraph {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.algos4j.graph.IGraph#isDirected()
+	 */
+	@Override
+	public boolean isDirected() {
+		return true;
+	}
+	
 	/**
 	 * Add an edge between fromVertex and toVertex.
 	 * 

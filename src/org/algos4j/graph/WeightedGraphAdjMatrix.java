@@ -27,6 +27,14 @@ public class WeightedGraphAdjMatrix extends AbstractWeightedGraph {
 		this.adjMatrix = new Edge[vertices][vertices];
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.algos4j.graph.IWeightedGraph#isDirected()
+	 */
+	@Override
+	public boolean isDirected() {
+		return false;
+	}
+	
 	/**
 	 * Add an edge between fromVertex and toVertex with the given weight.
 	 * 

@@ -32,6 +32,14 @@ public class WeightedDigraphAdjList extends AbstractWeightedGraph {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.algos4j.graph.IWeightedGraph#isDirected()
+	 */
+	@Override
+	public boolean isDirected() {
+		return true;
+	}
+	
 	/**
 	 * Add an edge between fromVertex and toVertex with the given weight.
 	 * 

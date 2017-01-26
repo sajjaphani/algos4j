@@ -29,6 +29,14 @@ public interface IGraph {
 	public int edges();
 	
 	/**
+	 * Indicates whether this graph is a directed graph.
+	 * 
+	 * @return
+	 * 		true if it is directed graph, false otherwise
+	 */
+	public boolean isDirected();
+	
+	/**
 	 * Adds an edge between fromVertex and toVertex.
 	 * 
 	 * @param fromVertex
