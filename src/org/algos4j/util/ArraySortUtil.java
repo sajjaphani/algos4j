@@ -6,7 +6,8 @@ import java.util.Map;
 
 /**
  * This class will contain utility methods to sort arrays.
- * It also contains methods which has relation to sorting.
+ * It also contains methods which has relation to sorting, e.g utilities on sorted arrays.
+ * The methods may assume that the array is sorted and does not check for sorted or not.
  * 
  * @author psajja
  *
@@ -237,5 +238,356 @@ public class ArraySortUtil {
 		}
 		
 		return result;
+	}
+	
+	/**
+	 * Given an array and an element to find, this method finds the index of
+	 * first occurrence of the element. It returns the sole location if the 
+	 * element does not occur more than once. A variation of binary search.
+	 * 
+	 * @param array
+	 *    	input array
+	 * @param elt
+	 *    	element to find
+	 * 
+	 * @return 
+	 * 		the index of the first occurrence, -1 if element not found
+	 * 
+	 * @throws NullPointerException
+	 * 		if the input array is null
+	 */
+	public static int findFirst(int[] array, int elt) {
+		if (array == null)
+			throw new NullPointerException("Array cannot be null.");
+		
+		int low = 0;
+		int high = array.length - 1;
+		int result = -1;
+		while (low <= high) {
+			int mid = low + (high - low) / 2;
+			if (elt == array[mid]) {
+				result = mid;
+				high = mid - 1;
+			} else if (elt < array[mid])
+				high = mid - 1;
+			else 
+				low = mid + 1;
+		}
+		
+		return result;
+	}
+
+	/**
+	 * Given an array and an element to find, this method finds the index of
+	 * last occurrence of the element. It returns the sole location if the 
+	 * element does not occur more than once. A variation of binary search.
+	 * 
+	 * @param array
+	 *    	input array
+	 * @param elt
+	 *    	element to find
+	 * 
+	 * @return 
+	 * 		the index of the first occurrence, -1 if element not found
+	 * 
+	 * @throws NullPointerException
+	 * 		if the input array is null
+	 */
+	public static int findLast(int[] array, int elt) {
+		if (array == null)
+			throw new NullPointerException("Array cannot be null.");
+		
+		int low = 0;
+		int high = array.length - 1;
+		int result = -1;
+		while (low <= high) {
+			int mid = low + (high - low) / 2;
+			if (elt == array[mid]) {
+				result = mid;
+				low = mid + 1;
+			} else if (elt < array[mid])
+				high = mid - 1;
+			else 
+				low = mid + 1;
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Find the number of occurrences of the element in an integer array. Uses a
+	 * variant of binary search based on the fact that the elements found
+	 * continuously.
+	 * 
+	 * @param array
+	 *  	the input array
+	 * @param elt
+	 *    	element to search
+	 * 
+	 * @return 
+	 * 		the number of occurrences
+	 * 
+	 * @throws NullPointerException
+	 * 		if the input array is null
+	 */
+	public static int count(int[] array, int elt) {
+		if (array == null)
+			throw new NullPointerException("Array cannot be null.");
+		
+		int first = findFirst(array, elt);
+		if (first == -1)
+			return 0;
+		int last = findLast(array, elt);
+		
+		return last - first + 1;
+	}
+	
+	/**
+	 * Given a sorted array and an element, this method checks whether the 
+	 * element is majority element or not. An element is a majority element 
+	 * if it occurs at least (n/2 + 1) times. Uses a variant of binary search 
+	 * based on the fact that the elements found continuously.
+	 * 
+	 * @param array
+	 *  	the input array
+	 * @param elt
+	 *    	element to check
+	 * 
+	 * @return 
+	 * 		the number of occurrences
+	 * 
+	 * @throws NullPointerException
+	 * 		if the input array is null
+	 */
+	public static boolean isMajority(int[] array, int elt) {
+		if (array == null)
+			throw new NullPointerException("Array cannot be null.");
+		
+		int first = findFirst(array, elt);		if (first == -1)
+			return false;
+		
+		int n = array.length;
+		if ((first + n/2) <= (n -1) && array[first + n/2] == elt)
+	        return true;
+		
+		return false;
+	}
+
+	/**
+	 * Given two sorted arrays, this method prints the union of the two.
+	 * 
+	 * @param array1
+	 * 		first array
+	 * @param array2
+	 * 		second array
+	 * 
+	 * @throws NullPointerException
+	 * 		if the input array is null
+	 */
+	static void printUnion(int[] array1, int[] array2) {
+		if (array1 == null || array2 == null)
+			throw new NullPointerException("Array(s) cannot be null.");
+
+		int len1 = array1.length;
+		int len2 = array2.length;
+		int i = 0, j = 0;
+		while (i < len1 && j < len2) {
+			if (array1[i] < array2[j]) {
+				System.out.print(array1[i] + " ");
+				i++;
+			} else if (array2[j] < array1[i]) {
+				System.out.print(array2[j] + " ");
+				j++;
+			} else {
+				System.out.print(array1[i] + " ");
+				i++;
+				j++;
+			}
+		}
+
+		while (i < len1) {
+			System.out.print(array1[i] + " ");
+			i++;
+		}
+
+		while (j < len2) {
+			System.out.print(array2[j] + " ");
+			j++;
+		}
+	}
+	
+	/**
+	 * Given two sorted arrays, this method prints the intersection of the two.
+	 * 
+	 * @param array1
+	 * 		first array
+	 * @param array2
+	 * 		second array
+	 * 
+	 * @throws NullPointerException
+	 * 		if the input array is null
+	 */
+	static void printIntersection(int[] array1, int[] array2) {
+		if (array1 == null || array2 == null)
+			throw new NullPointerException("Array(s) cannot be null.");
+
+		int len1 = array1.length;
+		int len2 = array2.length;
+		int i = 0, j = 0;
+		while (i < len1 && j < len2) {
+			if (array1[i] < array2[j]) {
+				i++;
+			} else if (array2[j] < array1[i]) {
+				j++;
+			} else {
+				System.out.print(array1[i]  + " ");
+				i++;
+				j++;
+			}
+		}
+	}
+	
+	/**
+	 * Given a sorted array and an element, this method finds the ceil of the given number. 
+	 * The ceil of an element is the smallest element in array greater than or equal to given element.
+	 * 
+	 * @param array
+	 *  	the input array
+	 * @param elt
+	 *    	element to find ceil
+	 * 
+	 * @return 
+	 * 		the ceil value
+	 * 
+	 * @throws NullPointerException
+	 * 		if the input array is null
+	 * @throws IllegalArgumentException
+	 * 		if the array is empty
+	 * @throws IllegalStateException
+	 * 		if the ceil is not found in the array
+	 */
+	public static int ceil(int[] array, int elt) {
+		if (array == null)
+			throw new NullPointerException("Array cannot be null.");
+		if(array.length == 0)
+			throw new IllegalArgumentException("Array is empty");
+		
+		int index = ceil(array, 0, array.length-1, elt);
+		if(index == -1)
+			throw new IllegalStateException("Ceil does not exist in the array.");
+		
+		return array[index];
+	}
+	
+	/**
+	 * Recursively find the ceil in the array.
+	 * 
+	 * @param array
+	 * 		integer array
+	 * @param low
+	 * 		current low index
+	 * @param high
+	 * 		current high index
+	 * @param elt
+	 * 		element to find ceil
+	 * 
+	 * @return
+	 * 		index of the ceil value
+	 */
+	private static int ceil(int[] array, int low, int high, int elt) {
+		if (elt <= array[low])
+			return low;
+
+		if (elt > array[high])
+			return -1;
+
+		int mid = (low + high) / 2;
+
+		if (array[mid] == elt)
+			return mid;
+
+		if (array[mid] < elt) {
+			if (mid + 1 <= high && elt <= array[mid + 1])
+				return mid + 1;
+			else
+				return ceil(array, mid + 1, high, elt);
+		} else {
+			if (mid - 1 >= low && elt > array[mid - 1])
+				return mid;
+			else
+				return ceil(array, low, mid - 1, elt);
+		}
+	}
+	
+	/**
+	 * Given a sorted array and an element, this method finds the floor of the given number. 
+	 * The floor of an element is the greatest element in array smaller than or equal to given element.
+	 * 
+	 * @param array
+	 *  	the input array
+	 * @param elt
+	 *    	element to find floor
+	 * 
+	 * @return 
+	 * 		the floor value
+	 * 
+	 * @throws NullPointerException
+	 * 		if the input array is null
+	 * @throws IllegalArgumentException
+	 * 		if the array is empty
+	 * @throws IllegalStateException
+	 * 		if the floor is not found in the array
+	 */
+	public static int floor(int[] array, int elt) {
+		if (array == null)
+			throw new NullPointerException("Array cannot be null.");
+		if(array.length == 0)
+			throw new IllegalArgumentException("Array is empty");
+		
+		int index = floor(array, 0, array.length-1, elt);
+		if(index == -1)
+			throw new IllegalStateException("Floor does not exist in the array.");
+		
+		return array[index];
+	}
+	
+	/**
+	 * Recursively find the floor in the array.
+	 * 
+	 * @param array
+	 * 		integer array
+	 * @param low
+	 * 		current low index
+	 * @param high
+	 * 		current high index
+	 * @param elt
+	 * 		element to find floor
+	 * 
+	 * @return
+	 * 		index of the floor value
+	 */
+	private static int floor(int[] array, int low, int high, int elt) {
+		if (elt < array[low])
+			return -1;
+
+		if (elt >= array[high])
+			return high;
+
+		int mid = (low + high) / 2;
+
+		if (array[mid] == elt)
+			return mid;
+
+		if (array[mid] < elt) {
+			if (mid + 1 <= high && elt <= array[mid + 1])
+				return mid;
+			else
+				return floor(array, mid + 1, high, elt);
+		} else {
+			if (mid - 1 >= low && elt > array[mid + 1])
+				return mid + 1;
+			else
+				return floor(array, low, mid - 1, elt);
+		}
 	}
 }

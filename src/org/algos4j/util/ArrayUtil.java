@@ -4,6 +4,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.algos4j.heap.BinaryHeap;
+import org.algos4j.heap.MaxBinaryHeap;
+import org.algos4j.heap.MinBinaryHeap;
+
 /**
  * Some utilities on arrays.
  * 
@@ -703,5 +707,157 @@ public class ArrayUtil {
 				maxFromRight = array[i];
 			}
 		}
+	}
+	
+	/**
+	 * Given an array and a sum, this method finds the pair whose sum results to
+	 * the closest of given sum.
+	 * 
+	 * @param array
+	 * 		given integer array
+	 * @param sum
+	 * 		expected closest sum
+	 * 
+	 * @return
+	 * 		a pair whose sum is close
+	 * 
+	 * @throws NullPointerException
+	 *    	if any of the input array is null
+	 *  @throws IllegalArgumentException
+	 *  		if the array does not have enough elements (< 2)
+	 */
+	public static int[] getClosestPair(int[] array, int sum) {
+		if (array == null)
+			throw new NullPointerException("Input array should not be null");
+		if (array.length < 2)
+			throw new IllegalArgumentException("Not enough elements in the array");
+
+		int sumNow, minSum = Integer.MAX_VALUE;
+
+		int l = 0, r = array.length - 1;
+
+		// Keep track of the left and right indices
+		int lMin = l, rMin = array.length - 1;
+
+		// Sort
+		Arrays.sort(array);
+
+		while (l < r) {
+			sumNow = array[l] + array[r];
+
+			if (Math.abs(sumNow) < Math.abs(minSum)) {
+				minSum = sumNow;
+				lMin = l;
+				rMin = r;
+			}
+
+			if (sumNow < sum)
+				l++;
+			else
+				r--;
+		}
+
+		return new int[] { array[lMin], array[rMin] };
+	}
+	
+	/**
+	 * Given an array, it prints the k smallest elements in the array.
+	 * Uses min binary heap. 
+	 * 
+	 * @param array
+	 * 		input array
+	 * @param k
+	 * 		number of elements to print
+	 * 
+	 * @throws NullPointerException
+	 *    	if any of the input array is null
+	 *  @throws IllegalArgumentException
+	 *  	if the given k (< 1)
+	 */
+	static void printSmallestK(int[] array, int k) {
+		if (array == null)
+			throw new NullPointerException("Input array should not be null");
+		if (array.length < 1)
+			throw new IllegalArgumentException("Invalid k, should be > 0.");
+
+		BinaryHeap<Integer> heap = new MinBinaryHeap<>();
+		for (int elt : array)
+			heap.add(elt);
+
+		for (int i = 0; i < k; i++)
+			System.out.print(heap.remove() + " ");
+		System.out.println();
+	}
+	
+	/**
+	 * Given an array, it prints the k largest elements in the array.
+	 * Uses max binary heap. 
+	 * 
+	 * @param array
+	 * 		input array
+	 * @param k
+	 * 		number of elements to print
+	 * 
+	 * @throws NullPointerException
+	 *    	if any of the input array is null
+	 *  @throws IllegalArgumentException
+	 *  	if the given k (< 1)
+	 */
+	static void printLargestK(int[] array, int k) {
+		if (array == null)
+			throw new NullPointerException("Input array should not be null");
+		if (array.length < 1)
+			throw new IllegalArgumentException("Invalid k, should be > 0.");
+
+		BinaryHeap<Integer> heap = new MaxBinaryHeap<>();
+		for (int elt : array)
+			heap.add(elt);
+
+		for (int i = 0; i < k; i++)
+			System.out.print(heap.remove() + " ");
+		System.out.println();
+	}
+	
+	
+	/**
+	 * Given an array, it finds the maximum difference of the elements. 
+	 * The larger element appears after the smaller number for the element diff.
+	 * 
+	 * @param array
+	 * 		input array
+	 * 
+	 * @return
+	 * 		max difference
+	 * 
+	 * @throws NullPointerException
+	 *    	if any of the input array is null
+	 *  @throws IllegalArgumentException
+	 *  	if the array does not have sufficient elements ( < 2).
+	 */
+	public static int getMaxPairDiff(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Input array should not be null");
+		if (array.length < 2)
+			throw new IllegalArgumentException("Not enough elements in the array");
+
+		int diff = array[1] - array[0];
+		int currSum = diff;
+		int maxSum = diff;
+
+		for (int i = 1; i < array.length - 1; i++) {
+			diff = array[i + 1] - array[i];
+
+			// Update current sum
+			if (currSum > 0)
+				currSum += diff;
+			else
+				currSum = diff;
+
+			// Update max sum
+			if (currSum > maxSum)
+				maxSum = currSum;
+		}
+
+		return maxSum;
 	}
 }
