@@ -37,5 +37,16 @@ public class ArrayDataStructureTest1 {
 		System.out.println(Arrays.toString(array3));
 		System.out.println("Ceil of 13: " + ArraySortUtil.ceil(array3, 13));
 		System.out.println("Floor of 20: " + ArraySortUtil.floor(array3, 20));
+		
+		System.out.println();
+		int[] array4 = new int[] {1, 2, 3, 1, 3, 6, 6};
+		System.out.println(Arrays.toString(array4));
+		System.out.print("Duplicates: " );
+		ArrayUtil.printDuplicates(array4);
+		
+		System.out.println();
+		int[] array5 = new int[] {-7, 1, 5, 2, -4, 3, 0};
+		System.out.println(Arrays.toString(array5));
+		System.out.print("Equilibrium index: " + ArrayUtil.getEquilibriumIndex(array5));
 	}
 }

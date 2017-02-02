@@ -631,7 +631,7 @@ public class ArrayUtil {
 	 *    	the input array
 	 * 
 	 * @throws NullPointerException
-	 *    	if any of the input array is null
+	 *    	if the input array is null
 	 */
 	public static void reverse(int[] array) {
 		if (array == null)
@@ -652,7 +652,7 @@ public class ArrayUtil {
 	 *     	the input array to reverse
 	 *     
 	 * @throws NullPointerException
-	 *    	if any of the input array is null
+	 *    	if the input array is null
 	 */
 	public static void reverseRecursive(int[] array) {
 		if (array == null)
@@ -690,7 +690,7 @@ public class ArrayUtil {
 	 * An element is leader if it is greater than all the elements to its right. 
 	 * 
 	 * @throws NullPointerException
-	 *    	if any of the input array is null
+	 *    	if the input array is null
 	 */
 	static void printLeaders(int[] array) {
 		if (array == null)
@@ -722,9 +722,9 @@ public class ArrayUtil {
 	 * 		a pair whose sum is close
 	 * 
 	 * @throws NullPointerException
-	 *    	if any of the input array is null
+	 *    	if the input array is null
 	 *  @throws IllegalArgumentException
-	 *  		if the array does not have enough elements (< 2)
+	 *  	if the array does not have enough elements (< 2)
 	 */
 	public static int[] getClosestPair(int[] array, int sum) {
 		if (array == null)
@@ -770,7 +770,7 @@ public class ArrayUtil {
 	 * 		number of elements to print
 	 * 
 	 * @throws NullPointerException
-	 *    	if any of the input array is null
+	 *    	if the input array is null
 	 *  @throws IllegalArgumentException
 	 *  	if the given k (< 1)
 	 */
@@ -799,7 +799,7 @@ public class ArrayUtil {
 	 * 		number of elements to print
 	 * 
 	 * @throws NullPointerException
-	 *    	if any of the input array is null
+	 *    	if the input array is null
 	 *  @throws IllegalArgumentException
 	 *  	if the given k (< 1)
 	 */
@@ -830,7 +830,7 @@ public class ArrayUtil {
 	 * 		max difference
 	 * 
 	 * @throws NullPointerException
-	 *    	if any of the input array is null
+	 *    	if the input array is null
 	 *  @throws IllegalArgumentException
 	 *  	if the array does not have sufficient elements ( < 2).
 	 */
@@ -859,5 +859,136 @@ public class ArrayUtil {
 		}
 
 		return maxSum;
+	}
+	
+	/**
+	 * Given an array, it produces product array such that the product[i] is the
+	 * result of multiplying the array elements other than element at i.
+	 * 
+	 * @param array
+	 * 		input array
+	 * 
+	 * @return
+	 * 		product array
+	 * 
+	 * @throws NullPointerException
+	 *    	if any of the input array is null
+	 */
+	public static int[] product(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Input array should not be null");
+
+		int[] product = new int[array.length];
+		int prod = 1;
+		for (int j = 0; j < array.length; j++)
+			product[j] = 1;
+
+		// 'prod' contains product on left side of i
+		for (int i = 0; i < array.length; i++) {
+			product[i] = prod;
+			prod *= array[i];
+		}
+		
+		// reset
+		prod = 1;
+
+		// 'prod' contains product on right side of i
+		for (int i = array.length - 1; i >= 0; i--) {
+			product[i] *= prod;
+			prod *= array[i];
+		}
+
+		return product;
+	}
+	
+	/**
+	 * Given an array, it re-arranges all elements such that the odd
+	 * numbers follows all even numbers.
+	 * 
+	 * @param array
+	 * 		input array
+	 * 
+	 * @throws NullPointerException
+	 *    	if any of the input array is null
+	 */
+	public static void segregateEvenOdd(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Input array should not be null");
+
+		int left = 0, right = array.length - 1;
+		while (left < right) {
+			while (array[left] % 2 == 0 && left < right)
+				left++;
+
+			while (array[right] % 2 == 1 && left < right)
+				right--;
+
+			if (left < right) {
+				int temp = array[left];
+				array[left] = array[right];
+				array[right] = temp;
+				left++;
+				right--;
+			}
+		}
+	}
+	
+	/**
+	 * Given an array, this method prints the duplicates in the array.
+	 * This method does modify the array elements.
+	 * 
+	 * @param array
+	 * 		input array
+	 * 
+	 * @throws NullPointerException
+	 *    	if any of the input array is null
+	 */
+	static void printDuplicates(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Input array should not be null");
+		
+		for (int i = 0; i < array.length; i++) {
+			if (array[Math.abs(array[i])] >= 0)
+				array[Math.abs(array[i])] = -array[Math.abs(array[i])];
+			else
+				System.out.print(Math.abs(array[i]) + " ");
+		}
+	}
+	
+	/**
+	 * Given an array it finds the equilibrium index in the array. Equilibrium
+	 * index is an index such that the sum of elements at lesser 
+	 * indices is equal to the sum of elements at higher indices.
+	 * 
+	 * @param array
+	 *     	input array
+	 * 
+	 * @return
+	 * 		the equilibrium index, -1 if there is no such index
+	 * 
+	 * @throws NullPointerException
+	 *             if any of the input array is null
+	 */
+	public static int getEquilibriumIndex(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Input array should not be null");
+
+		int sum = 0;
+		int leftSum = 0;
+
+		for (int i = 0; i < array.length; ++i)
+			sum += array[i];
+
+		for (int i = 0; i < array.length; ++i) {
+			// Holds right sum
+			sum -= array[i];
+
+			if (leftSum == sum)
+				return i;
+
+			leftSum += array[i];
+		}
+
+		return -1;
 	}
 }

@@ -87,6 +87,75 @@ public class ArraySortUtil {
 	}
 	
 	/**
+	 * Given an array contains 0s and 1s only this method sorts them.
+	 * This method does not check whether the array contains only 0s and 1s.
+	 * 
+	 * @param array
+	 * 		input array
+	 * 
+	 * @throws NullPointerException
+	 * 		if the input array is null
+	 */
+	public static void sort0s1s(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Array cannot be null.");
+
+		int left = 0, right = array.length - 1;
+
+		while (left < right) {
+			while (array[left] == 0 && left < right)
+				left++;
+
+			while (array[right] == 1 && left < right)
+				right--;
+
+			if (left < right) {
+				array[left] = 0;
+				array[right] = 1;
+				left++;
+				right--;
+			}
+		}
+	}
+	
+	/**
+	 * Given an array contains 0s, 1s and 2s only this method sorts them.
+	 * This method does not check whether the array contains only 0s, 1s and 2s.
+	 * 
+	 * @param array
+	 * 		input array
+	 * 
+	 * @throws NullPointerException
+	 * 		if the input array is null
+	 */
+	public static void sort0s1s2s(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Array cannot be null.");
+
+		int low = 0;
+		int high = array.length - 1;
+		int mid = 0;
+		while (mid <= high) {
+			switch (array[mid]) {
+			case 0: {
+				swap(array, low, mid);
+				low++;
+				mid++;
+				break;
+			}
+			case 1:
+				mid++;
+				break;
+			case 2: {
+				swap(array, mid, high);
+				high--;
+				break;
+			}
+			}
+		}
+	}
+	
+	/**
 	 * Given an array, this method counts the inversions in the array. Inversion
 	 * count indicates how far the array is being sorted. Inversions count is
 	 * zero if it is already sorted, is max if the array is in reverse sorted
@@ -187,6 +256,67 @@ public class ArraySortUtil {
 			array[i] = auxArray[i];
 
 		return inversions;
+	}
+
+	/**
+	 * Given an integer array, this method finds the range of array index that
+	 * are unsorted. Sorting the resulting sub-array makes the whole array
+	 * sorted.
+	 * 
+	 * @param array
+	 * 		input array
+	 * 
+	 * @return
+	 * 		a two element array with start and end indices, {-1, -1} if it is already sorted
+	 */
+	public static int[] findUnsortedRange(int[] array) {
+		int n = array.length;
+		int start = 0;
+		int end = n - 1;
+
+		// Find start element which is unsorted
+		for (start = 0; start < n - 1; start++) {
+			if (array[start] > array[start + 1])
+				break;
+		}
+
+		// Already sorted
+		if (start == n - 1)
+			return new int[] { -1, -1 };
+
+		// Find end element which is unsorted
+		for (end = n - 1; end > 0; end--) {
+			if (array[end] < array[end - 1])
+				break;
+		}
+
+		// Find max, min in unsorted array
+		int max = array[start];
+		int min = array[start];
+		for (int i = start + 1; i <= end; i++) {
+			if (array[i] > max)
+				max = array[i];
+			if (array[i] < min)
+				min = array[i];
+		}
+
+		// Adjust start index based on min
+		for (int i = 0; i < start; i++) {
+			if (array[i] > min) {
+				start = i;
+				break;
+			}
+		}
+
+		// Adjust end index based on max
+		for (int i = n - 1; i >= end + 1; i--) {
+			if (array[i] < max) {
+				end = i;
+				break;
+			}
+		}
+
+		return new int[] { start, end };
 	}
 	
 	/**
