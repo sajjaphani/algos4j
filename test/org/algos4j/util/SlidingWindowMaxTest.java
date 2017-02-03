@@ -1,4 +1,4 @@
-package org.algos4j.queue;
+package org.algos4j.util;
 
 import java.util.Arrays;
 
@@ -18,7 +18,7 @@ public class SlidingWindowMaxTest {
 		int[] elements = {12, 1, 78, 90, 57, 89, 56};
 		System.out.println("Array");
 		System.out.println(Arrays.toString(elements));
-		int[] slides = QueueUtil.computeSlidingWindowMax(elements, 3);
+		int[] slides = ArrayUtil.computeSlidingWindowMax(elements, 3);
 		System.out.println("Slides");
 		System.out.println(Arrays.toString(slides));
 	}

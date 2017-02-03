@@ -48,5 +48,10 @@ public class ArrayDataStructureTest1 {
 		int[] array5 = new int[] {-7, 1, 5, 2, -4, 3, 0};
 		System.out.println(Arrays.toString(array5));
 		System.out.print("Equilibrium index: " + ArrayUtil.getEquilibriumIndex(array5));
+		
+		System.out.println();
+		int[] array6 = new int[] { 9, 2, 3, 4, 5, 6, 7, 8, 18, 0 };
+		System.out.println(Arrays.toString(array6));
+		System.out.print("Max index diff: " + ArrayUtil.maxIndexDifference(array6));
 	}
 }

@@ -1,8 +1,6 @@
 package org.algos4j.queue;
 
 import java.util.Arrays;
-import java.util.Deque;
-import java.util.LinkedList;
 
 import org.algos4j.stack.IntStack;
 
@@ -139,63 +137,6 @@ public class QueueUtil {
 		// Move the rest of size - k elements to end
 		for (int i = 0; i < queue.size() - k; i++)
 			queue.insert(queue.remove());
-	}
-	
-	/**
-	 * Given an array of integers, and a window size w, 
-	 * this method computes the maximum of sliding windows of size w.
-	 * Time: O(n), Space: O(w)
-	 * 
-	 * @param array
-	 * 		input array
-	 * @param w
-	 * 		window size
-	 * 
-	 * @return
-	 * 		array containing max for each window size of w
-	 * 
-	 * @throws NullPointerException
-	 * 		if the given array is null
-	 * @throws IllegalArgumentException
-	 * 		if the given window size is not valid (> 0 && <= array size)
-	 */
-	public static int[] computeSlidingWindowMax(int[] array, int w) {
-
-		if (array == null)
-			throw new NullPointerException("Array should not be null.");
-		if (w <= 0 || w > array.length)
-			throw new IllegalArgumentException(
-					"Window size must be in the range of array size (> 0 && <= array size)");
-
-		int[] slides = new int[array.length];
-
-		// Deque holds the element indices, elements are in decreasing order
-		Deque<Integer> deque = new LinkedList<>();
-
-		// process initial w elements
-		for (int i = 0; i < w; i++) {
-			while (!deque.isEmpty() && array[i] >= array[deque.getLast()])
-				deque.removeLast();
-			deque.addLast(i);
-		}
-
-		for (int i = w; i < array.length; i++) {
-			slides[i - w] = array[deque.getFirst()];
-
-			// Remove all smaller elements than the current one
-			while (!deque.isEmpty() && array[i] >= array[deque.getLast()])
-				deque.removeLast();
-
-			// Remove elements which are outside window range
-			while (!deque.isEmpty() && deque.getFirst() <= i - w)
-				deque.removeFirst();
-
-			deque.addLast(i);
-		}
-		
-		slides[array.length - w] = array[deque.removeFirst()];
-
-		return slides;
 	}
 	
 	/**

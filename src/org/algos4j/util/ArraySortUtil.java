@@ -720,4 +720,56 @@ public class ArraySortUtil {
 				return floor(array, low, mid - 1, elt);
 		}
 	}
+	
+	/**
+	 * Given an array of sorted elements, find the first missing numbers in the series.
+	 * Use a variation of binary search. Assumption: numbers start from 0.
+	 * 
+	 * @param array
+	 *  	the input array
+	 * 
+	 * @return 
+	 * 		the first number missing
+	 * 
+	 * @throws NullPointerException
+	 * 		if the input array is null
+	 * @throws IllegalArgumentException
+	 * 		if the array is empty
+	 */
+	public static int findFirstMissing(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Array cannot be null.");
+		if (array.length == 0)
+			throw new IllegalArgumentException("Array is empty");
+
+		return findFirstMissing(array, 0, array.length - 1);
+	}
+	
+	/**
+	 * Recursively find the missing number.
+	 * 
+	 * @param array
+	 * 		input array
+	 * @param start
+	 * 		current start index
+	 * @param end
+	 * 		current end index
+	 * 
+	 * @return
+	 * 		first missing number
+	 */
+	private static int findFirstMissing(int array[], int start, int end) {
+		if (start > end)
+			return end + 1;
+
+		if (start != array[start])
+			return start;
+
+		int mid = (start + end) / 2;
+
+		if (array[mid] > mid)
+			return findFirstMissing(array, start, mid);
+		else
+			return findFirstMissing(array, mid + 1, end);
+	}
 }

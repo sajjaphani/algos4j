@@ -36,5 +36,11 @@ public class ArraySortSpecialTest {
 		System.out.println("Before: " + Arrays.toString(array2));
 		int[] range = ArraySortUtil.findUnsortedRange(array2);
 		System.out.println("Unsorted range: {" + range[0] + ", " + range[1] + "}");
+		
+		System.out.println();
+		int[] array3 = { 0, 1, 2, 3, 4, 5, 6, 7, 10 };
+		System.out.println(Arrays.toString(array3));
+		System.out.println("First missing: " + ArraySortUtil.findFirstMissing(array3));
+		
 	}
 }

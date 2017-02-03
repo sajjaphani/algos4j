@@ -1,8 +1,11 @@
 package org.algos4j.util;
 
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Stack;
 
 import org.algos4j.heap.BinaryHeap;
 import org.algos4j.heap.MaxBinaryHeap;
@@ -43,11 +46,39 @@ public class ArrayUtil {
 			throw new IllegalArgumentException("Input array has no elements");
 		
 		int max = array[0];
-		for (int i = 0; i < array.length; i++)
+		for (int i = 1; i < array.length; i++)
 			if (array[i] > max)
 				max = array[i];
 
 		return max;
+	}
+	
+	/**
+	 * Given an integer array, it returns the minimum.
+	 * 
+	 * @param array
+	 * 		given array
+	 * 
+	 * @return
+	 * 		minimum value
+	 * 
+	 * @throws NullPointerException
+	 * 		if the input array is null
+	 * @throws IllegalArgumentException
+	 * 		if the input array is empty
+	 */
+	public static int getMin(int[] array) {
+		if(array == null)
+			throw new NullPointerException("Input array should not be null");
+		if(array.length == 0)
+			throw new IllegalArgumentException("Input array has no elements");
+		
+		int min = array[0];
+		for (int i = 1; i < array.length; i++)
+			if (array[i] < min)
+				min = array[i];
+
+		return min;
 	}
 	
 	/**
@@ -990,5 +1021,195 @@ public class ArrayUtil {
 		}
 
 		return -1;
+	}
+	
+	/**
+	 * Given an array, this method finds the next greater element for each
+	 * element. The greater for an element is the first greater element on the
+	 * right side in the array. Elements for which no greater element exist is
+	 * represented -1.
+	 * 
+	 * @param array
+	 * 		input array
+	 * 
+	 * @return
+	 * 		array containing next greater
+	 * 
+	 * @throws NullPointerException
+	 *             if any of the input array is null
+	 */
+	public static int[] findNextGreater(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Input array should not be null");
+		int[] result = new int[array.length];
+
+		Stack<Integer> stack = new Stack<>();
+		int index, nextIndex;
+
+		stack.push(0);
+
+		for (int i = 1; i < array.length; i++) {
+			nextIndex = i;
+
+			if (!stack.isEmpty()) {
+				index = stack.pop();
+
+				while (array[index] < array[nextIndex]) {
+					result[index] = array[nextIndex];
+					if (stack.isEmpty())
+						break;
+					index = stack.pop();
+				}
+
+				if (array[index] > array[nextIndex])
+					stack.push(index);
+			}
+
+			stack.push(nextIndex);
+		}
+
+		while (!stack.isEmpty())
+			result[stack.pop()] = -1;
+
+		return result;
+	}
+	
+	/**
+	 * Given an array of elements this method checks whether the numbers are
+	 * consecutive or not. Time: O(n), Space: O(n)
+	 * 
+	 * @param array
+	 * 		given array
+	 * 
+	 * @return
+	 * 		true if the numbers are consecutive, false otherwise
+	 * 
+	 * @throws NullPointerException
+	 *     	if any of the input array is null
+	 */
+	public static boolean areConsecutive(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Input array should not be null");
+
+		int min = getMin(array);
+		int max = getMax(array);
+
+		if (max - min + 1 != array.length)
+			return false;
+
+		boolean[] visited = new boolean[array.length];
+
+		for (int i = 0; i < array.length; i++) {
+			if (visited[array[i] - min] != false)
+				return false;
+
+			visited[array[i] - min] = true;
+		}
+
+		return true;
+	}
+	
+	/**
+	 * Given an array, it finds the maximum array difference such that the first
+	 * element is lesser than the second one. In other words, maximum (j – i)
+	 * such that array[j] > array[i].
+	 * 
+	 * @param array
+	 * 		given array
+	 * 
+	 * @return
+	 * 		max index array diff
+	 * 
+	 * @throws NullPointerException
+	 *     	if any of the input array is null
+	 */
+	public static int maxIndexDifference(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Input array should not be null");
+
+		int n = array.length;
+
+		int rMax[] = new int[array.length];
+		int lMin[] = new int[array.length];
+
+		// lMin[i] holds the minimum value till index i
+		lMin[0] = array[0];
+		for (int i = 1; i < n; ++i)
+			lMin[i] = Math.min(array[i], lMin[i - 1]);
+
+		// lMax[i] holds the minimum value from index j
+		rMax[n - 1] = array[n - 1];
+		for (int j = n - 2; j >= 0; --j)
+			rMax[j] = Math.max(array[j], rMax[j + 1]);
+
+		int i = 0;
+		int j = 0;
+		int maxDiff = -1;
+		while (j < n && i < n) {
+			if (lMin[i] < rMax[j]) {
+				maxDiff = Math.max(maxDiff, j - i);
+				j = j + 1;
+			} else
+				i = i + 1;
+		}
+
+		return maxDiff;
+	}
+	
+	/**
+	 * Given an array of integers, and a window size w, 
+	 * this method computes the maximum of sliding windows of size w.
+	 * Time: O(n), Space: O(w)
+	 * 
+	 * @param array
+	 * 		input array
+	 * @param w
+	 * 		window size
+	 * 
+	 * @return
+	 * 		array containing max for each window size of w
+	 * 
+	 * @throws NullPointerException
+	 * 		if the given array is null
+	 * @throws IllegalArgumentException
+	 * 		if the given window size is not valid (> 0 && <= array size)
+	 */
+	public static int[] computeSlidingWindowMax(int[] array, int w) {
+
+		if (array == null)
+			throw new NullPointerException("Array should not be null.");
+		if (w <= 0 || w > array.length)
+			throw new IllegalArgumentException(
+					"Window size must be in the range of array size (> 0 && <= array size)");
+
+		int[] slides = new int[array.length];
+
+		// Deque holds the element indices, elements are in decreasing order
+		Deque<Integer> deque = new LinkedList<>();
+
+		// process initial w elements
+		for (int i = 0; i < w; i++) {
+			while (!deque.isEmpty() && array[i] >= array[deque.getLast()])
+				deque.removeLast();
+			deque.addLast(i);
+		}
+
+		for (int i = w; i < array.length; i++) {
+			slides[i - w] = array[deque.getFirst()];
+
+			// Remove all smaller elements than the current one
+			while (!deque.isEmpty() && array[i] >= array[deque.getLast()])
+				deque.removeLast();
+
+			// Remove elements which are outside window range
+			while (!deque.isEmpty() && deque.getFirst() <= i - w)
+				deque.removeFirst();
+
+			deque.addLast(i);
+		}
+		
+		slides[array.length - w] = array[deque.removeFirst()];
+
+		return slides;
 	}
 }
