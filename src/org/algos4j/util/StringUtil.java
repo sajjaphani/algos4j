@@ -237,6 +237,7 @@ public class StringUtil {
 	public static int findMatch(String text, String pattern) {
 		if (text == null)
 			throw new NullPointerException("Input text cannot be null.");
+	
 		if (pattern == null || "".equals(pattern))
 			return -1;
 
@@ -354,5 +355,378 @@ public class StringUtil {
 				printNumericStrings(n - 1, k, array);
 			}
 		}
+	}
+	
+	/**
+	 * Given a string it checks whether the given string contains all unique
+	 * characters. This method assumes that the string characters are ASCII only.
+	 * It will not work as expected for other than ASCII (128) characters.
+	 * 
+	 * @param string
+	 * 		given string
+	 * 
+	 * @return
+	 * 		true if it contains unique characters, false otherwise
+	 * 
+	 * @throws NullPointerException
+	 * 		if the given string is null
+	 */
+	static boolean hasUniqueChars(String string) {
+		if(string == null)
+			throw new NullPointerException("If the input string is null");
+		
+		if (string.length() > 128)
+			return false;
+
+		boolean[] occured = new boolean[128];
+		for (int i = 0; i < string.length(); i++) {
+			int val = string.charAt(i);
+			// First appearance of duplicate char
+			if (occured[val])
+				return false;
+			
+			occured[val] = true;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Given a string it checks whether the given string contains all unique
+	 * characters. This method assumes that string contains only lower case
+	 * ASCII characters.
+	 * 
+	 * @param string
+	 * 		given string
+	 * 
+	 * @return
+	 * 		true if it contains unique characters, false otherwise
+	 * 
+	 * @throws NullPointerException
+	 * 		if the given string is null
+	 */
+	static boolean hasUniqueChars1(String string) {
+		if (string == null)
+			throw new NullPointerException("Input string cannot be null");
+
+		int bits = 0;
+		for (int i = 0; i < string.length(); i++) {
+			int chr = string.charAt(i) - 'a';
+			if ((bits & (1 << chr)) > 0)
+				return false;
+			
+			bits |= (1 << chr);
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Given two string this method checks whether one is a permutation of the
+	 * other. This method assumes that the string characters are ASCII only. It
+	 * will not work as expected for other than ASCII (128) characters.
+	 * 
+	 * @param string1
+	 * 		first string
+	 * @param string2
+	 * 		second string
+	 * 
+	 * @return
+	 * 		true if one is permutation of other, false otherwise
+	 */
+	static boolean permutation(String string1, String string2) {
+		if (string1 == null || string2 == null)
+			return false;
+
+		if (string1.length() != string2.length())
+			return false;
+
+		int[] letters = new int[128];
+		for (char chr : string1.toCharArray())
+			letters[chr]++;
+
+		for (int i = 0; i < string2.length(); i++) {
+			int chr = string2.charAt(i);
+			letters[chr]--;
+			if (letters[chr] < 0)
+				return false;
+		}
+
+		return true;
+	}
+	
+	/**
+	 * Given a character array which holds the original string, it replaces all
+	 * the spaces with '%20'. It assumes that the array has sufficient space to
+	 * replace the spaces.
+	 * 
+	 * @param chars
+	 * 		character array holds the original string chars
+	 * @param length
+	 * 		length of the characters in the array
+	 * 
+	 * @throws NullPointerException
+	 * 		if the given character array is null
+	 * @throws IllegalArgumentException
+	 * 		if the length is <= 0
+	 * @throws ArrayIndexOutOfBoundsException
+	 * 		if chars array cannot accommodate the new chars
+	 */
+	static void urlify(char[] chars, int length) {
+		if (chars == null)
+			throw new NullPointerException("Chars array should not be null");
+		if (length <= 0)
+			throw new IllegalArgumentException("Invalid length provided.");
+
+		int spaces = 0, index;
+		for (int i = 0; i < length; i++) {
+			if (chars[i] == ' ')
+				spaces++;
+		}
+
+		index = length + spaces * 2;
+		if (index > chars.length)
+			throw new ArrayIndexOutOfBoundsException("Not sufficient space in array.");
+
+		for (int i = length - 1; i >= 0; i--) {
+			if (chars[i] == ' ') {
+				chars[--index] = '0';
+				chars[--index] = '2';
+				chars[--index] = '%';
+			} else {
+				chars[--index] = chars[i];
+			}
+		}
+	}
+	
+	/**
+	 * Given a string, this method checks whether it is a permutation of a
+	 * palindrome. A string is palindrome if it is the same forwards and 
+	 * backwards. To qualify a palindrome permutation, a string can have
+	 * at most one character in odd number and the rest are in even numbers.
+	 * Non letter characters are ignored.
+	 * 
+	 * @param string
+	 * 		input string
+	 * 
+	 * @return
+	 * 		true if it a permutation of a palindrome, false otherwise
+	 * 
+	 * @throws NullPointerException
+	 * 		if the input string is null
+	 */
+	static boolean isPalindromePermutation(String string) {
+		if (string == null)
+			throw new NullPointerException("Input string cannot be null");
+		
+		return matchedPalindromeFrequency(buildFrequencyTable(string));
+	}
+	
+	/**
+	 * Builds the frequency table for the characters in the string. There table
+	 * is an array of 26 elements holds the occurence of each char a-z ignoring
+	 * the case.
+	 * 
+	 * @param string
+	 * 		input string
+	 * 
+	 * @return
+	 * 		array holding the character frequency 
+	 */
+	private static int[] buildFrequencyTable(String string) {
+		int[] freq = new int[26];
+		for (char c : string.toCharArray()) {
+			int pos = getPosition(c);
+			if (pos != -1)
+				freq[pos]++;
+		}
+		
+		return freq;
+	}
+	
+	/**
+	 * Get the position of the given character.
+	 * 
+	 * @param chr
+	 * 		given character
+	 * 
+	 * @return
+	 * 		position ranging from 0 to 25, -1 for non character
+	 */
+	private static int getPosition(char chr) {
+		int start = 10;
+		int end = 35;
+		// irrespective of case, the char value for a-z is in the range of 10-35
+		int val = Character.getNumericValue(chr);
+		if (start <= val && val <= end)
+			return val - start;
+
+		return -1;
+	}
+	
+	/**
+	 * Given an array holding the character frequency, this method check if
+	 * the frequencies matches according to the definition of palindrome permutation.
+	 * 
+	 * @param freq
+	 * 		array holding frequencies
+	 * 
+	 * @return
+	 * 		false for more than one odd frequency, true otherwise
+	 */
+	private static boolean matchedPalindromeFrequency(int[] freq) {
+		boolean foundOddFreq = false;
+		for (int count : freq) {
+			if (count % 2 == 1) {
+				if (foundOddFreq)
+					return false;
+				
+				foundOddFreq = true;
+			}
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Given a string, this method checks whether it is a permutation of a
+	 * palindrome. This method is space optimized version and uses a bit 
+	 * vector rather than an array to compute the frequencies.
+	 * 
+	 * @param string
+	 * 		input string
+	 * 
+	 * @return
+	 * 		true if it a permutation of a palindrome, false otherwise
+	 * 
+	 * @throws NullPointerException
+	 * 		if the input string is null
+	 */
+	static boolean isPalindromePermutation1(String string) {
+		if (string == null)
+			throw new NullPointerException("Input string cannot be null");
+		
+		int bitVector = computeBitVector(string);
+	
+		return bitVector == 0 || ((bitVector & (bitVector - 1)) == 0);
+	}
+	
+	/**
+	 * Compute the bit vector for the given string.
+	 * 
+	 * @param string
+	 * 		given string
+	 * 
+	 * @return
+	 * 		integer holding the bits of the corresponding chars in the string
+	 */
+	private static int computeBitVector(String string) {
+		int bitVector = 0;
+		for (char chr : string.toCharArray()) {
+			int pos = getPosition(chr);
+			if (pos != -1)
+				bitVector = toggle(bitVector, pos);
+		}
+		
+		return bitVector;
+	}
+
+	/**
+	 * Toggle the corresponding bit at the given index.
+	 * 
+	 * @param bitVector
+	 * 		current bit vector
+	 * @param index
+	 * 		bit positioin to toggle
+	 * 
+	 * @return
+	 * 		bit vector after toggling the bit at index
+	 */
+	private static int toggle(int bitVector, int index) {
+		int mask = 1 << index;
+		if ((bitVector & mask) == 0)
+			bitVector |= mask;
+		else
+			bitVector &= ~mask;
+
+		return bitVector;
+	}
+
+	/**
+	 * Given two strings, this method checks whether the strings are either one
+	 * edit away or zero edit away. The three type of edits that can be
+	 * performed on strings are insert a character, remove a character, or
+	 * replace a character.
+	 * 
+	 * @param string1
+	 * 		first string
+	 * @param string2
+	 * 		second string
+	 * 
+	 * @return
+	 * 		true if they are one (or zero) edit away, false otherwise
+	 */
+	public static boolean areOneEditAway(String string1, String string2) {
+		if (string1 == null || string2 == null)
+			return false;
+
+		if (Math.abs(string1.length() - string2.length()) > 1)
+			return false;
+
+		String strl = string1.length() < string2.length() ? string1 : string2;
+		String str2 = string1.length() < string2.length() ? string2 : string1;
+
+		int indexl = 0;
+		int index2 = 0;
+		boolean replaceEdit = false;
+		while (index2 < str2.length() && indexl < strl.length()) {
+			if (strl.charAt(indexl) != str2.charAt(index2)) {
+				// More than one replace difference
+				if (replaceEdit)
+					return false;
+				
+				replaceEdit = true;
+				if (strl.length() == str2.length())
+					indexl++;
+			} else {
+				// Move shorter pointer
+				indexl++;
+			}
+			// Move longer pointer
+			index2++;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Given a string this method compresses the string using counts of repeated
+	 * characters. For example, it the string is 'aaabbc', the compressed string
+	 * will be 'a3b2c1'. This method returns the original string if the
+	 * "compressed" string would not become smaller than the original string.
+	 * 
+	 * @param string
+	 * 		given string
+	 * 
+	 * @return
+	 * 		compressed string if the length of compressed one is smaller, original string otherwise
+	 */
+	public static String compress(String string) {
+		if (string == null)
+			return null;
+
+		StringBuilder compressed = new StringBuilder();
+		int count = 0;
+		for (int i = 0; i < string.length(); i++) {
+			count++;
+			// We are seeing a different character or reached end of string
+			if (i + 1 >= string.length() || string.charAt(i) != string.charAt(i + 1)) {
+				compressed.append(string.charAt(i));
+				compressed.append(count);
+				count = 0;
+			}
+		}
+
+		return compressed.length() < string.length() ? compressed.toString() : string;
 	}
 }

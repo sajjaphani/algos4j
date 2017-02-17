@@ -58,6 +58,9 @@ public class SingleLinkedListAddTest {
 		System.out.println("Result List");
 		System.out.println(result);
 		
+		LinkedList result1 = LinkedListUtil.add1(list1, list2);
+		System.out.println("Result List 1");
+		System.out.println(result1);
+		
 	}
-
 }

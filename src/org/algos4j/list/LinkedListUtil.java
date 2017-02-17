@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Random;
+import java.util.Stack;
 
 import org.algos4j.list.LinkedList.Node;
 
@@ -631,6 +632,7 @@ public class LinkedListUtil {
 	/**
 	 * Check whether the linked list is palindrome or not.
 	 * It checks the numbers in the linked list to verify the list is palindrome.
+	 * This method modifies the list.
 	 * 
 	 * @param linkedList
 	 * 		linked list
@@ -641,7 +643,7 @@ public class LinkedListUtil {
 	 * @throws NullPointerException
 	 * 		if the linked list is null
 	 */
-	public static boolean isPalindrome(LinkedList linkedList) {
+	static boolean isPalindrome1(LinkedList linkedList) {
 		if (linkedList == null)
 			throw new NullPointerException("LinkedList can not be null.");
 
@@ -687,6 +689,124 @@ public class LinkedListUtil {
 		}
 
 		return true;
+	}
+	
+	/**
+	 * Check whether the linked list is palindrome or not.
+	 * A variant of {@link #isPalindrome1(LinkedList)}.
+	 * 
+	 * @param linkedList
+	 * 		linked list
+	 * 
+	 * @return
+	 * 		true if the linked list is palindrome, false otherwise
+	 * 
+	 * @throws NullPointerException
+	 * 		if the linked list is null
+	 */
+	public static boolean isPalindrome(LinkedList linkedList) {
+		if (linkedList == null)
+			throw new NullPointerException("LinkedList can not be null.");
+
+		Node head = linkedList.getHead();
+
+		Node fast = head;
+		Node slow = head;
+
+		Stack<Integer> stack = new Stack<Integer>();
+
+		while (fast != null && fast.next != null) {
+			stack.push(slow.getData());
+			slow = slow.next;
+			fast = fast.next.next;
+		}
+
+		// odd length
+		if (fast != null)
+			slow = slow.next;
+
+		while (slow != null) {
+			int top = stack.pop().intValue();
+
+			if (top != slow.getData())
+				return false;
+
+			slow = slow.next;
+		}
+
+		return true;
+	}
+	
+	/**
+	 * Check whether the linked list is palindrome or not.
+	 * A variant of {@link #isPalindrome(LinkedList)}.
+	 * 
+	 * @param linkedList
+	 * 		linked list
+	 * 
+	 * @return
+	 * 		true if the linked list is palindrome, false otherwise
+	 * 
+	 * @throws NullPointerException
+	 * 		if the linked list is null
+	 */
+	public static boolean isPalindrome2(LinkedList linkedList) {
+		if (linkedList == null)
+			throw new NullPointerException("LinkedList can not be null.");
+
+		Node head = linkedList.getHead();
+
+		int length = linkedList.size();
+		PalindromeNode palindromeNode = isPalindrome(head, length);
+
+		return palindromeNode.isPalindrome;
+	}
+	
+	/**
+	 * Recursively check each of i, n-i th nodes.
+	 * 
+	 * @param head
+	 * 		current head
+	 * @param length
+	 * 		current length of sublist
+	 * 
+	 * @return
+	 * 		palindrome node to be compared in next recursion
+	 */
+	private static PalindromeNode isPalindrome(Node head, int length) {
+		// Even length
+		if (head == null || length <= 0)
+			return new PalindromeNode(head, true);
+
+		// Odd length
+		if (length == 1)
+			return new PalindromeNode(head.next, true);
+
+		PalindromeNode palindromeNode = isPalindrome(head.next, length - 2);
+
+		if (!palindromeNode.isPalindrome || palindromeNode.node == null)
+			return palindromeNode;
+
+		palindromeNode.isPalindrome = head.data == palindromeNode.node.data;
+		palindromeNode.node = palindromeNode.node.next;
+
+		return palindromeNode;
+	}
+	
+	/**
+	 * Helper class to hold the node to be compared and the current sub list is palindrome or not.
+	 * 
+	 * @author psajja
+	 *
+	 */
+	private static class PalindromeNode {
+		public Node node;
+		public boolean isPalindrome;
+
+		public PalindromeNode(Node node, boolean isPalindrome) {
+			this.node = node;
+			this.isPalindrome = isPalindrome;
+		}
 	}
 	
 	/**
@@ -1711,6 +1831,129 @@ public class LinkedListUtil {
 		
 		return result;
 	}
+
+	/**
+	 * Add two numbers represented by linked lists. This method does not
+	 * validate that the linked list numbers are only digits. A variant 
+	 * of {@link #add(LinkedList, LinkedList)} method.
+	 * 
+	 * @param linkedList1
+	 *     	first linked list
+	 * @param linkedList2
+	 *     	second linked list
+	 * 
+	 * @return 
+	 * 		resultant linked list
+	 * 
+	 * @throws NullPointerException
+	 *     	if the linked lists are null
+	 */
+	static LinkedList add1(LinkedList linkedList1, LinkedList linkedList2) {
+		if (linkedList1 == null || linkedList2 == null)
+			throw new NullPointerException("LinkedList(s) can not be null.");
+
+		int lenl = linkedList1.size();
+		int len2 = linkedList2.size();
+
+		Node head1 = linkedList1.getHead();
+		Node head2 = linkedList2.getHead();
+
+		// Pad the shorter list with zeros
+		if (lenl < len2)
+			head1 = padZeros(head1, len2 - lenl);
+		else
+			head2 = padZeros(head2, lenl - len2);
+
+		// Add lists
+		SumNode sum = addLists(head1, head2);
+		LinkedList result = new LinkedList();
+
+		if (sum.carry == 0) {
+			result.setHead(sum.root);
+		} else {
+			Node node = insertBefore(sum.root, sum.carry);
+			result.setHead(node);
+		}
+
+		return result;
+	}
+	
+	/**
+	 * Pad necessary number of zeros at from for the given node.
+	 * 
+	 * @param node
+	 * 		head node to which append zeros
+	 * @param padding
+	 * 		number of zeros to pad
+	 * 
+	 * @return
+	 * 		new head node after appending zeros
+	 */
+	private static Node padZeros(Node node, int padding) {
+		Node head = node;
+		for (int i = 0; i < padding; i++)
+			head = insertBefore(head, 0);
+
+		return head;
+	}
+	
+	/**
+	 * Insert a given data item at the front of the list node.
+	 * 
+	 * @param node
+	 * 		node to insert before
+	 * @param data
+	 * 		data item to insert
+	 * 
+	 * @return
+	 * 		new head node
+	 */
+	private static Node insertBefore(Node node, int data) {
+		Node head = new Node(data);
+		if (node != null)
+			head.next = node;
+
+		return head;
+	}
+	
+	/**
+	 * Recursively add the two lists.
+	 * 
+	 * @param node1
+	 * 		first list head
+	 * @param node2
+	 * 		second list head
+	 * 
+	 * @return
+	 * 		sum node which holds the result list and carry if any
+	 */
+	private static SumNode addLists(Node node1, Node node2) {
+		if (node1 == null && node2 == null)
+			return new SumNode();
+
+		SumNode sum = addLists(node1.next, node2.next);
+
+		int value = sum.carry + node1.data + node2.data;
+
+		// new head
+		Node result = insertBefore(sum.root, value % 10);
+
+		sum.root = result;
+		sum.carry = value / 10;
+
+		return sum;
+	}
+	
+	/**
+	 * Helper class which holds the resultant sum node and carray.
+	 * 
+	 * @author psajja
+	 *
+	 */
+	private static class SumNode {
+		public Node root = null;
+		public int carry = 0;
+	}
 	
 	/**
 	 * Add two lists given their starting nodes of the same size.
@@ -1772,6 +2015,7 @@ public class LinkedListUtil {
 		}
 	}
 
+	
 	/**
 	 * Add two numbers represented by linked lists. 
 	 * Assumption: the numbers are in linked list are in reverse order.
@@ -2172,6 +2416,47 @@ public class LinkedListUtil {
 		prev.next = moreHead.next;
 
 		linkedList.setHead(newHead.next);
+	}
+	
+	/**
+	 * Given a linked list, it partitions the list such that nodes less than the given 
+	 * element comes before nodes greater than element. Preserve relative order.
+	 * 
+	 * @param linkedList
+	 * 		linked list
+	 * @param elt
+	 * 		partition element
+	 * 
+	 * @throws NullPointerException
+	 * 		if the linked list is null
+	 */
+	static void partition1(LinkedList linkedList, int elt) {
+		if (linkedList == null)
+			throw new NullPointerException("LinkedList can not be null.");
+	
+		Node node = linkedList.getHead();
+
+		Node head = node;
+		Node tail = node;
+
+		while (node != null) {
+			Node next = node.next;
+			if (node.data < elt) {
+				// Insert at head
+				node.next = head;
+				head = node;
+			} else {
+				// Insert at tail
+				tail.next = node;
+				tail = node;
+			}
+			node = next;
+		}
+
+		tail.next = null;
+
+		// set head
+		linkedList.setHead(head);
 	}
 	
 	/**

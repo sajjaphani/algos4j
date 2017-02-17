@@ -29,12 +29,12 @@ public class SingleLinkedListRearrangeTest {
 	 * Tests odd length of a given linked list
 	 */
 	private static void testPartition() {
-		int[] elements = {1, 4, 3, 2, 5, 2};
+		int[] elements = {/*1, 4, 3, 2, 5, 2*/ 3, 5, 8, 5, 10, 2, 1};
 		LinkedList list = LinkedListUtil.createList(elements);
 		System.out.println("Partitioning a List Test");
 		System.out.println("Liked List Before");
 		System.out.println(list);
-		LinkedListUtil.partition(list, 3);
+		LinkedListUtil.partition1(list, 5);
 		System.out.println("Linked List After");
 		System.out.println(list);	
 	}
