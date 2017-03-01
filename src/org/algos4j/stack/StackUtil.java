@@ -421,7 +421,9 @@ public class StackUtil {
 	
 	/**
 	 * Sort the given stack. Iterative solution. 
-	 * This should also work for {@link LinkedIntStack}. O(n^2)
+	 * Uses auxiliary stack.
+	 * This should also work for {@link LinkedIntStack}. 
+	 * Time: O(n^2), Space: O(n)
 	 * 
 	 * @param stack
 	 * 		given stack
@@ -432,7 +434,7 @@ public class StackUtil {
 	 * @throws NullPointerException
 	 * 		if the input stack is null
 	 */
-	public static IntStack sortIterative(IntStack stack) {
+	public static void sortIterative(IntStack stack) {
 		if (stack == null)
 			throw new NullPointerException("Stack cannot be null.");
 		IntStack sortedStack = new IntStack(stack.size());
@@ -445,7 +447,8 @@ public class StackUtil {
 			sortedStack.push(temp);
 		}
 		
-		return sortedStack;
+		while (!sortedStack.isEmpty())
+			stack.push(sortedStack.pop());
 	}
 	
 	/**

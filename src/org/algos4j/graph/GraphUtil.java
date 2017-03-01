@@ -2,7 +2,10 @@ package org.algos4j.graph;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Stack;
 
 /**
@@ -155,6 +158,7 @@ public class GraphUtil {
 	
 	/**
 	 * Checks whether there is a path between fromVertex to toVertex.
+	 * Based on DFS.
 	 * 
 	 * @param graph
 	 * 		given graph
@@ -195,6 +199,49 @@ public class GraphUtil {
 		for (int adj : graph.outEdges(vertex))
 			if (!visited[adj])
 				hasPath(graph, adj, visited);
+	}
+	
+	/**
+	 * Checks whether there is a path between fromVertex to toVertex.
+	 * 
+	 * @param graph
+	 * 		given graph
+	 * @param fromVertex
+	 * 		from vertex
+	 * @param toVertex
+	 * 		to vertex
+	 * 
+	 * @return
+	 * 		true if there is a path, false otherwise
+	 * 
+	 * @throws NullPointerException
+	 * 		if the graph is null
+	 * @throws IllegalArgumentException
+	 * 		if the given vertices are outside of the range
+	 */
+	static boolean hasPath1(IGraph graph, int fromVertex, int toVertex) {
+		validate(graph, fromVertex, toVertex);
+	
+		boolean[] visited = new boolean[graph.vertices()];
+		Queue<Integer> queue = new LinkedList<>();
+		queue.add(fromVertex);
+		
+		while (!queue.isEmpty()) {
+			int u = queue.poll();
+		
+			Iterator<Integer> iter = graph.outEdges(u).iterator();
+			while (iter.hasNext()) {
+				int n = iter.next();
+				if (!visited[n]) {
+					if(n == toVertex)
+						return true;
+					visited[n] = true;
+					queue.add(n);
+				}
+			}
+		}
+		
+		return false;
 	}
 	
 	/**
@@ -420,5 +467,65 @@ public class GraphUtil {
 		}
 
 		return true;
+	}
+	
+	/**
+	 * Given a projects and their dependencies, this method finds a build order
+	 * so that all the projects can built successfully. All the project 
+	 * dependencies must be built before building the project itself. This
+	 * method assumes that the dependencies data is a 2d array.
+	 * This is incomplete one...
+	 * 
+	 * @param noOfProjects
+	 * 		number of projects
+	 * @param dependencies
+	 * 		project dependencies
+	 * 
+	 * @return
+	 * 		array containing build order if possible
+	 * 
+	 * @throws NullPointerException
+	 * 		if dependencies array is null or any of the entry is null
+	 * @throws IllegalArgumentException
+	 * 		if invalid project count or invalid dependencies data provided
+	 */
+	static int[] findBuildOrder(int noOfProjects, int[][] dependencies) {
+		if(noOfProjects <=0 )
+			throw new IllegalArgumentException("Invalid project count");
+	
+		if(dependencies == null)
+			throw new NullPointerException("Project dependencies can not be null.");
+		
+		@SuppressWarnings("unused")
+		IGraph graph = buildGraph(noOfProjects, dependencies);
+		
+		// TODO do a topological sort here
+		
+		return null;
+	}
+
+	/**
+	 * This method builds a directed graph based on the data.
+	 * 
+	 * @param noOfProjects
+	 * 		no of projects (vertices)
+	 * @param dependencies
+	 * 		dependencies (edge data)
+	 * 
+	 * @return
+	 * 		directed graph based on dependencies
+	 */
+	private static IGraph buildGraph(int noOfProjects, int[][] dependencies) {
+		IGraph graph = new DigraphAdjList(noOfProjects);
+		for (int[] dependency : dependencies) {
+			if (dependency == null)
+				throw new NullPointerException("Dependency entry cannot be null.");
+			if (dependency.length != 2)
+				throw new IllegalArgumentException("Dependency must be 2 elements, from -> to");
+
+			graph.addEdge(dependency[0], dependency[1]);
+		}
+
+		return graph;
 	}
 }

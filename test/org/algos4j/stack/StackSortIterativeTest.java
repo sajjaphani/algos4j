@@ -15,9 +15,9 @@ public class StackSortIterativeTest {
 		int[] elements = {10, 5, 25, 15, 30};
 		IntStack stack = StackUtil.constructStack(elements);
 		System.out.println(stack);
-		IntStack sortedStack = StackUtil.sortIterative(stack);
+		StackUtil.sortIterative(stack);
 		System.out.println("Sorted Stack");
-		System.out.println(sortedStack);
+		System.out.println(stack);
 	}
 
 }

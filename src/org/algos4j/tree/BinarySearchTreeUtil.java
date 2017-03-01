@@ -1,5 +1,8 @@
 package org.algos4j.tree;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Stack;
 
 import org.algos4j.tree.BinaryTree.BTNode;
@@ -958,5 +961,146 @@ public class BinarySearchTreeUtil {
 			stack.push(node);
 			node = node.left;
 		}
+	}
+	
+	/**
+	 * Given a sorted array (increasing order), this method constructs a binary
+	 * search tree which has minimal height. This method assumes the array is
+	 * sorted and does not explicitly check whether the array is sorted or not.
+	 * 
+	 * @param array
+	 * 		given sorted array
+	 * 
+	 * @return
+	 * 		constructed binary search tree
+	 * 
+	 * @throws NullPointerException
+	 * 		if the input array is null
+	 */
+	public static BinaryTree createMinimalBst(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Input array should not be null");
+
+		BinaryTree bt = new BinarySearchTree();
+		bt.setRoot(createMinimalBst(array, 0, array.length - 1));
+
+		return bt;
+	}
+
+	/**
+	 * Recursively construct the tree.
+	 * 
+	 * @param array
+	 * 		given array
+	 * @param start
+	 * 		current sub array start
+	 * @param end
+	 * 		current sub array end
+	 * 
+	 * @return
+	 * 		root node of this subtree
+	 */
+	private static BTNode createMinimalBst(int[] array, int start, int end) {
+		if (end < start)
+			return null;
+
+		int mid = (start + end) / 2;
+	
+		BTNode root = new BTNode(array[mid]);
+		root.left = createMinimalBst(array, start, mid - 1);
+		root.right = createMinimalBst(array, mid + 1, end);
+
+		return root;
+	}
+	
+	/**
+	 * Given a binary search tree with distinct elements, this method returns
+	 * the possible arrays that can be used to construct the search tree.
+	 * 
+	 * @param bst
+	 * 		given binary search tree
+	 * 
+	 * @return
+	 * 		possible arrays, in the form of lists of lists
+	 */
+	static List<List<Integer>> sequences(BinarySearchTree bst) {
+		if(bst == null)
+			throw new NullPointerException("Binary search tree cannot be null.");
+		
+		return sequences(bst.root);
+	}
+
+	/**
+	 * Recursively traverse the subtrees to finds the sequences.
+	 * 
+	 * @param node
+	 * 		the current subtree root.
+	 * 
+	 * @return
+	 * 		the sequences, list of lists possible
+	 */
+	private static List<List<Integer>> sequences(BTNode node) {
+		List<List<Integer>> result = new ArrayList<List<Integer>>();
+		if (node == null) {
+			result.add(new LinkedList<Integer>());
+			return result;
+		}
+
+		List<Integer> prefix = new LinkedList<Integer>();
+		prefix.add(node.getData());
+
+		List<List<Integer>> sequencesLeft = sequences(node.left);
+		List<List<Integer>> sequencesRight = sequences(node.right);
+
+		// Weave lists
+		for (List<Integer> sequenceLeft : sequencesLeft) {
+			for (List<Integer> sequenceRight : sequencesRight) {
+				List<List<Integer>> weavedLists = new ArrayList<List<Integer>>();
+				weaveLists(sequenceLeft, sequenceRight, prefix, weavedLists);
+				result.addAll(weavedLists);
+			}
+		}
+		
+		return result;
+	}
+
+	/**
+	 * Recursively weave the lists in all possible ways.
+	 * 
+	 * @param sequenceLeft
+	 * 		first list
+	 * @param sequenceRight
+	 * 		second list
+	 * @param prefix
+	 * 		current prefix
+	 * @param weavedLists
+	 * 		weaved lists
+	 */
+	private static void weaveLists(List<Integer> sequenceLeft, List<Integer> sequenceRight, List<Integer> prefix,
+			List<List<Integer>> weavedLists) {
+		// One of the list is empty
+		if (sequenceLeft.size() == 0 || sequenceRight.size() == 0) {
+			List<Integer> result = new LinkedList<>(prefix);
+			result.addAll(sequenceLeft);
+			result.addAll(sequenceRight);
+			weavedLists.add(result);
+			return;
+		}
+
+		// Process first list (sequenceLeft) by removing front of the list and
+		// adding it to end of prefix
+		int firstHead = sequenceLeft.remove(0);
+		prefix.add(prefix.size(), firstHead);
+		weaveLists(sequenceLeft, sequenceRight, prefix, weavedLists);
+		prefix.remove(prefix.size() - 1);
+		sequenceLeft.add(0, firstHead);
+
+		// Process second list (sequenceRight) by removing front of the list and
+		// adding it to end of prefix
+		int secondHead = sequenceRight.remove(0);
+		prefix.add(prefix.size(), secondHead);
+		weaveLists(sequenceLeft, sequenceRight, prefix, weavedLists);
+		prefix.remove(prefix.size() - 1);
+		sequenceRight.add(0, secondHead);
 	}
 }

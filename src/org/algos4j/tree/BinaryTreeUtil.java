@@ -1512,7 +1512,7 @@ public class BinaryTreeUtil {
 	
 		height[0] = Math.max(leftHeight[0], rightHeight[0]) + 1;
 
-		if (Math.abs(leftHeight[0] - rightHeight[0]) >= 2)
+		if (Math.abs(leftHeight[0] - rightHeight[0]) > 1)
 			return false;
 		else
 			return leftBalanced && rightBalanced;
@@ -2317,6 +2317,229 @@ public class BinaryTreeUtil {
 	}
 
 	/**
+	 * Given two nodes in a binary tree, this method finds and returns the
+	 * common ancestor node for the two. This algorithm assumes that the nodes
+	 * also has a link to its parent. Time: O(d), d the depth of the deeper node.
+	 * 
+	 * @param node1
+	 * 		first node
+	 * @param node2
+	 * 		second node
+	 * 
+	 * @return
+	 * 		the first common ancestor node if exists, null otherwise
+	 */
+	static BTNode leastCommonAncestor(BTNode node1, BTNode node2) {
+		int delta = height(node1) - height(node2);
+		BTNode first = delta > 0 ? node2 : node1;
+		BTNode second = delta > 0 ? node1 : node2;
+		second = goNodeUp(second, Math.abs(delta));
+
+		while (first != second && first != null && second != null) {
+			// first = first.parent;
+			// second = second.parent;
+		}
+
+		return null;
+	}
+	
+	/**
+	 * Move the deeper node up by delta.
+	 * 
+	 * @param node
+	 * 		deeper node
+	 * @param delta
+	 * 		number of moves up
+	 * 
+	 * @return
+	 * 		the parent node by delta distant
+	 */
+	private static BTNode goNodeUp(BTNode node, int delta) {
+		while (delta > 0 && node != null) {
+			// node= node.parent;
+			delta--;
+		}
+		
+		return node;
+	}
+	
+	/**
+	 * Given a binary tree and two nodes of the binary tree, this method finds 
+	 * and returns the common ancestor node for the two. This algorithm works 
+	 * based on assumption that the nodes are not liked to parent node.
+	 * Time: O(n)
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * @param node1
+	 * 		first node
+	 * @param node2
+	 * 		second node
+	 * 
+	 * @return
+	 * 		the first common ancestor node if exists, null otherwise
+	 * 
+	 * @throws NullPointerException
+	 * 		if the given binary tree is null.
+	 */
+	static BTNode leastCommonAncestor(BinaryTree bt, BTNode node1, BTNode node2) {
+		if (bt == null)
+			throw new NullPointerException("Given binary tree cannot be null.");
+
+		BTNode root = bt.root;
+
+		if (!exists(root, node1) || !exists(root, node2))
+			return null;
+
+		return leastCommonAncestor(root, node1, node2);
+	}
+	
+	/**
+	 * Checks whether the given node existing in the tree.
+	 * 
+	 * @param root
+	 * 		the current subtree
+	 * @param node
+	 * 		node to check
+	 * 
+	 * @return
+	 * 		true if it exists, false otherwise
+	 */
+	private static boolean exists(BTNode root, BTNode node) {
+		if (root == null)
+			return false;
+		
+		if (root == node)
+			return true;
+	
+		return exists(root.left, node) || exists(root.right, node);
+	}
+	
+	/**
+	 * Recursively traverse the tree and find the common ancestor.
+	 * 
+	 * @param root
+	 * 		the current subtree root
+	 * @param node1
+	 * 		first node
+	 * @param node2
+	 * 		second node
+	 * 
+	 * @return
+	 * 		the common ancestor if found, null otherwise
+	 */
+	private static BTNode leastCommonAncestor(BTNode root, BTNode node1, BTNode node2) {
+		if (root == null || root == node1 || root == node2)
+			return root;
+
+		boolean node1OnLeft = exists(root.left, node1);
+		boolean node2OnLeft = exists(root.left, node2);
+		// Nodes are on different side
+		if (node1OnLeft != node2OnLeft)
+			return root;
+
+		BTNode childSide = node1OnLeft ? root.left : root.right;
+		
+		return leastCommonAncestor(childSide, node1, node2);
+	}
+
+	/**
+	 * Given a binary tree and two nodes of the binary tree, this method finds 
+	 * and returns the common ancestor node for the two. This algorithm works 
+	 * based on assumption that the nodes are not liked to parent node.
+	 * Optimized version of {@link #leastCommonAncestor(BinaryTree, BTNode, BTNode)}.
+	 * Time: O(n)
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * @param node1
+	 * 		first node
+	 * @param node2
+	 * 		second node
+	 * 
+	 * @return
+	 * 		the first common ancestor node if exists, null otherwise
+	 * 
+	 * @throws NullPointerException
+	 * 		if the given binary tree is null.
+	 */
+	static BTNode leastCommonAncestorOpt(BinaryTree bt, BTNode node1, BTNode node2) {
+		if (bt == null)
+			throw new NullPointerException("Given binary tree cannot be null.");
+
+		// TODO we need to check whether both node1 and node2 exists in the tree before proceeding
+		
+		AncestorNode ancestorNode = leastCommonAncestorOpt(bt.root, node1, node2);
+		if (ancestorNode.isAncestor)
+			return ancestorNode.node;
+
+		return null;
+	}
+	
+	/**
+	 * Recursively traverse the tree and find the common ancestor.
+	 * 
+	 * @param root
+	 * 		current subtree root
+	 * @param node1
+	 * 		first node
+	 * @param node2
+	 * 		second node
+	 * 
+	 * @return
+	 * 		<code>AncestorNode</code> object holding the possible ancestor
+	 */
+	private static AncestorNode leastCommonAncestorOpt(BTNode root, BTNode node1, BTNode node2) {
+		if (root == null)
+			return new AncestorNode(null, false);
+
+		if (root == node1 && root == node2)
+			return new AncestorNode(root, true);
+
+		AncestorNode ancestorLeft = leastCommonAncestorOpt(root.left, node1, node2);
+		if (ancestorLeft.isAncestor)
+			return ancestorLeft;
+
+		AncestorNode ancestorRight = leastCommonAncestorOpt(root.right, node1, node2);
+		if (ancestorRight.isAncestor)
+			return ancestorRight;
+
+		if (ancestorLeft.node != null && ancestorRight.node != null)
+			return new AncestorNode(root, true);
+		else if (root == node1 || root == node2) {
+			// We are currently at node1 or node2
+			boolean isAncestor = ancestorLeft.node != null || ancestorRight.node != null;
+
+			return new AncestorNode(root, isAncestor);
+		} else
+			return new AncestorNode(ancestorLeft.node != null ? ancestorLeft.node : ancestorRight.node, false);
+	}
+
+	/**
+	 * Represents an ancestor node.
+	 * 
+	 * @author psajja
+	 *
+	 */
+	private static class AncestorNode {
+		public BTNode node;
+		public boolean isAncestor;
+
+		/**
+		 * Initialize the object.
+		 * 
+		 * @param node
+		 * 		probable ancestor
+		 * @param isAncestor
+		 * 		indicates whether this is ancestor or not
+		 */
+		public AncestorNode(BTNode node, boolean isAncestor) {
+			this.node = node;
+			this.isAncestor = isAncestor;
+		}
+	}
+
+	/**
 	 * Given a binary tree and two node values, it returns the distance between the two nodes.
 	 * 
 	 * @param bt
@@ -2824,7 +3047,9 @@ public class BinaryTreeUtil {
 	
 	/**
 	 * Given two binary trees, check if the second tree is a subtree of the first one. 
-	 * Time: O(m*n)
+	 * This is based on building unique pre-order traversal and uses special value 
+	 * for null nodes while constructing the pre-order strings.
+	 * Time: O(m + n), Space: O(m + n) 
 	 * 
 	 * @param bt1
 	 * 		first binary tree
@@ -2833,6 +3058,56 @@ public class BinaryTreeUtil {
 	 * 
 	 * @return
 	 * 		true if second is a subtree of first
+	 * 
+	 * @throws NullPointerException
+	 * 		if any of the given tree is null
+	 */
+	static boolean isSubTree0(BinaryTree bt1, BinaryTree bt2) {
+		if (bt1 == null || bt2 == null)
+			throw new NullPointerException("Binary tree should not be null");
+	
+		StringBuilder stringl = new StringBuilder();
+		StringBuilder string2 = new StringBuilder();
+
+		getPreorderString(bt1.root, stringl);
+		getPreorderString(bt2.root, string2);
+
+		return stringl.indexOf(string2.toString()) != -1;
+	}
+	
+	/**
+	 * Traverse the tree in pre-order and construct the pre-order string.
+	 * 
+	 * @param node
+	 * 		current subtree root
+	 * @param sb
+	 * 		buffer to add nodes
+	 */
+	private static void getPreorderString(BTNode node, StringBuilder sb) {
+		if (node == null) {
+			sb.append("$");
+			return;
+		}
+
+		sb.append(node.getData() + ",");
+		getPreorderString(node.left, sb);
+		getPreorderString(node.right, sb);
+	}
+
+	/**
+	 * Given two binary trees, check if the second tree is a subtree of the first one. 
+	 * Time: O(m*n) -> O ( n + k*m), K is the number of occurrences of bt2's root in bt1
+	 * 
+	 * @param bt1
+	 * 		first binary tree
+	 * @param bt2
+	 * 		second binary tree
+	 * 
+	 * @return
+	 * 		true if second is a subtree of first
+	 * 
+	 * @throws NullPointerException
+	 * 		if any of the given tree is null
 	 */
 	static boolean isSubTree(BinaryTree bt1, BinaryTree bt2) {
 		if (bt1 == null || bt2 == null)
@@ -4173,5 +4448,222 @@ public class BinaryTreeUtil {
 	private static void join(BTNode node1, BTNode node2) {
 		node1.right = node2;
 		node2.left = node1;
+	}
+	
+	/**
+	 * Given a binary tree, this method creates a lists of nodes 
+	 * where each list contains nodes of each level.
+	 * This is based on pre-order traversal.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @return
+	 * 		list containing level nodes
+	 * 
+	 * @throws NullPointerException
+	 *     	if the given binary tree is null
+	 */
+	static List<List<BTNode>> getLevelLists(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+
+		List<List<BTNode>> lists = new ArrayList<List<BTNode>>();
+		getLevelLists(bt.root, lists, 0);
+	
+		return lists;
+	}
+
+	/**
+	 * Recursively traverse the tree and create the level lists.
+	 * 
+	 * @param root
+	 * 		the current root
+	 * @param lists	
+	 * 		list of linked nodes
+	 * @param level
+	 * 		current level
+	 */
+	private static void getLevelLists(BTNode root, List<List<BTNode>> lists, int level) {
+		if (root == null)
+			return;
+
+		List<BTNode> list = null;
+		if (lists.size() == level) {
+			list = new LinkedList<BTNode>();
+			lists.add(list);
+		} else {
+			list = lists.get(level);
+		}
+
+		list.add(root);
+		getLevelLists(root.left, lists, level + 1);
+		getLevelLists(root.right, lists, level + 1);
+	}
+	
+	/**
+	 * Given a binary tree, this method creates a lists of nodes 
+	 * where each list contains nodes of each level.
+	 * This is based on breadth first search.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @return
+	 * 		list containing level nodes
+	 * 
+	 * @throws NullPointerException
+	 *     	if the given binary tree is null
+	 */
+	static List<List<BTNode>> getLevelLists1(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+
+		List<List<BTNode>> lists = new ArrayList<List<BTNode>>();
+
+		List<BTNode> current = new LinkedList<BTNode>();
+		if (bt.root != null)
+			current.add(bt.root);
+
+		while (current.size() > 0) {
+			lists.add(current);
+			List<BTNode> parentList = current;
+			current = new LinkedList<BTNode>();
+			for (BTNode parent : parentList) {
+				if (parent.left != null)
+					current.add(parent.left);
+
+				if (parent.right != null)
+					current.add(parent.right);
+			}
+		}
+
+		return lists;
+	}
+	
+	/**
+	 * Given a root node of a binary tree, this method finds the inorder
+	 * successor of the given node. This method assumes that the nodes contains
+	 * a link to their parent. This is just a pseudo-code not a working code.
+	 * 
+	 * @param bt
+	 *    	given binary tree
+	 * 
+	 * @return 
+	 * 		inorder successor if exists, null otherwise
+	 */
+	static BTNode inorderSuccessor(BTNode root) {
+		if (root == null)
+			return null;
+
+		if (root.right != null)
+			return leftMostChild(root.right);
+
+		BTNode current = root;
+		BTNode parent = null/* current.parent */;
+		// Go up until we're on left instead of right
+		while (parent != null && parent.left != current) {
+			current = parent;
+			// update parent
+			// parent = parent.parent;
+		}
+		
+		return parent;
+	}
+	
+	/**
+	 * Given a node, it returns the left most node of this node.
+	 * 
+	 * @param node
+	 * 		given node
+	 * 
+	 * @return
+	 * 		the left most node in this subtree
+	 */
+	private static BTNode leftMostChild(BTNode node) {
+		if (node == null)
+			return null;
+
+		while (node.left != null)
+			node = node.left;
+
+		return node;
+	}
+	
+	/**
+	 * Given a binary tree, it finds the number of paths with the given sum.
+	 * A path need not start at root, and need not end at leaf. Time:  O(n).
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * @param pathSum
+	 * 		the path sum
+	 * 
+	 * @return
+	 * 		the number of the paths with the given sum
+	 * 
+	 * @throws NullPointerException
+	 *     	if the given binary tree is null
+	 */
+	public static int countPaths(BinaryTree bt, int pathSum) {
+		if (bt == null)
+			throw new NullPointerException("Binary tree should not be null");
+		
+		return countPaths(bt.root, pathSum, 0, new HashMap<Integer, Integer>());
+	}
+
+	/**
+	 * Recursively traverse the tree and compute the no of paths.
+	 * 
+	 * @param node
+	 * 		current subtree root
+	 * @param pathSum
+	 * 		actual sum
+	 * @param runningSum
+	 * 		current running sum
+	 * @param hashMap
+	 * 		map holding the path sums and corresponding count
+	 * 
+	 * @return
+	 * 		number of paths in the subtree
+	 */
+	private static int countPaths(BTNode node, int pathSum, int runningSum, HashMap<Integer, Integer> pathCounts) {
+		if (node == null)
+			return 0;
+
+		// Count paths with sum ending at the current node.
+		runningSum += node.getData();
+		int sum = runningSum - pathSum;
+		int totalPaths = pathCounts.containsKey(sum) ? pathCounts.get(sum) : 0;
+
+		// If runningSum equals targetSum, one additional path starts at root.
+		if (runningSum == pathSum)
+			totalPaths++;
+
+		incrementHashTable(pathCounts, runningSum, 1); // Increment by 1
+		totalPaths += countPaths(node.left, pathSum, runningSum, pathCounts);
+		totalPaths += countPaths(node.right, pathSum, runningSum, pathCounts);
+		incrementHashTable(pathCounts, runningSum, -1); // Decrement by 1
+
+		return totalPaths;
+	}
+	
+	/**
+	 * Update the paths count for the given sum.
+	 * 
+	 * @param pathCounts
+	 * 		holds sum and no.of paths 
+	 * @param sum
+	 * 		current sum
+	 * @param delta
+	 * 		delta to be adjusted (count)
+	 */
+	private static void incrementHashTable(HashMap<Integer, Integer> pathCounts, int sum, int delta) {
+		int newCount = (pathCounts.containsKey(sum) ? pathCounts.get(sum) : 0) + delta;
+		if (newCount == 0) {
+			pathCounts.remove(sum);
+		} else {
+			pathCounts.put(sum, newCount);
+		}
 	}
 }
