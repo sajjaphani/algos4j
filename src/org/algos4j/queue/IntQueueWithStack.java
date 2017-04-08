@@ -10,7 +10,9 @@ import org.algos4j.stack.IntStack;
  */
 public class IntQueueWithStack {
 
+	// Stack used to push elements
 	private IntStack stack1;
+	// Stack used to pop elements
 	private IntStack stack2;
 
 	private int capacity;
@@ -74,14 +76,38 @@ public class IntQueueWithStack {
 	 * 		if the queue is empty
 	 */
 	public int remove() {
-		if (stack1.isEmpty() && stack2.isEmpty())
+		if (isEmpty())
 			throw new IllegalStateException("Queue is empty.");
+		shiftElements();
+
+		return stack2.pop();
+	}
+	
+	/**
+	 * Retrieves and returns the front element of the queue.
+	 * 
+	 * @return
+	 * 		front element
+	 * 
+	 *  @throws IllegalStateException
+	 * 		if the queue is empty
+	 */
+	public int peek() {
+		if (isEmpty())
+			throw new IllegalStateException("Queue is empty.");
+		shiftElements();
+
+		return stack2.peek();
+	}
+
+	/**
+	 * Shift the stack elements from stack1 to stack2.
+	 */
+	protected void shiftElements() {
 		if (stack2.isEmpty()) {
 			while (!stack1.isEmpty())
 				stack2.push(stack1.pop());
 		}
-
-		return stack2.pop();
 	}
 	
 	/* (non-Javadoc)
