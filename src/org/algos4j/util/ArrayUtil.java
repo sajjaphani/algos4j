@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
@@ -1211,5 +1212,30 @@ public class ArrayUtil {
 		slides[array.length - w] = array[deque.removeFirst()];
 
 		return slides;
+	}
+	
+	/**
+	 * Given a list of Integer objects, it returns the array representation of
+	 * the objects. Returns an empty array if the given list is null
+	 * 
+	 * @param values
+	 * 		list of Integer objects
+	 * 
+	 * @return
+	 * 		array of int primitives
+	 * 
+	 * @throws NullPointerException
+	 * 		if any of the list element is null
+	 */
+	public static int[] toArray(List<Integer> values) {
+		if(values == null)
+			return new int[0];
+		
+		int[] array = new int[values.size()];
+	    int i = 0;
+	    for (int elt : values)  
+	    	array[i++] = elt;
+	
+	    return array;
 	}
 }

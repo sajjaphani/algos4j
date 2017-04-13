@@ -14,6 +14,8 @@ import java.util.Map;
 public class Trie {
 
 	private TrieNode root;
+
+	// Assumes to hold ASCII Strings
 	private static int BUFFER_SIZE = 128;
 	
 	/**

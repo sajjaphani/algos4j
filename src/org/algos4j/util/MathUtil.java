@@ -1,6 +1,10 @@
 package org.algos4j.util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Some math utility methods.
@@ -227,5 +231,261 @@ public class MathUtil {
 
 		if (n != 1)
 			System.out.println(n + " -> " + 1);
+	}
+	
+	/**
+	 * Given n stairs, this method counts the number of ways (paths) to reach
+	 * the top. A person can take either 1 or 2 or 3 steps at a time.
+	 * Time: O(3^n)
+	 * 
+	 * @param stairs
+	 * 		number of steps to climb
+	 * 
+	 * @return
+	 * 		the number of ways
+	 */
+	public static int countPaths(int stairs) {
+		if (stairs < 0)
+			return 0;
+		if (stairs == 0)
+			return 1;
+	
+		return countPaths(stairs - 1) + countPaths(stairs - 2) + countPaths(stairs - 3);
+	}
+	
+	/**
+	 * Given n stairs, this method counts the number of ways (paths) to reach
+	 * the top. A person can take either 1 or 2 or 3 steps at a time.
+	 * Uses memorization of the computed results. Time: O(n), Space: O(n).
+	 * 
+	 * @param stairs
+	 * 		number of steps to climb
+	 * 
+	 * @return
+	 * 		the number of ways
+	 */
+	public static int countPathsMemorization(int stairs) {
+		int memo[] = new int[stairs];
+	
+		return countPathsMemorization(stairs, memo);
+	}
+
+	/**
+	 * Recursively compute the number of ways starting at current stair.
+	 * 
+	 * @param stairs
+	 * 		stairs
+	 * @param memo
+	 * 		memorized result
+	 * 
+	 * @return
+	 * 		number of ways
+	 */
+	private static int countPathsMemorization(int stairs, int[] memo) {
+		if (stairs < 0)
+			return 0;
+		if (stairs == 0)
+			return 1;
+
+		if (memo[stairs] == 0)
+			memo[stairs] = countPathsMemorization(stairs - 1) + countPathsMemorization(stairs - 2) + countPathsMemorization(stairs - 3);
+
+		return memo[stairs];
+	}
+	
+	/**
+	 * Given n stairs, this method counts the number of ways (paths) to reach
+	 * the top. A person can take either 1 or 2 or 3 steps at a time.
+	 * Uses dynamic programming of the computed results. Time: O(n), Space: O(n).
+	 * 
+	 * @param stairs
+	 * 		number of steps to climb
+	 * 
+	 * @return
+	 * 		the number of ways
+	 */
+	public static int countPathsDynamic(int stairs) {
+		if (stairs < 0)
+			return 0;
+		
+		if (stairs <= 1)
+			return 1;
+	
+		int[] paths = new int[stairs];
+		paths[0] = 1;
+		paths[1] = 1;
+		paths[2] = 2;
+		for (int i = 3; i <= stairs; i++)
+			paths[i] = paths[i - 1] + paths[i - 2] + paths[i - 3];
+
+		return paths[stairs];
+	}
+	
+	/**
+	 * Given n stairs, this method counts the number of ways (paths) to reach
+	 * the top. A person can take either 1 or 2 or 3 steps at a time.
+	 * Uses dynamic programming of the computed results. Time: O(n), Space optimized.
+	 * 
+	 * @param stairs
+	 * 		number of steps to climb
+	 * 
+	 * @return
+	 * 		the number of ways
+	 */
+	public static int countPathsDynamicOpt(int stairs) {
+		if (stairs < 0)
+			return 0;
+
+		if (stairs <= 1)
+			return 1;
+
+		// We do not need more than last three counts
+		int[] paths = { 1, 1, 2 };
+		for (int i = 3; i <= stairs; i++) {
+			int count = paths[2] + paths[1] + paths[0];
+			paths[0] = paths[1];
+			paths[1] = paths[2];
+			paths[2] = count;
+		}
+
+		return paths[2];
+	}
+	
+	/**
+	 * Given denominations and the amount to make change, 
+	 * this method computes the number of ways the coins can be picked to make the sum.
+	 * 
+	 * @param denominations
+	 * 		denominations (coins)
+	 * @param amount
+	 * 		the amount to make
+	 * 
+	 * @return
+	 * 		the number of ways to make change
+	 */
+	public static int findWaysToMakeChange(int[] denominations, int amount) {
+		
+		return findWaysToMakeChange(denominations, amount, new HashMap<String, Integer>(), 0);
+	}
+
+	/**
+	 * Helper method which computes the ways to make change.
+	 * Memorization. Dynamic programming.
+	 * 
+	 * @param denominations
+	 * 		denominations
+	 * @param amount
+	 * 		amount
+	 * @param memomap
+	 * 		memorization map
+	 * @param index
+	 * 		current index of denomination
+	 * 
+	 * @return
+	 * 		the coins
+	 */
+	private static int findWaysToMakeChange(int[] denominations, int amount, Map<String, Integer> memomap, int index) {
+		if (amount == 0)
+			return 1;
+
+		if (index >= denominations.length)
+			return 0;
+
+		String key = amount + "-" + index;
+		if (memomap.containsKey(key))
+			return memomap.get(key);
+
+		int amountWith = 0;
+		int ways = 0;
+		while (amountWith <= amount) {
+			int remaining = amount - amountWith;
+			ways += findWaysToMakeChange(denominations, remaining, memomap, index + 1);
+			amountWith += denominations[index];
+		}
+		memomap.put(key, ways);
+
+		return ways;
+	}
+	
+	/**
+	 * Given denominations and the amount to make change, 
+	 * this method computes the minimum number of coins required to make change.
+	 * Time: O(n * amount), Space: O(amount)
+	 * 
+	 * @param denominations
+	 * 		denominations (coins)
+	 * @param amount
+	 * 		the amount to make
+	 * 
+	 * @return
+	 * 		minimum coins required to make change
+	 */
+	public static int findMinCoinsToMakeChange(int[] denominations, int amount) {
+		int min = 0;
+		int[] minCoins = new int[amount + 1];
+		Arrays.fill(minCoins, Integer.MAX_VALUE);
+		minCoins[0] = 0;
+		for (int i = 1; i <= amount; i++) {
+			min = minCoins[i];
+			for (int j = 0; j < denominations.length; j++) {
+				if (i >= denominations[j]) {
+					min = Math.min(min, minCoins[i - denominations[j]]);
+				if (min != Integer.MAX_VALUE && min + 1 < minCoins[i]) {
+					minCoins[i] = min + 1;
+				}
+				}
+			}
+		}
+
+		return minCoins[amount];
+	}
+	
+	/**
+	 * Given denominations and the amount to make change, 
+	 * this method computes the minimum number of coins required to make change.
+	 * Time: O(n * amount), Space: O(amount)
+	 * 
+	 * @param denominations
+	 * 		denominations (coins)
+	 * @param amount
+	 * 		the amount to make
+	 * 
+	 * @return
+	 * 		array of coins required to make change, empty array if can not make change
+	 */
+	public static int[] makeChange(int[] denominations, int amount) {
+		int min = 0;
+		int[] minCoins = new int[amount + 1];
+		Arrays.fill(minCoins, Integer.MAX_VALUE);
+		int[] prevCoin = new int[amount + 1];
+		Arrays.fill(prevCoin, -1);
+		
+		minCoins[0] = 0;
+		for (int i = 1; i <= amount; i++) {
+			min = minCoins[i];
+			for (int j = 0; j < denominations.length; j++) {
+				if (i >= denominations[j]) {
+					min = Math.min(min, minCoins[i - denominations[j]]);
+					if (min != Integer.MAX_VALUE && min + 1 < minCoins[i]) {
+						minCoins[i] = min + 1;
+						prevCoin[i] = j;
+					}
+				}
+			}
+		}
+
+		if (prevCoin[amount] != -1) {
+			List<Integer> coins = new ArrayList<>();
+			int curAmount = amount;
+			while (curAmount != 0) {
+				int j = prevCoin[curAmount];
+				coins.add(denominations[j]);
+				curAmount = curAmount - denominations[j];
+			}
+			
+			return ArrayUtil.toArray(coins);
+		}
+		
+		return new int[0];
 	}
 }

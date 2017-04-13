@@ -212,4 +212,63 @@ public class Array2dUtil {
 		if (colHasZero)
 			nullifyColumn(array, 0);
 	}
+	
+	/**
+	 * Given a m X n matrix, which contains 0s and 1s, this method computes the
+	 * max region of 1s that is in the array. Based on DFS.
+	 * 
+	 * @param array
+	 *   	given matrix
+	 * 
+	 * @return 
+	 * 		the max region
+	 */
+	public static int maxRegion(int[][] array) {
+		// TODO check array or any of the row is null
+		// TODO validate data for only 0s and 1s
+
+		int maxRegion = 0;
+		int[][] matrix = array.clone();
+		for (int row = 0; row < matrix.length; row++) {
+			for (int col = 0; col < matrix[row].length; col++) {
+				if (matrix[row][col] == 1) {
+					maxRegion = Math.max(getResionSize(matrix, row, col), maxRegion);
+				}
+			}
+		}
+
+		return maxRegion;
+	}
+
+	/**
+	 * Recursively computes the region starting from given row and column.
+	 * 
+	 * @param matrix
+	 * 		given matrix
+	 * @param row
+	 * 		current row
+	 * @param col
+	 * 		current column
+	 * 
+	 * @return
+	 * 		region starting from [row][col]
+	 */
+	private static int getResionSize(int[][] matrix, int row, int col) {
+		if (row < 0 || col < 0 || row >= matrix.length || col >= matrix[row].length)
+			return 0;
+		
+		if (matrix[row][col] == 0)
+			return 0;
+		
+		matrix[row][col] = 0;
+		int size = 0;
+		for (int r = row - 1; r <= row + 1; r++) {
+			for (int c = col - 1; r <= col + 1; c++) {
+				if(r != row || c != col)
+					size += getResionSize(matrix, r, c);
+			}
+		}
+
+		return size;
+	}
 }

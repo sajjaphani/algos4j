@@ -1,6 +1,7 @@
 package org.algos4j.graph;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -304,6 +305,51 @@ public class GraphUtil {
 				pathTo(graph, w, visited, edgeTo);
 			}
 		}
+	}
+	
+	/**
+	 * Given a graph and a start vertex, this method computes the shortest
+	 * distance from that vertex to each other vertex. If a node can not be
+	 * reached then the entry will be -1.
+	 * 
+	 * @param graph
+	 * 		given graph
+	 * @param fromVertex
+	 * 		start vertex
+	 * 
+	 * @return
+	 * 		the array holding distances
+	 * 
+	 * @throws NullPointerException
+	 * 		if the graph is null
+	 * @throws IllegalArgumentException
+	 * 		if the given vertex is outside of the range
+	 */
+	public static int[] shortestReach(IGraph graph, int fromVertex) {
+		if (graph == null)
+			throw new NullPointerException("Graph can not be null.");
+
+		if (fromVertex < 0 || fromVertex >= graph.vertices())
+			throw new IllegalArgumentException("Invalid from vertex.");
+
+		Queue<Integer> queue = new LinkedList<>();
+		queue.add(fromVertex);
+
+		int[] distances = new int[graph.vertices()];
+		Arrays.fill(distances, -1);
+		distances[fromVertex] = 0;
+
+		while (!queue.isEmpty()) {
+			int vertex = queue.poll();
+			for (int v : graph.outEdges(vertex)) {
+				if (distances[v] == -1) {
+					distances[v] = distances[vertex] + 1;
+					queue.add(v);
+				}
+			}
+		}
+
+		return distances;
 	}
 	
 	/**

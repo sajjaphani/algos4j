@@ -21,6 +21,31 @@ public class ArraySortUtil {
 	}
 	
 	/**
+	 * Given an array, this method sorts the elements using bubble sort algorithm.
+	 * 
+	 * Time: O(n^2).
+	 * 
+	 * @param array
+	 * 		given array
+	 * 
+	 * @throws NullPointerException
+	 * 		if the input array is null
+	 */
+	public static void bubbleSoft(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Array cannot be null.");
+
+		int size = array.length;
+		for (int i = 0; i < size - 1; i++) {
+			for (int j = 0; j < size - i - 1; j++) {
+				if (array[j] > array[j + 1]) {
+					swap(array, j, j - 1);
+				}
+			}
+		}
+	}
+	
+	/**
 	 * Given an array, this method sorts the elements using insertion sort algorithm.
 	 * 
 	 * Time: O(n^2).
@@ -40,8 +65,6 @@ public class ArraySortUtil {
 				swap(array, j, j - 1);
 			}
 		}
-		
-		return;
 	}
 
 	/**
@@ -771,5 +794,154 @@ public class ArraySortUtil {
 			return findFirstMissing(array, start, mid);
 		else
 			return findFirstMissing(array, mid + 1, end);
+	}
+	
+	/**
+	 * Given an array of integers, it sorts them using quicksort algorithm.
+	 * Time: (n log n)
+	 * 
+	 * @param array
+	 * 		given array
+	 * 
+	 * @throws NullPointerException
+	 * 		if the input array is null
+	 */
+	public static void quickSort(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Array cannot be null.");
+		
+		quickSort(array, 0, array.length-1);
+	}
+
+	/**
+	 * Recursively sort the subarrays.
+	 * 
+	 * @param array
+	 * 		given array
+	 * @param start
+	 * 		current start index
+	 * @param end
+	 * 		current end index
+	 */
+	private static void quickSort(int[] array, int start, int end) {
+		if (start >= end)
+			return;
+
+		int pivot = array[(start + end) / 2];
+		int index = partition(array, start, end, pivot);
+		quickSort(array, start, index - 1);
+		quickSort(array, index, end);
+	}
+
+	/**
+	 * Partition the the array such that the elements are arranged around pivot element.
+	 * 
+	 * @param array
+	 * 		given array
+	 * @param start
+	 * 		current start index
+	 * @param end
+	 * 		current end index
+	 * @param pivot
+	 * 		pivot element
+	 * 
+	 * @return
+	 * 		index of the partition
+	 */
+	private static int partition(int[] array, int start, int end, int pivot) {
+		while (start <= end) {
+			while (array[start] < pivot)
+				start++;
+
+			while (array[end] > pivot)
+				end--;
+
+			if (start <= end) {
+				swap(array, start, end);
+				start++;
+				end--;
+			}
+		}
+
+		return start;
+	}
+	
+	/**
+	 * Given an array of integers, it sorts them using mergesort algorithm.
+	 * Time: (n log n), Space: O(n)
+	 * 
+	 * @param array
+	 * 		given array
+	 * 
+	 * @throws NullPointerException
+	 * 		if the input array is null
+	 */
+	public static void mergeSort(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Array cannot be null.");
+
+		mergeSort(array, new int[array.length], 0, array.length - 1);
+	}
+
+	/**
+	 * Recursively sort the array, from the start to end index.
+	 * 
+	 * @param array
+	 * 		given array
+	 * @param aux
+	 * 		auxiliary array
+	 * @param start
+	 * 		left start
+	 * @param end
+	 * 		right end
+	 */
+	private static void mergeSort(int[] array, int[] aux, int start, int end) {
+		if (start >= end)
+			return;
+
+		int middle = (start + end) / 2;
+		mergeSort(array, aux, start, middle);
+		mergeSort(array, aux, middle + 1, end);
+		merge(array, aux, start, end);
+	}
+
+	/**
+	 * Merge the halves.
+	 * 
+	 * @param array
+	 * 		given array
+	 * @param aux
+	 * 		auxiliary array
+	 * @param leftStart
+	 * 		current left start
+	 * @param rightEnd
+	 * 		current right end
+	 */
+	private static void merge(int[] array, int[] aux, int leftStart, int rightEnd) {
+		int leftEnd = (leftStart + rightEnd) / 2;
+		int rightStart = leftEnd + 1;
+		int curSize = rightEnd-leftStart;
+		
+		int left = leftStart;
+		int right = rightStart;
+		int index = leftStart;
+		
+		while(left <= leftEnd && right <= rightEnd) {
+			if(array[left] <= array[right]) {
+				aux[index] = array[left];
+				left++;
+			} else {
+				aux[index] = array[right];
+			}
+			index++;
+		}
+		
+		// Copy remainder elements
+		// Copy left remaining elements to aux
+		System.arraycopy(array, left, aux, index, leftEnd - left + 1);
+		// Copy right remaining elements to aux
+		System.arraycopy(array, right, aux, index, rightEnd - right + 1);
+		// Copy back to the original
+		System.arraycopy(aux, leftStart, array, leftStart, curSize);
 	}
 }
