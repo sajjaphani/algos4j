@@ -1238,4 +1238,90 @@ public class ArrayUtil {
 	
 	    return array;
 	}
+	
+	/**
+	 * Given an array of numbers, this method computes the median for each
+	 * element in the array from numbers[0] to till that number.
+	 * 
+	 * @param numbers
+	 * 		given numbers
+	 * 
+	 * @return
+	 * 		the continuous median of numbers
+	 * 
+	 * @throws NullPointerException
+	 * 		if the numbers array is null
+	 */
+	public static double[] getMedians(int[] numbers) {
+		if (numbers == null)
+			throw new NullPointerException("Input array of numbers cannot be null.");
+
+		// Both heaps differ by 1 max
+		BinaryHeap<Integer> lowersHeap = new MaxBinaryHeap<>();
+		BinaryHeap<Integer> highersHeap = new MinBinaryHeap<>();
+
+		double[] median = new double[numbers.length];
+
+		for (int i = 0; i < numbers.length; i++) {
+			addNumber(numbers[i], lowersHeap, highersHeap);
+			rebalance(lowersHeap, highersHeap);
+			median[i] = getMedian(lowersHeap, highersHeap);
+		}
+
+		return median;
+	}
+
+	/**
+	 * Add the given number to the lower or higher heap.
+	 * 
+	 * @param number
+	 * 		number to add
+	 * @param lowersHeap
+	 * 		lower numbers heap
+	 * @param highersHeap
+	 * 		higher numbers heap
+	 */
+	private static void addNumber(int number, BinaryHeap<Integer> lowersHeap, BinaryHeap<Integer> highersHeap) {
+		if (lowersHeap.isEmpty() || number < lowersHeap.peek())
+			lowersHeap.add(number);
+		else
+			highersHeap.add(number);
+	}
+
+	/**
+	 * Rebalance the heaps such that they differ in size by a max of 1.
+	 * 
+	 * @param lowersHeap
+	 * 		lower numbers heap
+	 * @param highersHeap
+	 * 		higher numbers heap
+	 */
+	private static void rebalance(BinaryHeap<Integer> lowersHeap, BinaryHeap<Integer> highersHeap) {
+		BinaryHeap<Integer> bigHeap = lowersHeap.size() > highersHeap.size() ? lowersHeap : highersHeap;
+		BinaryHeap<Integer> smallHeap = lowersHeap.size() > highersHeap.size() ? highersHeap : lowersHeap;
+
+		if (bigHeap.size() - smallHeap.size() > 1)
+			smallHeap.add(bigHeap.remove());
+	}
+
+	/**
+	 * Get the current median of numbers.
+	 * 
+	 * @param lowersHeap
+	 * 		lower numbers heap
+	 * @param highersHeap
+	 * 		higher numbers heap
+	 * 		
+	 * @return
+	 * 		current median
+	 */
+	private static double getMedian(BinaryHeap<Integer> lowersHeap, BinaryHeap<Integer> highersHeap) {
+		BinaryHeap<Integer> bigHeap = lowersHeap.size() > highersHeap.size() ? lowersHeap : highersHeap;
+		BinaryHeap<Integer> smallHeap = lowersHeap.size() > highersHeap.size() ? highersHeap : lowersHeap;
+
+		if (bigHeap.size() == smallHeap.size())
+			return (double) (bigHeap.peek() + smallHeap.peek()) / 2;
+
+		return bigHeap.peek();
+	}
 }
