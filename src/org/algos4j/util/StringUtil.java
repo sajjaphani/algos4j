@@ -729,4 +729,63 @@ public class StringUtil {
 
 		return compressed.length() < string.length() ? compressed.toString() : string;
 	}
+	
+	/**
+	 * The number of lower case letters
+	 */
+	public static final int NUMBER_OF_LETTERS_LOWERCASE = 26;
+		
+	/**
+	 * Given two strings, this method computes the number of characters that are
+	 * needed to be removed from either of the string to make them anagrams. This
+	 * method assumes the given strings contain lower case characters only.
+	 * 
+	 * @param string1
+	 * 		first string
+	 * @param string2
+	 * 		second string
+	 * 
+	 * @return
+	 * 		number of characters to remove from either of the string
+	 */
+	public static int computeAnagramDifference(String string1, String string2) {
+		// TODO - error handling, null checks
+
+		int[] charCounts1 = getCharCounts(string1);
+		int[] charCounts2 = getCharCounts(string2);
+
+		return computeDelta(charCounts1, charCounts2);
+	}
+
+	/**
+	 * This method computes the counts of each character in the given string.
+	 * 
+	 * @param string
+	 * 		given string
+	 * 
+	 * @return
+	 * 		array holding the count of each character
+	 */
+	private static int[] getCharCounts(String string) {
+		return buildFrequencyTable(string);
+	}
+
+	/**
+	 * This method computes the difference of number of character.
+	 * 
+	 * @param charCounts1
+	 * 		character frequencies of first string
+	 * @param charCounts2
+	 * 		character frequencies of second string
+	 * 
+	 * @return
+	 * 		the number of characters differ
+	 */
+	private static int computeDelta(int[] charCounts1, int[] charCounts2) {
+		int delta = 0;
+		for (int i = 0; i < charCounts1.length; i++)
+			delta += Math.abs(charCounts1[i] - charCounts2[i]);
+
+		return delta;
+	}
 }
