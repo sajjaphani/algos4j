@@ -788,4 +788,54 @@ public class StringUtil {
 
 		return delta;
 	}
+	
+	/**
+	 * Given a string this method reverse the words in the string.
+	 * E.g, 'you are how' becomes 'how are you'. Time: O(n)
+	 * 
+	 * @param string
+	 * 		given string
+	 * 
+	 * @return
+	 * 		string with words in reverse order.
+	 */
+	public static String reverseWords(String string) {
+		if (string == null)
+			throw new NullPointerException("Input string cannot be null.");
+
+		char[] chars = string.toCharArray();
+
+		// First reverse the whole string
+		reverse(chars, 0, chars.length - 1);
+
+		int wIndex = 0;
+		// Reverse individual words
+		for (int index = 0; index <= chars.length; index++) {
+			if (index == chars.length || chars[index] == ' ') {
+				reverse(chars, wIndex, index - 1);
+				wIndex = index + 1;
+			}
+		}
+
+		return new String(chars);
+	}
+	
+	/**
+	 * Given character array, this method reverse the characters from start to
+	 * end index.
+	 * 
+	 * @param chars
+	 *   	character array
+	 * @param startIndex
+	 *     	start index
+	 * @param endIndex
+	 *    	end index
+	 */
+	protected static void reverse(char[] chars, int startIndex, int endIndex) {
+		while (startIndex < endIndex) {
+			char temp = chars[startIndex];
+			chars[startIndex++] = chars[endIndex];
+			chars[endIndex--] = temp;
+		}
+	}
 }
