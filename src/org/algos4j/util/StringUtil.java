@@ -790,7 +790,7 @@ public class StringUtil {
 	}
 	
 	/**
-	 * Given a string this method reverse the words in the string.
+	 * Given a string this method reverse the the string by words.
 	 * E.g, 'you are how' becomes 'how are you'. Time: O(n)
 	 * 
 	 * @param string

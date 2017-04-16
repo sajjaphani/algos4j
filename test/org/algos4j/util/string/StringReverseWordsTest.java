@@ -3,7 +3,7 @@ package org.algos4j.util.string;
 import org.algos4j.util.StringUtil;
 
 /**
- * This  class tests the reversing of words in a given string.
+ * This  class tests the reversing the string by words in a given string.
  * 
  * @author psajja
  *
