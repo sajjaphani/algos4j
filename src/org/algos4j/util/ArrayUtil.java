@@ -1324,4 +1324,86 @@ public class ArrayUtil {
 
 		return bigHeap.peek();
 	}
+	
+	/**
+	 * Given an array of integers and a sum, this method finds three numbers
+	 * that are sum to the given sum. This method modifies the given array. 
+	 * Time: O(n^2)
+	 * 
+	 * @param array
+	 * 		given array
+	 * @param sum
+	 * 		the sum
+	 * 
+	 * @return
+	 * 		a three element array if found, empty array if not found
+	 * 
+	 * @throws NullPointerException
+	 * 		if the input array is null
+	 * @throws IllegalArgumentException
+	 * 		if the input array is not having sufficient elements
+	 */
+	public static int[] find3Numbers(int[] array, int sum) {
+		if (array == null)
+			throw new NullPointerException("Input array cannot be null.");
+		if (array.length < 3)
+			throw new IllegalArgumentException("Not enough elements in the array.");
+
+		int size = array.length;
+		int left, right;
+
+		Arrays.sort(array);
+
+		for (int i = 0; i < size - 2; i++) {
+			left = i + 1;
+			right = size - 1;
+			while (left < right) {
+				if (array[i] + array[left] + array[right] == sum)
+					return new int[] { array[i], array[left], array[right] };
+				else if (array[i] + array[left] + array[right] < sum)
+					left++;
+				else
+					right--;
+			}
+		}
+
+		return new int[0];
+	}
+	
+	/**
+	 * Given an array and a sum, this method returns a sub array with the matching sum.
+	 * 
+	 * @param array
+	 * 		given array
+	 * @param sum
+	 * 		given sum
+	 * 
+	 * @return
+	 * 		sub array if exists, an empty array if there is no sub-array sum
+	 * 
+	 * @throws NullPointerException
+	 * 		if the input array is null
+	 */
+	public static int[] subarrayWithSum(int[] array, int sum) {
+		if (array == null)
+			throw new NullPointerException("Input array cannot be null.");
+
+		Map<Integer, Integer> map = new HashMap<>();
+
+		int currentSum = 0;
+
+		for (int i = 0; i < array.length; i++) {
+			currentSum = currentSum + array[i];
+
+			if (currentSum == sum)
+				return Arrays.copyOfRange(array, 0, i + 1);
+
+			if (map.containsKey(currentSum - sum))
+				return Arrays.copyOfRange(array, map.get(currentSum - sum) + 1, i + 1);
+
+			map.put(currentSum, i);
+		}
+
+		return new int[0];
+	}
 }

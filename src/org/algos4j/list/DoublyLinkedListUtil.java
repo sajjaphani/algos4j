@@ -73,7 +73,7 @@ public class DoublyLinkedListUtil {
 
 	/**
 	 * Clones the given linked list. This method logic can be adapted when we
-	 * are cloning a doubly linked list where prev pointer is a random pointer.
+	 * are cloning a doubly linked list where 'prev' pointer is a random pointer.
 	 * 
 	 * @param linkedList
 	 *   	doubly linked list.

@@ -430,9 +430,9 @@ public class MathUtil {
 			for (int j = 0; j < denominations.length; j++) {
 				if (i >= denominations[j]) {
 					min = Math.min(min, minCoins[i - denominations[j]]);
-				if (min != Integer.MAX_VALUE && min + 1 < minCoins[i]) {
-					minCoins[i] = min + 1;
-				}
+					if (min != Integer.MAX_VALUE && min + 1 < minCoins[i]) {
+						minCoins[i] = min + 1;
+					}
 				}
 			}
 		}

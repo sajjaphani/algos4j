@@ -31,13 +31,13 @@ public final class ArrayRotateUtil {
 	public static void rotate(int[] array, int d) {
 		if (array == null)
 			throw new NullPointerException("Input array should not be null");
-		if(d <= 0)
+		if (d <= 0)
 			throw new IllegalArgumentException("Invalid rotations: " + d);
-		
+
 		for (int i = 0; i < d; i++) {
 			int temp = array[0];
-			int j = 0;
-			for (; j < array.length - 1; j++)
+			int j;
+			for (j = 0; j < array.length - 1; j++)
 				array[j] = array[j + 1];
 			array[j] = temp;
 		}
@@ -125,9 +125,9 @@ public final class ArrayRotateUtil {
 	 * 		end index
 	 */
 	private static void reverese(int array[], int start, int end) {
-		int temp;
+		// TODO extract as an utility method
 		while (start < end) {
-			temp = array[start];
+			int temp = array[start];
 			array[start] = array[end];
 			array[end] = temp;
 			start++;
@@ -155,6 +155,7 @@ public final class ArrayRotateUtil {
 		int i, j;
 		if (d == 0 || d == n)
 			return;
+	
 		i = d;
 		j = n - d;
 		while (i != j) {
@@ -181,13 +182,11 @@ public final class ArrayRotateUtil {
 	 * @param d
 	 * 		number of swaps
 	 */
-	public static void swap(int[] array, int first, int second, int d) {
-		int i, temp;
-		for (i = 0; i < d; i++) {
-			temp = array[first + i];
+	private static void swap(int[] array, int first, int second, int d) {
+		for (int i = 0; i < d; i++) {
+			int temp = array[first + i];
 			array[first + i] = array[second + i];
 			array[second + i] = temp;
 		}
 	}
-
 }
