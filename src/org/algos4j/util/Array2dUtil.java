@@ -1,5 +1,7 @@
 package org.algos4j.util;
 
+import java.util.Stack;
+
 /**
  * Some utilities on two dimensional arrays and also related to matrices.
  * 
@@ -270,5 +272,113 @@ public class Array2dUtil {
 		}
 
 		return size;
+	}
+	
+	/**
+	 * Given a 2d array of nXn size, which holds the relation knows(a, b) which
+	 * holds either true or false, this method will find the celebrity if any.
+	 * In a party of n people, there may exists only one celebrity and is known
+	 * to everyone and celebrity doesn't know anyone. Uses Stack, Time: O(n).
+	 * 
+	 * @param array
+	 * 		given array holds relation knows(a, b)
+	 * 
+	 * @return
+	 * 		celebrity if exists, -1 otherwise
+	 */
+	static int findCelebrity1(boolean[][] array) {
+		if (array == null)
+			throw new NullPointerException("Input array cannot be null.");
+		// TODO check for nXn size
+
+		Stack<Integer> s = new Stack<>();
+
+		int candidate;
+
+		for (int i = 0; i < array.length - 1; i++)
+			s.push(i);
+
+		int person1 = s.pop();
+		int person2 = s.pop();
+
+		while (s.size() > 1) {
+			if (knows(array, person1, person2)) {
+				person1 = s.pop();
+			} else {
+				person2 = s.pop();
+			}
+		}
+
+		// Potential candidate?
+		candidate = s.pop();
+
+		// person1 or person2 or candidate can be a celebrity
+		if (knows(array, candidate, person2))
+			candidate = person2;
+
+		if (knows(array, candidate, person1))
+			candidate = person1;
+
+		// is 'candidate' celebrity?
+		for (int i = 0; i < array.length; i++) {
+			if ((i != candidate) && (knows(array, candidate, i) || !knows(array, i, candidate)))
+				return -1;
+		}
+
+		return candidate;
+	}
+	
+	/**
+	 * Returns true if a knows b, false otherwise.
+	 * 
+	 * @param array
+	 * 		given array holds relation knows(a, b)
+	 * 
+	 * @param a
+	 * 		person a
+	 * @param b
+	 * 		person b
+	 * 
+	 * @return
+	 * 		true if a knows b, false otherwise
+	 */
+	private static boolean knows(boolean[][] array, int a, int b) {
+		return array[a][b];
+	}
+	
+	/**
+	 * Given a 2d array of nXn size, which holds the relation knows(a, b) which
+	 * holds either true or false, this method will find the celebrity if any.
+	 * In a party of n people, there may exists only one celebrity and is known
+	 * to everyone and celebrity doesn't know anyone. No extra space, Time: O(n).
+	 * 
+	 * @param array
+	 * 		given array holds relation knows(a, b)
+	 * 
+	 * @return
+	 * 		celebrity if exists, -1 otherwise
+	 */
+	public static int findCelebrity(boolean[][] array) {
+		if (array == null)
+			throw new NullPointerException("Input array cannot be null.");
+		// TODO check for nXn size
+
+		int person1 = 0;
+		int person2 = array.length - 1;
+
+		while (person1 < person2) {
+			if (knows(array, person1, person2))
+				person1++;
+			else
+				person2--;
+		}
+
+		// We can use 'person1' or 'person2'
+		for (int i = 0; i < array.length; i++) {
+			if ((i != person1) && (knows(array, person1, i) || !knows(array, i, person1)))
+				return -1;
+		}
+
+		return person1;
 	}
 }
