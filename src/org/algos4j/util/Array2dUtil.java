@@ -1,5 +1,9 @@
 package org.algos4j.util;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Stack;
 
 /**
@@ -380,5 +384,124 @@ public class Array2dUtil {
 		}
 
 		return person1;
+	}
+	
+	/**
+	 * Represents an interval.
+	 * 
+	 * @author psajja
+	 *
+	 */
+	static class Interval {
+		int start;
+		int end;
+
+		public Interval(int start, int end) {
+			this.start = start;
+			this.end = end;
+		}
+
+		@Override
+		public String toString() {
+			return "{" + start + ", " + end + "}";
+		}
+	}
+	
+	/**
+	 * Given a list of intervals, this method merges the overlapping intervals.
+	 * Time: O(n log n), Space: O(n)
+	 * 
+	 * @param intervals
+	 * 		list of interval objects
+	 * 
+	 * @return
+	 * 		the intervals after merging overlapping once
+	 */
+	static List<Interval> mergeIntervals(List<Interval> intervals) {
+		if (intervals == null)
+			throw new NullPointerException("Input intervals can not be null.");
+
+		if (intervals.size() < 2)
+			return intervals;
+
+		// Sort based on increasing order of start interval
+		Collections.sort(intervals, new Comparator<Interval>() {
+
+			@Override
+			public int compare(Interval i1, Interval i2) {
+				if (i1.start != i2.start)
+					return i1.start - i2.start;
+				else
+					return i1.end - i2.end;
+			}
+		});
+
+		Stack<Interval> s = new Stack<>();
+
+		s.push(intervals.get(0));
+
+		for (int i = 1; i < intervals.size(); i++) {
+			Interval top = s.peek();
+
+			if (top.end < intervals.get(i).start) {
+				s.push(intervals.get(i));
+			} else if (top.end < intervals.get(i).end) {
+				top.end = intervals.get(i).end;
+			}
+		}
+
+		List<Interval> mergedIntervals = new ArrayList<>();
+
+		while (!s.empty())
+			mergedIntervals.add(s.pop());
+
+		return mergedIntervals;
+	}
+	
+	/**
+	 * Given a list of intervals, this method merges the overlapping intervals.
+	 * Time: O(n log n)
+	 * 
+	 * @param intervals
+	 * 		list of interval objects
+	 * 
+	 * @return
+	 * 		the intervals after merging overlapping once
+	 */
+	static List<Interval> mergeIntervals1(List<Interval> intervals) {
+		if (intervals == null)
+			throw new NullPointerException("Input intervals can not be null.");
+
+		if (intervals.size() < 2)
+			return intervals;
+
+		// Sort based on decreasing order of start interval
+		Collections.sort(intervals, new Comparator<Interval>() {
+
+			@Override
+			public int compare(Interval i1, Interval i2) {
+				if (i1.start != i2.start)
+					return i2.start - i1.start;
+				else
+					return i1.end - i2.end;
+			}
+		});
+
+		List<Interval> mergedIntervals = new ArrayList<>();
+
+		for (int i = 0, index = 0; i < intervals.size(); i++, index++) {
+			if (index != 0 && intervals.get(index - 1).start <= intervals.get(i).end) {
+				while (index != 0 && intervals.get(index - 1).start <= intervals.get(i).end) {
+					// Merge the overlapping intervals
+					mergedIntervals.get(index - 1).end = Math.max(mergedIntervals.get(index - 1).end, intervals.get(i).end);
+					mergedIntervals.get(index - 1).start = Math.min(mergedIntervals.get(index - 1).start, intervals.get(i).start);
+					index--;
+				}
+			} else {
+				mergedIntervals.add(intervals.get(i));
+			}
+		}
+
+		return mergedIntervals;
 	}
 }

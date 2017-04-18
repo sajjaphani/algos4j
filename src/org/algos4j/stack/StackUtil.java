@@ -779,4 +779,41 @@ public class StackUtil {
 
 		return Arrays.copyOfRange(result, 1, result.length);
 	}
+	
+	/**
+	 * Given a string containing an expression, this method checks whether the
+	 * expression contains duplicate parenthesis.
+	 * 
+	 * @param expression
+	 * 		given expression
+	 * 
+	 * @return
+	 * 		true if the expression contains duplicate parenthesis, false otherwise
+	 */
+	public static boolean hasDuplicateParenthesis(String expression) {
+		if (expression == null)
+			return false;
+
+		CharStack Stack = new CharStack(expression.length());
+
+		for (int i = 0; i < expression.length(); i++) {
+			char chr = expression.charAt(i);
+			if (chr == ')') {
+				char top = Stack.peek();
+				Stack.pop();
+
+				if (top == '(')
+					return true;
+				else {
+					while (top != '(') {
+						top = Stack.peek();
+						Stack.pop();
+					}
+				}
+			} else
+				Stack.push(chr);
+		}
+
+		return false;
+	}
 }
