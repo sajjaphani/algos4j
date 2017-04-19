@@ -1462,8 +1462,8 @@ public class ArrayUtil {
 	 * @throws NullPointerException
 	 * 		if the input array is null
 	 */
-	public static int[] subarrayWith0s1sOptimal(int[] arr) {
-		if (arr == null)
+	public static int[] subarrayWith0s1sOptimal(int[] array) {
+		if (array == null)
 			throw new NullPointerException("Input array can not be null.");
 
 		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
@@ -1472,14 +1472,14 @@ public class ArrayUtil {
 		int maxLength = 0;
 		int endIndex = -1;
 
-		int length = arr.length;
+		int length = array.length;
 
 		// Change 0s to -1s
 		for (int i = 0; i < length; i++)
-			arr[i] = (arr[i] == 0) ? -1 : 1;
+			array[i] = (array[i] == 0) ? -1 : 1;
 
 		for (int i = 0; i < length; i++) {
-			sum += arr[i];
+			sum += array[i];
 
 			// handle last index
 			if (sum == 0) {
@@ -1499,8 +1499,51 @@ public class ArrayUtil {
 
 		// Change back -1s to 0s
 		for (int i = 0; i < length; i++)
-			arr[i] = (arr[i] == -1) ? 0 : 1;
+			array[i] = (array[i] == -1) ? 0 : 1;
 
 		return new int[] { endIndex - maxLength + 1, endIndex };
+	}
+	
+	/**
+	 * Given an array of positive integers, this method counts the number of 
+	 * triangles that can be formed from these numbers. To form a triangle  
+	 * from 3 values, the sum of any two values must be greater than the third.
+	 * Time: O(n^2).
+	 * 
+	 * @param array
+	 * 		given array
+	 * 
+	 * @return
+	 * 		two element array of start and end index, or with {-1 and -1}
+	 * 
+	 * @throws NullPointerException
+	 * 		if the input array is null
+	 */
+	public static int numberOfTrianglesPossible(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Input array can not be null.");
+
+		// TODO check for positive ints only.
+		
+		Arrays.sort(array);
+
+		int size = array.length;
+		int count = 0;
+
+		for (int i = 0; i < size - 2; i++) {
+
+			for (int j = i + 1, k = i + 2; j < size; j++) {
+
+				// Find the rightmost element which is smaller than the sum of
+				// two elements
+				while (k < size && array[i] + array[j] > array[k])
+					k++;
+
+				// update count
+				count += k - j - 1;
+			}
+		}
+
+		return count;
 	}
 }
