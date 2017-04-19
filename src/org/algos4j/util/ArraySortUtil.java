@@ -944,4 +944,30 @@ public class ArraySortUtil {
 		// Copy back to the original
 		System.arraycopy(aux, leftStart, array, leftStart, curSize);
 	}
+	
+	/**
+	 * Given an array of numbers (sorted), this method finds the smallest number
+	 * that can not be represented as sum of any subset. Time: O(n). 
+	 * For unsorted numbers complexity O(n log n), as we need to sort elements.
+	 * 
+	 * @param numbers
+	 * 		given numbers
+	 * 
+	 * @return
+	 * 		the minimum number
+	 * 
+	 * @throws NullPointerException
+	 * 		if the input array is null
+	 */
+	public static int findMinNumber(int[] numbers) {
+		if (numbers == null)
+			throw new NullPointerException("Input numbers array can not be null.");
+
+		int smallNumber = 1;
+
+		for (int i = 0; i < numbers.length && numbers[i] <= smallNumber; i++)
+			smallNumber = smallNumber + numbers[i];
+
+		return smallNumber;
+	}
 }
