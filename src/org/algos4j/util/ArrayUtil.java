@@ -1406,4 +1406,101 @@ public class ArrayUtil {
 
 		return new int[0];
 	}
+	
+	/**
+	 * Given an array which contains 0s and 1s, this method finds the largest
+	 * sub-array which is having equal number of 0s and 1s. Time: O(n^2)
+	 * 
+	 * @param array
+	 * 		given array
+	 * 
+	 * @return
+	 * 		two element array of start and end index, or with {-1 and -1}
+	 * 
+	 * @throws NullPointerException
+	 * 		if the input array is null
+	 */
+	public static int[] subarrayWith0s1s(int[] array) {
+		if(array == null)
+			throw new NullPointerException("Input array can not be null.");
+		
+		int sum = 0;
+		int maxSize = -1, startIndex = 0;
+
+		for (int i = 0; i < array.length - 1; i++) {
+			sum = (array[i] == 0) ? -1 : 1;
+
+			for (int j = i + 1; j < array.length; j++) {
+				if (array[j] == 0)
+					sum += -1;
+				else
+					sum += 1;
+
+				if (sum == 0 && maxSize < j - i + 1) {
+					maxSize = j - i + 1;
+					startIndex = i;
+				}
+			}
+		}
+
+		if (maxSize == -1)
+			return new int[] { -1, -1 };
+		else
+			return new int[] { startIndex, startIndex + maxSize - 1 };
+	}
+	
+	/**
+	 * Given an array which contains 0s and 1s, this method finds the largest
+	 * sub-array which is having equal number of 0s and 1s. Time: O(n), Space: O(n)
+	 * 
+	 * @param array
+	 * 		given array
+	 * 
+	 * @return
+	 * 		two element array of start and end index, or with {-1 and -1}
+	 * 
+	 * @throws NullPointerException
+	 * 		if the input array is null
+	 */
+	public static int[] subarrayWith0s1sOptimal(int[] arr) {
+		if (arr == null)
+			throw new NullPointerException("Input array can not be null.");
+
+		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+
+		int sum = 0;
+		int maxLength = 0;
+		int endIndex = -1;
+
+		int length = arr.length;
+
+		// Change 0s to -1s
+		for (int i = 0; i < length; i++)
+			arr[i] = (arr[i] == 0) ? -1 : 1;
+
+		for (int i = 0; i < length; i++) {
+			sum += arr[i];
+
+			// handle last index
+			if (sum == 0) {
+				maxLength = i + 1;
+				endIndex = i;
+			}
+
+			// update maxLength
+			if (map.containsKey(sum + length)) {
+				if (maxLength < i - map.get(sum + length)) {
+					maxLength = i - map.get(sum + length);
+					endIndex = i;
+				}
+			} else
+				map.put(sum + length, i);
+		}
+
+		// Change back -1s to 0s
+		for (int i = 0; i < length; i++)
+			arr[i] = (arr[i] == -1) ? 0 : 1;
+
+		return new int[] { endIndex - maxLength + 1, endIndex };
+	}
 }
