@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Stack;
 
 import org.algos4j.heap.BinaryHeap;
@@ -1545,5 +1547,45 @@ public class ArrayUtil {
 		}
 
 		return count;
+	}
+	
+	/**
+	 * Given a positive integer, this method returns the next greater number
+	 * that is a permutation of the given digits in the number.
+	 * 
+	 * @param number
+	 * 		given number
+	 * 
+	 * @return
+	 * 		next greater number or the same number if not possible or given a -ve number
+	 */
+	public static int findNextGreater(int number) {
+		if (number <= 10)
+			return number;
+
+		char[] digits = String.valueOf(number).toCharArray();
+
+		int i = digits.length - 1;
+		Queue<Character> priorityQueue = new PriorityQueue<>();
+		while (i > 0) {
+			priorityQueue.add(digits[i]);
+			if (Character.getNumericValue(digits[i]) > Character.getNumericValue(digits[i - 1]))
+				break;
+
+			i--;
+		}
+
+		// All digits are in decreasing order
+		if (i == 0)
+			return number;
+
+		char temp = digits[i - 1];
+		digits[i - 1] = priorityQueue.poll();
+		priorityQueue.add(temp);
+
+		for (int j = i; j < digits.length; j++)
+			digits[j] = priorityQueue.poll();
+
+		return Integer.parseInt(new String(digits));
 	}
 }
