@@ -1,7 +1,9 @@
 package org.algos4j.util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -969,5 +971,79 @@ public class ArraySortUtil {
 			smallNumber = smallNumber + numbers[i];
 
 		return smallNumber;
+	}
+	
+	/**
+	 * Given three sorted (increasing order) arrays, this method returns the
+	 * common elements from the three elements. If any of the array is null
+	 * this method returns an empty array.
+	 * 
+	 * @param array1
+	 * 		first array
+	 * @param array2
+	 * 		second array
+	 * @param array3
+	 * 		third array
+	 * 
+	 * @return
+	 * 		array holding common elements, empty array otherwise
+	 */
+	public static int[] getCommonElements(int[] array1, int[] array2, int[] array3) {
+		if (array1 == null || array2 == null || array3 == null)
+			return new int[0];
+
+		List<Integer> commonElements = new ArrayList<>();
+
+		// Indices of three arrays
+		int i = 0, j = 0, k = 0;
+
+		while (i < array1.length && j < array2.length && k < array3.length) {
+			if (array1[i] == array2[j] && array2[j] == array3[k]) {
+				commonElements.add(array1[i]);
+				i++;
+				j++;
+				k++;
+			} else if (array1[i] < array2[j])
+				i++;
+			else if (array2[j] < array3[k])
+				j++;
+			else
+				k++;
+		}
+
+		return ArrayUtil.toArray(commonElements);
+	}
+	
+	/**
+	 * Given an array of integers, sort the array into a wave form array. An
+	 * array is sorted in wave form if array[0] >= array[1] <= array[2] >=
+	 * array[3] <= array[4] > ...
+	 * 
+	 * <p>Approach:</p>
+	 * <pre>
+	 * 1. Traverse even positioned elements of the array
+	 *    a. Swap current and previous elements if current is smaller than previous.
+	 *    b. Swap current and next elements if current is smaller than next.
+	 * 
+	 * </pre>
+	 * 
+	 * @param array
+	 * 		given array
+	 * 
+	 * @throws NullPointerException
+	 * 		if the input array is null
+	 */
+	public static void sortInWaveForm(int[] array) {
+		if (array == null)
+			throw new NullPointerException("Input numbers array can not be null.");
+
+		for (int i = 0; i < array.length; i += 2) {
+
+			if (i > 0 && array[i - 1] > array[i])
+				swap(array, i - 1, i);
+
+			if (i < array.length - 1 && array[i] < array[i + 1])
+				swap(array, i, i + 1);
+		}
 	}
 }

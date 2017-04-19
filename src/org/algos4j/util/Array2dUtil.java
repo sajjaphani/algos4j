@@ -504,4 +504,55 @@ public class Array2dUtil {
 
 		return mergedIntervals;
 	}
+	
+	/**
+	 * Given a 2d array, this method prints the elements in spiral order. The
+	 * order is first row -> last column -> last row (right to left) -> first
+	 * column (bottom to top).
+	 * 
+	 * @param array
+	 * 		given array
+	 */
+	static void spiralPrint(int[][] array) {
+		// TODO data validation
+
+		int k = 0; // Starting row index
+		int l = 0; // Starting column index
+		int m = array.length; // Ending row index
+		int n = array[0].length; // Ending column index
+
+		while (k < m && l < n) {
+			// Print the first row from the
+			for (int i = l; i < n; ++i)
+				System.out.print(array[k][i] + " ");
+			
+			// Move to next row
+			k++;
+
+			// Print the last column
+			for (int i = k; i < m; ++i)
+				System.out.print(array[i][n - 1] + " ");
+
+			// Move to previous column
+			n--;
+
+			// Print the last row
+			if (k < m) {
+				for (int i = n - 1; i >= l; --i)
+					System.out.print(array[m - 1][i] + " ");
+
+				// Move to previous row
+				m--;
+			}
+
+			// Print the first column
+			if (l < n) {
+				for (int i = m - 1; i >= k; --i)
+					System.out.print(array[i][l] + " ");
+
+				// Move to next column
+				l++;
+			}
+		}
+	}
 }
