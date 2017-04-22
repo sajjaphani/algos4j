@@ -1,5 +1,11 @@
 package org.algos4j.util;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+
 /**
  * Some utility methods on strings.
  * 
@@ -425,6 +431,7 @@ public class StringUtil {
 	 * Given two string this method checks whether one is a permutation of the
 	 * other. This method assumes that the string characters are ASCII only. It
 	 * will not work as expected for other than ASCII (128) characters.
+	 * Anagrams.
 	 * 
 	 * @param string1
 	 * 		first string
@@ -434,7 +441,7 @@ public class StringUtil {
 	 * @return
 	 * 		true if one is permutation of other, false otherwise
 	 */
-	static boolean permutation(String string1, String string2) {
+	public static boolean permutation(String string1, String string2) {
 		if (string1 == null || string2 == null)
 			return false;
 
@@ -704,6 +711,7 @@ public class StringUtil {
 	 * characters. For example, it the string is 'aaabbc', the compressed string
 	 * will be 'a3b2c1'. This method returns the original string if the
 	 * "compressed" string would not become smaller than the original string.
+	 * Also knows as Run Length Encoding.
 	 * 
 	 * @param string
 	 * 		given string
@@ -837,5 +845,616 @@ public class StringUtil {
 			chars[startIndex++] = chars[endIndex];
 			chars[endIndex--] = temp;
 		}
+	}
+	
+	/**
+	 * Given an integer, this method prints all the sequence of characters that can be used to dial the number.
+	 * <p>
+	 * Below summarizes the characters that can be used to dial each digit.
+	 * <pre>
+	 * 	2 -> using A or B or C
+	 * 	3 -> using D or E or F
+	 *	4 -> using G or H or I
+	 *	5 -> using J or K or L
+	 *	6 -> using M or N or O
+	 *	7 -> using P or Q or R or S
+	 *	8 -> using T or U or V
+	 *	9 -> using W or X or Y or Z
+	 *	1 -> using 1
+	 *	0 -> using 0
+	 *         	
+	 * </pre>
+	 * </p>
+	 * 
+	 * @param number
+	 * 		given number
+	 * 
+	 * @throws IllegalArgumentException
+	 * 		if the number is -ve
+	 */
+	public static void printDialableStrings(int number) {
+		if (number < 0)
+			throw new IllegalArgumentException();
+		Map<Character, String> map = new HashMap<Character, String>();
+
+		map.put('2', "ABC");
+		map.put('3', "DEF");
+		map.put('4', "GHI");
+		map.put('5', "JKL");
+		map.put('6', "MNO");
+		map.put('7', "PQRS");
+		map.put('8', "TUV");
+		map.put('9', "WXYZ");
+		map.put('1', "1");
+		map.put('0', "0");
+
+		StringBuilder str = new StringBuilder();
+
+		printStrings(Integer.toString(number), 0, map, str);
+	}
+	
+	/**
+	 * Recursively finds all combinations and prnts.
+	 * 
+	 * @param numberString
+	 * 		string representation of number
+	 * @param index
+	 * 		current index
+	 * @param map
+	 * 		number mappings
+	 * @param sb
+	 * 		string builder to hold partial result
+	 */
+	private static void printStrings(String numberString, int index, Map<Character, String> map, StringBuilder sb) {
+
+		if (index == numberString.length()) {
+			System.out.print(sb.toString() + " ");
+			return;
+		}
+
+		String value = map.get(numberString.charAt(index));
+		for (int j = 0; j < value.length(); j++) {
+			sb.append(value.charAt(j));
+			printStrings(numberString, index + 1, map, sb);
+			sb.deleteCharAt(sb.length() - 1);
+		}
+	}
+	
+	/**
+	 * Given a string, this method computes the number of palindromic sequences
+	 * to be removed to make it an empty string. At max we have 2, since we can
+	 * remove all 1s or 0s to make it a palindrome.
+	 * 
+	 * @param string
+	 * 		given string
+	 * 
+	 * @return
+	 * 		min sequences to be removed
+	 */
+	public static int minPalindromicSubsequences(String string) {
+		if (string == null || string.length() == 0)
+			return 0;
+	
+		// TODO data validation for only 0s and 1s
+
+		if (isPalindrome(string))
+			return 1;
+
+		return 2;
+	}
+	
+	/**
+	 * Given a string, this method prints the concatenated string formed by
+	 * arranging them in zig-zag row column fashion.
+	 * 
+	 * <pre>
+	 * 		Input: PRINTCONCATZIGZAG
+	 * 
+	 * 		Row Zig-Zag arrangement:
+	 * 
+	 * 			P     T      C     I     G
+  	 *			 R  N   C  N   A  Z  G  A
+     *			  I      O      T     Z
+     *
+     *		Output: PTCIGRNCNAZGAIOTZ
+	 * </pre>
+	 * 
+	 * @param string
+	 * 		given string
+	 * @param rows
+	 * 		number of rows
+	 * 
+	 * @throws IllegalArgumentException
+	 * 		if n is -ve or greater than string size
+	 */
+	public static void printZigZagConcatination(String string, int rows) {
+		if (string == null)
+			return;
+
+		if (rows == 1) {
+			System.out.println(string);
+			return;
+		}
+
+		int charLen = string.length();
+
+		String[] arr = new String[rows];
+		Arrays.fill(arr, "");
+
+		int row = 0;
+		boolean down = false; 
+
+		for (int i = 0; i < charLen; ++i) {
+			// append current character to the current row
+			arr[row] = arr[row] + string.charAt(i);
+			
+			if (row == rows - 1) // If last row change direction to 'up'
+				down = false;
+			else if (row == 0) // If 1st row change direction to 'down'
+				down = true;
+
+			// change row based on direction
+			if (down)
+				row++;
+			else
+				row--;
+		}
+
+		for (int i = 0; i < rows; ++i)
+			System.out.print(arr[i]);
+	}
+	
+	/**
+	 * Given column number in an Excel sheep, this method returns the column name.
+	 * In Excel the column names be like A, B, C, ..., Z, AA, AB, AC, ..., AZ, BA, 
+	 * BB, ...,ZZ, ... etc.
+	 * 
+	 * @param number
+	 * 		 column number
+	 * 
+	 * @return
+	 * 		column name
+	 * 
+	 * @throws IllegalArgumentException
+	 * 		if the column number is invalid ( < 0 )
+	 */
+	public static String getExcelColumnName(int number) {
+		if (number < 0)
+			throw new IllegalArgumentException("");
+
+		// 7 chars are sufficient for up to max integer value
+		char[] chars = new char[7];
+		int index = 0;
+
+		while (number > 0) {
+			int rem = number % 26;
+
+			if (rem == 0) {
+				chars[index++] = 'Z';
+				number = (number / 26) - 1;
+			} else {
+				chars[index++] = (char)((rem - 1) + 65);
+				number = number / 26;
+			}
+		}
+
+		reverse(chars, 0, index - 1);
+
+		return new String(chars, 0, index);
+	}
+	
+	/**
+	 * Given two strings, this method counts the minimum number of operations
+	 * required to transform the string1 into string2. The operations allowed is
+	 * pick any character from first string and insert it to the front of it.
+	 * 
+	 * @param string1
+	 * 		first string
+	 * @param string2
+	 * 		second string
+	 * 
+	 * @return
+	 * 		number of operations required, -1 if not possible, 0 when strings are same
+	 */
+	public static int getMinOperations(String string1, String string2) {
+		if (string1 == null || string2 == null)
+			return -1;
+
+		if (string1.length() != string2.length())
+			return -1;
+
+		int[] charCounts1 = getCharCounts(string1);
+		int[] charCounts2 = getCharCounts(string2);
+
+		for (int i = 0; i < charCounts1.length; i++)
+			if (charCounts1[i] != charCounts2[i])
+				return -1;
+
+		int count = 0;
+		for (int i = string1.length() - 1, j = string1.length() - 1; i >= 0;) {
+			// If there is a mismatch, continue until string2[j] is not found in string1[0...i]
+			while (i >= 0 && string1.charAt(i) != string2.charAt(j)) {
+				i--;
+				count++;
+			}
+
+			// chars at index i matches in both
+			if (i >= 0) {
+				i--;
+				j--;
+			}
+		}
+
+		return count;
+	}
+	
+	/**
+	 * The number of ASCII characters
+	 */
+	public static final int NUMBER_OF_ASCII_CHARS = 128;
+	
+	/**
+	 * 
+	 * @author psajja
+	 *
+	 */
+	static class Char {
+		int startIndex;
+		int count;
+	
+		Char(int startIndex, int count) {
+			this.startIndex = startIndex;
+			this.count = count;
+		}
+		
+		@Override
+		public String toString() {
+			return "{" + startIndex + ", " + count + "}";
+		}
+	}
+	
+	/**
+	 * Given a string, this method returns the first non-repeating character.
+	 * 
+	 * @param string
+	 * 		given string
+	 * 
+	 * @return
+	 * 		the first non-repeating character, returns char '\0' if there is no such char
+	 */
+	public static char getFirstNonRepeatingCharacter(String string) {
+		if(string == null)
+			throw new NullPointerException();
+		
+		if(string.isEmpty())
+			throw new IllegalArgumentException();
+		
+		Char[] chars = getChars(string);
+		for(Char chr : chars) {
+			if(chr != null && chr.count == 1)
+				return string.charAt(chr.startIndex);
+		}
+		
+		return '\0';
+	}
+
+	/**
+	 * Compute the char array which stores the first occurrence and count of character.
+	 * 
+	 * @param string
+	 * 		given string
+	 * 
+	 * @return
+	 * 		chars array
+	 */
+	private static Char[] getChars(String string) {
+		Char[] chars = new Char[NUMBER_OF_ASCII_CHARS];
+		for (int i = 0; i < string.length(); i++) {
+			int chrIndex = string.charAt(i);
+			Char chr = chars[chrIndex];
+			if (chr == null)
+				chars[chrIndex] = new Char(i, 1);
+			else
+				chars[chrIndex].count++;
+		}
+
+		return chars;
+	}
+	
+	/**
+	 * Given a tour where the tour contains sequence of steps by a robot, this
+	 * method checks whether the tour is a circular tour.
+	 * 
+	 * <p>
+	 * Each char in the string can be one of the following:
+	 * <pre>
+	 * 	G - Go one unit
+	 * 	L - Turn left
+	 * 	R - Turn right 
+	 * </pre>
+	 * </p>
+	 * 
+	 * @param tour
+	 * 		given tour
+	 * 
+	 * @return
+	 * 		true if forms a circle, false otherwise
+	 */
+	public static boolean isCircularTour(String tour) {
+	
+		// directions
+		int N = 0;
+		int E = 1;
+		int S = 2;
+		int W = 3;
+
+		// starting point
+		int x = 0, y = 0;
+		
+		int dir = N;
+		char[] path = tour.toCharArray();
+		
+		for (int i = 0; i < path.length; i++) {
+			// Find current move
+			char move = path[i];
+
+			if (move == 'R')
+				dir = (dir + 1) % 4;
+			else if (move == 'L')
+				dir = (4 + dir - 1) % 4;
+			else if (move == 'G') {
+				if (dir == N)
+					y++;
+				else if (dir == E)
+					x++;
+				else if (dir == S)
+					y--;
+				else if (dir == W)
+					x--;
+			}
+		}
+
+		// IS the robot at starting point (0, 0)?
+		return (x == 0 && y == 0);
+	}
+	
+	/**
+	 * Given a string, this method removes the adjacent duplicate characters recursively.
+	 * 
+	 * @param string
+	 * 		given string
+	 * 
+	 * @return
+	 * 		string after removing the chars
+	 */
+	public static String removeAdjacentDuplicates(String string) {
+		if (isNullOrEmpty(string))
+			return string;
+
+		char[] chars = string.toCharArray();
+		char lastChar = chars[0];
+
+		// Holds the index of the output string
+		int outputIndex = 1;
+		for (int i = 1; i < chars.length; i++) {
+			if (outputIndex > 0 && chars[i] == chars[outputIndex - 1]) {
+				lastChar = chars[outputIndex - 1];
+				while (outputIndex > 0 && chars[outputIndex - 1] == lastChar) {
+					outputIndex--;
+				}
+			} else if (chars[i] == lastChar) {
+				// do nothing, we are seeing the lastChar again after removing adjacent once
+				continue;
+			} else {
+				chars[outputIndex++] = chars[i];
+			}
+		}
+
+		return new String(chars, 0, outputIndex);
+	}
+	
+	/**
+	 * Given a string, this method returns the number of palindrome sub-strings in the string.
+	 * Length of the palindrome sub-string must be at least 2.
+	 * 
+	 * @param string
+	 * 		given string
+	 * 
+	 * @return
+	 * 		count of palindromic substrings
+	 */
+	public static int countPalindromeSubstrings(String string) {
+		if (isNullOrEmpty(string))
+			return 0;
+
+		// Map holds the count of palindromes from i to j (i->j as key)
+		Map<String, Integer> countMap = new HashMap<String, Integer>();
+		
+		// Map holds whether the sequence from i to j (i->j as key) is a palindrome.
+		Map<String, Boolean> palindromeMap = new HashMap<String, Boolean>();
+		
+		String separator = "->";
+	
+		int n = string.length();
+		
+		// Initialize palindromes of all to false, counts to zero
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				countMap.put(i + separator + j, 0);
+				palindromeMap.put(i + separator + j, false);
+			}
+		}
+	
+		// Update palindrome map for single chars
+		for (int i = 0; i < n; i++) {
+			palindromeMap.put(i + separator + i, true);
+		}
+		
+		// find and update palindromes of 2 chars (aa, bb, etc.)
+		for (int i = 0; i < n - 1; i++) {
+			if (string.charAt(i) == string.charAt(i + 1)) {
+				palindromeMap.put(i + separator + (i + 1), true);
+				countMap.put(i + separator + (i + 1), 1);
+			}
+		}
+	
+		// find and update palindromes of more than 2 chars
+		for (int size = 2; size < n; size++) {
+			for (int i = 0; i < n - size; i++) {
+				int j = size + i;
+				// Current string is palindrome
+				if (string.charAt(i) == string.charAt(j) && palindromeMap.get((i + 1) + separator + (j - 1)))
+					palindromeMap.put(i + separator + j, true);
+				
+				// Palindromes from i to j (excluding current, overlapping)
+				int count = countMap.get(i + separator + (j - 1)) + countMap.get((i + 1) + separator + j) - countMap.get((i + 1) + separator + (j - 1));
+				if (palindromeMap.get(i + separator + j)) {
+					// Current one is also a palindrome
+					countMap.put(i + separator + j, count + 1);
+				} else {
+					countMap.put(i + separator + j, count);
+				}
+			}
+		}
+
+		// Final Count of palindromes (0 to size-1)
+		return countMap.get(0 + separator + (n - 1));
+	}
+	
+	/**
+	 * Given a string, this method returns the number of palindrome sub-strings in the string.
+	 * Length of the palindrome sub-string must be at least 2.
+	 * 
+	 * @param string
+	 * 		given string
+	 * 
+	 * @return
+	 * 		collection of palindromes, the returned collection does not preserve the order of their occurrence.
+	 */
+	public static Collection<String> getPalindromeSubstrings(String string) {
+		if (isNullOrEmpty(string))
+			return new HashSet<>();
+
+		// Set holds the palindromes
+		Collection<String> palindromes = new HashSet<String>();
+		
+		// Map holds whether the sequence from i to j (i->j as key) is a palindrome.
+		Map<String, Boolean> palindromeMap = new HashMap<String, Boolean>();
+		
+		String separator = "->";
+
+		int n = string.length();
+		
+		// Initialize palindromes of all sizes to false
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				palindromeMap.put(i + separator + j, false);
+			}
+		}
+	
+		// Update palindromes for all single chars
+		for (int i = 0; i < n; i++) {
+			palindromes.add(string.charAt(i) + "");
+			palindromeMap.put(i + separator + i, true);
+		}
+		
+		// find and update palindromes of 2 chars (aa, bb, etc.)
+		for (int i = 0; i < n - 1; i++) {
+			if (string.charAt(i) == string.charAt(i + 1)) {
+				palindromeMap.put(i + separator + (i + 1), true);
+				palindromes.add(string.substring(i, i + 2));
+			}
+		}
+	
+		// find and update palindromes of more than  chars
+		for (int size = 2; size < n; size++) {
+			for (int i = 0; i < n - size; i++) {
+				int j = size + i;
+				// Current string is palindrome
+				if (string.charAt(i) == string.charAt(j) && palindromeMap.get((i + 1) + separator + (j - 1))) {
+					palindromeMap.put(i + separator + j, true);
+					palindromes.add(string.substring(i, j + 1));
+				}
+			}
+		}
+
+		return palindromes;
+	}
+	
+	/**
+	 * Given a string and a pattern string, this method returns the minimum
+	 * string that contains the pattern string. All the characters in pattern
+	 * string must contain in window string. The order does not matter in the
+	 * window string.
+	 * 
+	 * <p>
+	 * An Example:
+	 * <pre>
+	 * Input String:   "this is a test string"
+	 * Pattern String: "tist"
+	 * Window String   "t stri"
+	 * </pre>
+	 * </p>
+	 * 
+	 * @param string
+	 * @param pattern
+	 * 
+	 * @return
+	 * 		the min window string if exists, null in other cases
+	 */
+	public static String getWindowString(String string, String pattern) {
+		if (string == null || pattern == null)
+			return null;
+
+		int stringLength = string.length();
+		int patternLength = pattern.length();
+
+		if (stringLength < patternLength)
+			return null;
+
+		int[] patternCounts = new int[NUMBER_OF_ASCII_CHARS];
+		int[] stringCounts = new int[NUMBER_OF_ASCII_CHARS];
+
+		for (int i = 0; i < patternLength; i++)
+			patternCounts[pattern.charAt(i)]++;
+
+		int currentStart = 0, startIndex = -1, minLength = Integer.MAX_VALUE;
+
+		int count = 0; // count of characters
+		for (int i = 0; i < stringLength; i++) {
+			stringCounts[string.charAt(i)]++;
+
+			// string character and pattern character matches
+			if (patternCounts[string.charAt(i)] != 0
+					&& stringCounts[string.charAt(i)] <= patternCounts[string.charAt(i)])
+				count++;
+
+			// Found all the chars in pattern in string so far
+			if (count == patternLength) {
+				// Remove useless and redundant characters
+				while (stringCounts[string.charAt(currentStart)] > patternCounts[string.charAt(currentStart)]
+						|| patternCounts[string.charAt(currentStart)] == 0) {
+
+					if (stringCounts[string.charAt(currentStart)] > patternCounts[string.charAt(currentStart)])
+						stringCounts[string.charAt(currentStart)]--;
+					
+					currentStart++;
+				}
+
+				// Update minimum window size
+				int windowLength = i - currentStart + 1;
+				if (minLength > windowLength) {
+					minLength = windowLength;
+					startIndex = currentStart;
+				}
+			}
+		}
+
+		// No match found
+		if (startIndex == -1)
+			return null;
+
+		// Matched window
+		return string.substring(startIndex, startIndex + minLength);
 	}
 }

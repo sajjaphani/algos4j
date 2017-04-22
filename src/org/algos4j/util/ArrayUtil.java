@@ -27,27 +27,27 @@ public class ArrayUtil {
 	 */
 	private ArrayUtil() {
 	}
-	
+
 	/**
 	 * Given an integer array, it returns the maximum.
 	 * 
 	 * @param array
-	 * 		given array
+	 *     	given array
 	 * 
-	 * @return
+	 * @return 
 	 * 		maximum value
 	 * 
 	 * @throws NullPointerException
-	 * 		if the input array is null
+	 *     	if the input array is null
 	 * @throws IllegalArgumentException
-	 * 		if the input array is empty
+	 *    	if the input array is empty
 	 */
 	public static int getMax(int[] array) {
-		if(array == null)
+		if (array == null)
 			throw new NullPointerException("Input array should not be null");
-		if(array.length == 0)
+		if (array.length == 0)
 			throw new IllegalArgumentException("Input array has no elements");
-		
+
 		int max = array[0];
 		for (int i = 1; i < array.length; i++)
 			if (array[i] > max)
@@ -55,27 +55,27 @@ public class ArrayUtil {
 
 		return max;
 	}
-	
+
 	/**
 	 * Given an integer array, it returns the minimum.
 	 * 
 	 * @param array
-	 * 		given array
+	 *    	given array
 	 * 
-	 * @return
+	 * @return 
 	 * 		minimum value
 	 * 
 	 * @throws NullPointerException
-	 * 		if the input array is null
+	 *     	if the input array is null
 	 * @throws IllegalArgumentException
-	 * 		if the input array is empty
+	 *     	if the input array is empty
 	 */
 	public static int getMin(int[] array) {
-		if(array == null)
+		if (array == null)
 			throw new NullPointerException("Input array should not be null");
-		if(array.length == 0)
+		if (array.length == 0)
 			throw new IllegalArgumentException("Input array has no elements");
-		
+
 		int min = array[0];
 		for (int i = 1; i < array.length; i++)
 			if (array[i] < min)
@@ -83,7 +83,7 @@ public class ArrayUtil {
 
 		return min;
 	}
-	
+
 	/**
 	 * Given an array where the array elements represents a binary tree, this
 	 * method prints them in inorder. If the array elements represent a binary
@@ -91,27 +91,27 @@ public class ArrayUtil {
 	 * its left child is at '2 * i + 1' and its right child is at '2 * i + 2'.
 	 * 
 	 * @param array
-	 *    	given integer array
+	 *     	given integer array
 	 * 
 	 * @throws NullPointerException
-	 *       	if the input array is null
+	 *     	if the input array is null
 	 */
 	static void printInorder(int[] array) {
-		if(array == null)
+		if (array == null)
 			throw new NullPointerException("Input array should not be null");
-		
+
 		printInorder(array, 0, array.length - 1);
 	}
-	
+
 	/**
 	 * Recursively print the array in inorder fashion.
 	 * 
 	 * @param array
-	 * 		integer array
+	 *     	integer array
 	 * @param start
-	 * 		start position
+	 *    	start position
 	 * @param end
-	 * 		end position
+	 *    	end position
 	 */
 	private static void printInorder(int[] array, int start, int end) {
 		if (start > end)
@@ -123,7 +123,7 @@ public class ArrayUtil {
 
 		printInorder(array, start * 2 + 2, end);
 	}
-	
+
 	/**
 	 * Given a preorder traversal, this method checks whether the given tree has
 	 * exactly one child at each node. If all nodes have only one child in a
@@ -131,13 +131,13 @@ public class ArrayUtil {
 	 * larger than the node.
 	 * 
 	 * @param preorder
-	 *     	given preorder traversal
+	 *   	given preorder traversal
 	 * 
 	 * @return 
 	 * 		true if each node has a single child, false otherwise
 	 * 
 	 * @throws NullPointerException
-	 *       	if the input array is null
+	 *     	if the input array is null
 	 */
 	public static boolean hasOneChild(int[] preorder) {
 		if (preorder == null)
@@ -152,35 +152,35 @@ public class ArrayUtil {
 
 		return true;
 	}
-	
+
 	/**
 	 * Given an array it checks whether the array elements are in sorted order.
 	 * Ascending order.
 	 * 
 	 * @param array
-	 * 		given array
+	 *     	given array
 	 * 
-	 * @return
+	 * @return 
 	 * 		true if the array elements are in sorted order
 	 * 
 	 * @throws NullPointerException
-	 *       	if the input array is null
+	 *     	if the input array is null
 	 */
 	public static boolean isSorted(int[] array) {
 		if (array == null)
 			throw new NullPointerException("Input array should not be null");
-		
+
 		for (int i = 1; i < array.length; i++) {
 			if (array[i - 1] > array[i])
 				return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	/**
-	 * Searches for an element in a sorted array with the given key.
-	 * This method does not test whether the array is sorted.
+	 * Searches for an element in a sorted array with the given key. This method
+	 * does not test whether the array is sorted.
 	 * 
 	 * @param array
 	 *   	input array
@@ -191,7 +191,7 @@ public class ArrayUtil {
 	 * 		index if element is found, -1 otherwise.
 	 * 
 	 * @throws NullPointerException
-	 *    	if the input array is null
+	 *   	if the input array is null
 	 */
 	public static int binarySearch(int[] array, int key) {
 		if (array == null)
@@ -211,7 +211,7 @@ public class ArrayUtil {
 
 		return -1;
 	}
-	
+
 	/**
 	 * Given an array and a sum, this method finds whether there is a pair
 	 * exists in the array with the sum. Returns first occurrence.
@@ -222,25 +222,25 @@ public class ArrayUtil {
 	 * @param array
 	 *     	the input integer array
 	 * @param sum
-	 *     the sum to find
-	 *     
-	 * @return
-	 *     the array pair if exists, null otherwise
-	 *     
+	 *    	the sum to find
+	 * 
+	 * @return 
+	 * 		the array pair if exists, null otherwise
+	 * 
 	 * @throws NullPointerException
 	 *    	if the input array is null
 	 */
 	static int[] getPair0(int[] array, int sum) {
 		if (array == null)
 			throw new NullPointerException("Input array should not be null");
-		
+
 		Arrays.sort(array);
 
 		int left = 0;
 		int right = array.length - 1;
 		while (left < right) {
 			if (array[left] + array[right] == sum) {
-				return new int[] {array[left], array[right]};
+				return new int[] { array[left], array[right] };
 				// left++;
 				// right--;
 			} else if (array[left] + array[right] < sum)
@@ -248,7 +248,7 @@ public class ArrayUtil {
 			else
 				right--;
 		}
-		
+
 		return null;
 	}
 
@@ -260,40 +260,40 @@ public class ArrayUtil {
 	 * @param array
 	 *     	the input integer array
 	 * @param sum
-	 *     	the sum to find
+	 *      	the sum to find
 	 * @return 
 	 * 		the array pair if exists, null otherwise
-	 *     
+	 * 
 	 * @throws NullPointerException
-	 *    	if the input array is null
+	 *     	if the input array is null
 	 */
 	public static int[] getPair(int[] array, int sum) {
 		if (array == null)
 			throw new NullPointerException("Input array should not be null");
-		
+
 		int rem;
 		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
 
 		for (int i = 0; i < array.length; i++) {
 			rem = sum - array[i];
 			if (map.containsKey(rem)) {
-				//System.out.println(array[i] + " " + temp);
+				// System.out.println(array[i] + " " + temp);
 				return new int[] { array[i], rem };
 			}
 			map.put(array[i], 1);
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Given an integer array it finds the majority element if one exists. A
-	 * majority element in an array is an element that appears more than
-	 * half times. There exists only one such element in any given array.
-	 * Time: O(n), space: O(n)
+	 * majority element in an array is an element that appears more than half
+	 * times. There exists only one such element in any given array. Time: O(n),
+	 * space: O(n)
 	 * 
 	 * @param array
-	 *    	integer array
+	 *     	integer array
 	 * 
 	 * @return 
 	 * 		majority element if exists, {@link Integer#MIN_VALUE} otherwise
@@ -307,6 +307,7 @@ public class ArrayUtil {
 
 		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
 		int count = 0;
+	
 		for (int element : array) {
 			count = 0;
 			if (map.containsKey(element))
@@ -319,7 +320,7 @@ public class ArrayUtil {
 
 		return Integer.MIN_VALUE;
 	}
-	
+
 	/**
 	 * This method computes the majority element using which is using
 	 * Bayer-Moore’s Voting Algorithm. It is a two phase algorithm and in each
@@ -328,13 +329,13 @@ public class ArrayUtil {
 	 * occurrences than all the others.
 	 * 
 	 * @param array
-	 *     	integer array
+	 *    	integer array
 	 * 
 	 * @return 
 	 * 		majority element if exists, {@link Integer#MIN_VALUE} otherwise
 	 * 
 	 * @throws NullPointerException
-	 *     	if the input array is null
+	 *    	if the input array is null
 	 */
 	public static int getMajorityElement(int[] array) {
 		if (array == null)
@@ -366,42 +367,42 @@ public class ArrayUtil {
 
 		return Integer.MIN_VALUE;
 	}
-	
+
 	/**
 	 * Given an array of positive integers, all the numbers occur even number of
 	 * times except one number, which occurs odd number of times. Time: O(n).
 	 * 
 	 * @param array
-	 * 		given integer array
+	 *    	given integer array
 	 * 
 	 * @return 
 	 * 		the number which occurs odd times, zero if all are even times,
 	 *      unknown if multiple numbers occurs odd times.
-	 *      
+	 * 
 	 * @throws NullPointerException
-	 *     	if the input array is null
+	 *    	if the input array is null
 	 */
 	public static int findOddNumber(int[] array) {
 		if (array == null)
 			throw new NullPointerException("Input array should not be null");
-		
+
 		int oddNumber = 0;
 		for (int num : array)
 			oddNumber = oddNumber ^ num;
 
 		return oddNumber;
 	}
-	
+
 	/**
-	 * Given an array it computes the maximum of sub-array sum.
-	 * This is based on Kadane's algorithm. While scanning the array values, at
-	 * each position, it computes the maximum of sub-array ending at that
-	 * position. The sub-array can be either empty or consists of one more
-	 * element than the maximum sub-array ending at the previous position.
-	 * Dynamic programming problem. Time: O(n).
+	 * Given an array it computes the maximum of sub-array sum. This is based on
+	 * Kadane's algorithm. While scanning the array values, at each position, it
+	 * computes the maximum of sub-array ending at that position. The sub-array
+	 * can be either empty or consists of one more element than the maximum
+	 * sub-array ending at the previous position. Dynamic programming problem.
+	 * Time: O(n).
 	 * 
 	 * @param array
-	 *      	the given input array.
+	 *    	the given input array.
 	 * 
 	 * @return 
 	 * 		the maximum sub-array sum
@@ -423,10 +424,10 @@ public class ArrayUtil {
 
 		return maxSoFar;
 	}
-	
+
 	/**
-	 * A variant version of {@link #maxSumSubArray(int[])}, which also returns the
-	 * start and end index of the sub-array.
+	 * A variant version of {@link #maxSumSubArray(int[])}, which also returns
+	 * the start and end index of the sub-array.
 	 * 
 	 * @param array
 	 *     	the given input array.
@@ -440,7 +441,7 @@ public class ArrayUtil {
 	static int[] maxSumSubArray1(int[] array) {
 		if (array == null)
 			throw new NullPointerException("Input array should not be null");
-		
+
 		int maxHere = array[0];
 		int maxSoFar = array[0];
 
@@ -463,13 +464,13 @@ public class ArrayUtil {
 
 		return result;
 	}
-	
+
 	/**
-	 * Given an array, it finds the maximum sum from the array such that 
-	 * no two consecutive elements are not picked to compute the sum.
+	 * Given an array, it finds the maximum sum from the array such that no two
+	 * consecutive elements are not picked to compute the sum.
 	 * 
 	 * @param array
-	 *     	the given input array.
+	 *    	the given input array.
 	 * 
 	 * @return 
 	 * 		an array whose values are, {0: max sum, 1: start index, 2: end index}
@@ -493,18 +494,18 @@ public class ArrayUtil {
 
 		return Math.max(sumInclusive, sumExclusive);
 	}
-	
+
 	/**
-	 * Given an array of n numbers, which are supposed to be in the range of 
-	 * 1 to n + 1 with no duplicates, find the number that is missing. We can 
-	 * compute the number based on formulae n*(n+1)/2, but integer overflow 
-	 * might occur. This method is based on XOR operation. Eliminates integer 
+	 * Given an array of n numbers, which are supposed to be in the range of 1
+	 * to n + 1 with no duplicates, find the number that is missing. We can
+	 * compute the number based on formulae n*(n+1)/2, but integer overflow
+	 * might occur. This method is based on XOR operation. Eliminates integer
 	 * overflow. Time: O(n).
 	 * 
 	 * @param array
-	 * 		integer array
+	 *    	integer array
 	 * 
-	 * @return
+	 * @return 
 	 * 		missing number if the array is proper, otherwise unknown for the same reason
 	 * 
 	 * @throws NullPointerException
@@ -513,7 +514,7 @@ public class ArrayUtil {
 	public static int findMissingNumber(int[] array) {
 		if (array == null)
 			throw new NullPointerException("Input array should not be null");
-		
+
 		int xorArray = array[0];
 		int xorNumbers = 1;
 
@@ -527,7 +528,7 @@ public class ArrayUtil {
 
 		return (xorArray ^ xorNumbers);
 	}
-	
+
 	/**
 	 * Given an array, which is sorted and rotated, it finds the given number in
 	 * the array. It uses a variant of Binary Search. Based on the fact that one
@@ -537,13 +538,13 @@ public class ArrayUtil {
 	 * Computes in O(log n).
 	 * 
 	 * @param array
-	 * 		the integer array
+	 *    	the integer array
 	 * 
 	 * @return 
 	 * 		number of times the array is rotated.
 	 * 
 	 * @throws NullPointerException
-	 *  	if the input array is null
+	 *    	if the input array is null
 	 */
 	public static int searchPivoted(int[] array, int elt) {
 		if (array == null)
@@ -571,13 +572,14 @@ public class ArrayUtil {
 
 		return -1;
 	}
-	
+
 	/**
 	 * Given an array, which is sorted and rotated, it finds the number of
 	 * rotations in the array. The number of times the array is rotated towards
 	 * right. It uses a variant of Binary Search, based on the fact that the
 	 * next and previous elements of the pivot element are greater. This
-	 * approach doesn't handle the duplicates in the given array. Time: O(log n).
+	 * approach doesn't handle the duplicates in the given array. Time: O(log
+	 * n).
 	 * 
 	 * @param array
 	 *    	the integer array
@@ -586,7 +588,7 @@ public class ArrayUtil {
 	 * 		number of times the array is rotated.
 	 * 
 	 * @throws NullPointerException
-	 *     	if the input array is null
+	 *    	if the input array is null
 	 */
 	public static int findRotations(int[] array) {
 		if (array == null)
@@ -600,13 +602,13 @@ public class ArrayUtil {
 		while (low <= high) {
 			if (array[low] <= array[high])
 				return low;
-		
+
 			mid = (low + high) / 2;
 			next = (mid + 1) % size;
 			prev = (mid - 1 + size) % size;
 			if (array[mid] < array[next] && array[mid] < array[prev])
 				return mid;
-		
+
 			if (array[mid] < array[high])
 				high = mid - 1;
 
@@ -616,19 +618,19 @@ public class ArrayUtil {
 
 		return -1;
 	}
-	
+
 	/**
 	 * Given two arrays, where first one has m + n positions where the empty
 	 * slots are represented by {@link Integer#MIN_VALUE}, this method merges
 	 * the second array elements at alternative positions into first one.
 	 * 
 	 * @param array1
-	 * 		first array (m + n) positions
+	 *    	first array (m + n) positions
 	 * @param array2
-	 * 		second array (n) positions
+	 *     	second array (n) positions
 	 * 
 	 * @throws NullPointerException
-	 *     	if any of the input array is null
+	 *    	if any of the input array is null
 	 */
 	public static void merge(int[] array1, int[] array2) {
 		if (array1 == null || array2 == null)
@@ -657,7 +659,7 @@ public class ArrayUtil {
 			}
 		}
 	}
-	
+
 	/**
 	 * Given an integer array, it reverses the array.
 	 * 
@@ -665,12 +667,12 @@ public class ArrayUtil {
 	 *    	the input array
 	 * 
 	 * @throws NullPointerException
-	 *    	if the input array is null
+	 *     	if the input array is null
 	 */
 	public static void reverse(int[] array) {
 		if (array == null)
 			throw new NullPointerException("Input array should not be null");
-		
+
 		int size = array.length;
 		for (int i = 0; i < size / 2; i++) {
 			int temp = array[i];
@@ -683,15 +685,15 @@ public class ArrayUtil {
 	 * Reverses the given integer array. Recursive version.
 	 * 
 	 * @param array
-	 *     	the input array to reverse
-	 *     
+	 *    	the input array to reverse
+	 * 
 	 * @throws NullPointerException
-	 *    	if the input array is null
+	 *     	if the input array is null
 	 */
 	public static void reverseRecursive(int[] array) {
 		if (array == null)
 			throw new NullPointerException("Input array should not be null");
-		
+
 		if (array.length <= 1)
 			return;
 		reverse(array, 0, array.length - 1);
@@ -701,11 +703,11 @@ public class ArrayUtil {
 	 * Reverse recursively from the given range elements.
 	 * 
 	 * @param array
-	 * 		integer array
+	 *     	integer array
 	 * @param start
-	 * 		start index
+	 *     	start index
 	 * @param end
-	 * 		end index
+	 *     	end index
 	 */
 	private static void reverse(int array[], int start, int end) {
 		if (start >= end)
@@ -717,11 +719,11 @@ public class ArrayUtil {
 		array[end] = temp;
 		reverse(array, start + 1, end - 1);
 	}
-	
+
 	/**
 	 * 
-	 * Given an array of integers, this method all the leaders in the array. 
-	 * An element is leader if it is greater than all the elements to its right. 
+	 * Given an array of integers, this method all the leaders in the array. An
+	 * element is leader if it is greater than all the elements to its right.
 	 * 
 	 * @throws NullPointerException
 	 *    	if the input array is null
@@ -742,23 +744,23 @@ public class ArrayUtil {
 			}
 		}
 	}
-	
+
 	/**
 	 * Given an array and a sum, this method finds the pair whose sum results to
 	 * the closest of given sum.
 	 * 
 	 * @param array
-	 * 		given integer array
+	 *     	given integer array
 	 * @param sum
-	 * 		expected closest sum
+	 *    	expected closest sum
 	 * 
-	 * @return
+	 * @return 
 	 * 		a pair whose sum is close
 	 * 
 	 * @throws NullPointerException
 	 *    	if the input array is null
-	 *  @throws IllegalArgumentException
-	 *  	if the array does not have enough elements (< 2)
+	 * @throws IllegalArgumentException
+	 *    	if the array does not have enough elements (< 2)
 	 */
 	public static int[] getClosestPair(int[] array, int sum) {
 		if (array == null)
@@ -793,20 +795,20 @@ public class ArrayUtil {
 
 		return new int[] { array[lMin], array[rMin] };
 	}
-	
+
 	/**
-	 * Given an array, it prints the k smallest elements in the array.
-	 * Uses min binary heap. 
+	 * Given an array, it prints the k smallest elements in the array. Uses min
+	 * binary heap.
 	 * 
 	 * @param array
-	 * 		input array
+	 *     	input array
 	 * @param k
-	 * 		number of elements to print
+	 *     	number of elements to print
 	 * 
 	 * @throws NullPointerException
-	 *    	if the input array is null
-	 *  @throws IllegalArgumentException
-	 *  	if the given k (< 1)
+	 *     	if the input array is null
+	 * @throws IllegalArgumentException
+	 *     	if the given k (< 1)
 	 */
 	static void printSmallestK(int[] array, int k) {
 		if (array == null)
@@ -820,22 +822,23 @@ public class ArrayUtil {
 
 		for (int i = 0; i < k; i++)
 			System.out.print(heap.remove() + " ");
+		
 		System.out.println();
 	}
-	
+
 	/**
-	 * Given an array, it prints the k largest elements in the array.
-	 * Uses max binary heap. 
+	 * Given an array, it prints the k largest elements in the array. Uses max
+	 * binary heap.
 	 * 
 	 * @param array
-	 * 		input array
+	 *     	input array
 	 * @param k
-	 * 		number of elements to print
+	 *     	number of elements to print
 	 * 
 	 * @throws NullPointerException
 	 *    	if the input array is null
-	 *  @throws IllegalArgumentException
-	 *  	if the given k (< 1)
+	 * @throws IllegalArgumentException
+	 *     	if the given k (< 1)
 	 */
 	static void printLargestK(int[] array, int k) {
 		if (array == null)
@@ -851,22 +854,21 @@ public class ArrayUtil {
 			System.out.print(heap.remove() + " ");
 		System.out.println();
 	}
-	
-	
+
 	/**
-	 * Given an array, it finds the maximum difference of the elements. 
-	 * The larger element appears after the smaller number for the element diff.
+	 * Given an array, it finds the maximum difference of the elements. The
+	 * larger element appears after the smaller number for the element diff.
 	 * 
 	 * @param array
-	 * 		input array
+	 *     	input array
 	 * 
-	 * @return
+	 * @return 
 	 * 		max difference
 	 * 
 	 * @throws NullPointerException
-	 *    	if the input array is null
-	 *  @throws IllegalArgumentException
-	 *  	if the array does not have sufficient elements ( < 2).
+	 *      if the input array is null
+	 * @throws IllegalArgumentException
+	 *    	if the array does not have sufficient elements ( < 2).
 	 */
 	public static int getMaxPairDiff(int[] array) {
 		if (array == null)
@@ -894,19 +896,19 @@ public class ArrayUtil {
 
 		return maxSum;
 	}
-	
+
 	/**
 	 * Given an array, it produces product array such that the product[i] is the
 	 * result of multiplying the array elements other than element at i.
 	 * 
 	 * @param array
-	 * 		input array
+	 *   	input array
 	 * 
-	 * @return
+	 * @return 
 	 * 		product array
 	 * 
 	 * @throws NullPointerException
-	 *    	if any of the input array is null
+	 *     	if any of the input array is null
 	 */
 	public static int[] product(int[] array) {
 		if (array == null)
@@ -922,7 +924,7 @@ public class ArrayUtil {
 			product[i] = prod;
 			prod *= array[i];
 		}
-		
+
 		// reset
 		prod = 1;
 
@@ -934,16 +936,16 @@ public class ArrayUtil {
 
 		return product;
 	}
-	
+
 	/**
-	 * Given an array, it re-arranges all elements such that the odd
-	 * numbers follows all even numbers.
+	 * Given an array, it re-arranges all elements such that the odd numbers
+	 * follows all even numbers.
 	 * 
 	 * @param array
-	 * 		input array
+	 *   	input array
 	 * 
 	 * @throws NullPointerException
-	 *    	if any of the input array is null
+	 *     	if any of the input array is null
 	 */
 	public static void segregateEvenOdd(int[] array) {
 		if (array == null)
@@ -966,21 +968,21 @@ public class ArrayUtil {
 			}
 		}
 	}
-	
+
 	/**
-	 * Given an array, this method prints the duplicates in the array.
-	 * This method does modify the array elements.
+	 * Given an array, this method prints the duplicates in the array. This
+	 * method does modify the array elements.
 	 * 
 	 * @param array
-	 * 		input array
+	 *     	input array
 	 * 
 	 * @throws NullPointerException
-	 *    	if any of the input array is null
+	 *     	if any of the input array is null
 	 */
 	static void printDuplicates(int[] array) {
 		if (array == null)
 			throw new NullPointerException("Input array should not be null");
-		
+
 		for (int i = 0; i < array.length; i++) {
 			if (array[Math.abs(array[i])] >= 0)
 				array[Math.abs(array[i])] = -array[Math.abs(array[i])];
@@ -988,20 +990,20 @@ public class ArrayUtil {
 				System.out.print(Math.abs(array[i]) + " ");
 		}
 	}
-	
+
 	/**
 	 * Given an array it finds the equilibrium index in the array. Equilibrium
-	 * index is an index such that the sum of elements at lesser 
-	 * indices is equal to the sum of elements at higher indices.
+	 * index is an index such that the sum of elements at lesser indices is
+	 * equal to the sum of elements at higher indices.
 	 * 
 	 * @param array
-	 *     	input array
+	 *    	input array
 	 * 
-	 * @return
+	 * @return 
 	 * 		the equilibrium index, -1 if there is no such index
 	 * 
 	 * @throws NullPointerException
-	 *             if any of the input array is null
+	 *    	if any of the input array is null
 	 */
 	public static int getEquilibriumIndex(int[] array) {
 		if (array == null)
@@ -1025,7 +1027,7 @@ public class ArrayUtil {
 
 		return -1;
 	}
-	
+
 	/**
 	 * Given an array, this method finds the next greater element for each
 	 * element. The greater for an element is the first greater element on the
@@ -1033,13 +1035,13 @@ public class ArrayUtil {
 	 * represented -1.
 	 * 
 	 * @param array
-	 * 		input array
+	 *    	input array
 	 * 
-	 * @return
+	 * @return 
 	 * 		array containing next greater
 	 * 
 	 * @throws NullPointerException
-	 *             if any of the input array is null
+	 *    	if any of the input array is null
 	 */
 	public static int[] findNextGreater(int[] array) {
 		if (array == null)
@@ -1076,15 +1078,15 @@ public class ArrayUtil {
 
 		return result;
 	}
-	
+
 	/**
 	 * Given an array of elements this method checks whether the numbers are
 	 * consecutive or not. Time: O(n), Space: O(n)
 	 * 
 	 * @param array
-	 * 		given array
+	 *    	given array
 	 * 
-	 * @return
+	 * @return 
 	 * 		true if the numbers are consecutive, false otherwise
 	 * 
 	 * @throws NullPointerException
@@ -1111,16 +1113,16 @@ public class ArrayUtil {
 
 		return true;
 	}
-	
+
 	/**
 	 * Given an array, it finds the maximum array difference such that the first
 	 * element is lesser than the second one. In other words, maximum (j – i)
 	 * such that array[j] > array[i].
 	 * 
 	 * @param array
-	 * 		given array
+	 *     	given array
 	 * 
-	 * @return
+	 * @return 
 	 * 		max index array diff
 	 * 
 	 * @throws NullPointerException
@@ -1158,32 +1160,30 @@ public class ArrayUtil {
 
 		return maxDiff;
 	}
-	
+
 	/**
-	 * Given an array of integers, and a window size w, 
-	 * this method computes the maximum of sliding windows of size w.
-	 * Time: O(n), Space: O(w)
+	 * Given an array of integers, and a window size w, this method computes the
+	 * maximum of sliding windows of size w. Time: O(n), Space: O(w)
 	 * 
 	 * @param array
-	 * 		input array
+	 *     	input array
 	 * @param w
-	 * 		window size
+	 *    	window size
 	 * 
-	 * @return
+	 * @return 
 	 * 		array containing max for each window size of w
 	 * 
 	 * @throws NullPointerException
-	 * 		if the given array is null
+	 *     	if the given array is null
 	 * @throws IllegalArgumentException
-	 * 		if the given window size is not valid (> 0 && <= array size)
+	 *    	if the given window size is not valid (> 0 && <= array size)
 	 */
 	public static int[] computeSlidingWindowMax(int[] array, int w) {
 
 		if (array == null)
 			throw new NullPointerException("Array should not be null.");
 		if (w <= 0 || w > array.length)
-			throw new IllegalArgumentException(
-					"Window size must be in the range of array size (> 0 && <= array size)");
+			throw new IllegalArgumentException("Window size must be in the range of array size (> 0 && <= array size)");
 
 		int[] slides = new int[array.length];
 
@@ -1210,49 +1210,49 @@ public class ArrayUtil {
 
 			deque.addLast(i);
 		}
-		
+
 		slides[array.length - w] = array[deque.removeFirst()];
 
 		return slides;
 	}
-	
+
 	/**
 	 * Given a list of Integer objects, it returns the array representation of
 	 * the objects. Returns an empty array if the given list is null
 	 * 
 	 * @param values
-	 * 		list of Integer objects
+	 *     	list of Integer objects
 	 * 
-	 * @return
+	 * @return 
 	 * 		array of int primitives
 	 * 
 	 * @throws NullPointerException
-	 * 		if any of the list element is null
+	 *     	if any of the list element is null
 	 */
 	public static int[] toArray(List<Integer> values) {
-		if(values == null)
+		if (values == null)
 			return new int[0];
-		
+
 		int[] array = new int[values.size()];
-	    int i = 0;
-	    for (int elt : values)  
-	    	array[i++] = elt;
-	
-	    return array;
+		int i = 0;
+		for (int elt : values)
+			array[i++] = elt;
+
+		return array;
 	}
-	
+
 	/**
 	 * Given an array of numbers, this method computes the median for each
 	 * element in the array from numbers[0] to till that number.
 	 * 
 	 * @param numbers
-	 * 		given numbers
+	 *    	given numbers
 	 * 
-	 * @return
+	 * @return 
 	 * 		the continuous median of numbers
 	 * 
 	 * @throws NullPointerException
-	 * 		if the numbers array is null
+	 *    	if the numbers array is null
 	 */
 	public static double[] getMedians(int[] numbers) {
 		if (numbers == null)
@@ -1277,11 +1277,11 @@ public class ArrayUtil {
 	 * Add the given number to the lower or higher heap.
 	 * 
 	 * @param number
-	 * 		number to add
+	 *   	number to add
 	 * @param lowersHeap
-	 * 		lower numbers heap
+	 *     	lower numbers heap
 	 * @param highersHeap
-	 * 		higher numbers heap
+	 *     	higher numbers heap
 	 */
 	private static void addNumber(int number, BinaryHeap<Integer> lowersHeap, BinaryHeap<Integer> highersHeap) {
 		if (lowersHeap.isEmpty() || number < lowersHeap.peek())
@@ -1294,9 +1294,9 @@ public class ArrayUtil {
 	 * Rebalance the heaps such that they differ in size by a max of 1.
 	 * 
 	 * @param lowersHeap
-	 * 		lower numbers heap
+	 *      lower numbers heap
 	 * @param highersHeap
-	 * 		higher numbers heap
+	 *     	higher numbers heap
 	 */
 	private static void rebalance(BinaryHeap<Integer> lowersHeap, BinaryHeap<Integer> highersHeap) {
 		BinaryHeap<Integer> bigHeap = lowersHeap.size() > highersHeap.size() ? lowersHeap : highersHeap;
@@ -1310,11 +1310,11 @@ public class ArrayUtil {
 	 * Get the current median of numbers.
 	 * 
 	 * @param lowersHeap
-	 * 		lower numbers heap
+	 *     	lower numbers heap
 	 * @param highersHeap
-	 * 		higher numbers heap
-	 * 		
-	 * @return
+	 *    	higher numbers heap
+	 * 
+	 * @return 
 	 * 		current median
 	 */
 	private static double getMedian(BinaryHeap<Integer> lowersHeap, BinaryHeap<Integer> highersHeap) {
@@ -1326,24 +1326,24 @@ public class ArrayUtil {
 
 		return bigHeap.peek();
 	}
-	
+
 	/**
 	 * Given an array of integers and a sum, this method finds three numbers
-	 * that are sum to the given sum. This method modifies the given array. 
+	 * that are sum to the given sum. This method modifies the given array.
 	 * Time: O(n^2)
 	 * 
 	 * @param array
-	 * 		given array
+	 *     given array
 	 * @param sum
-	 * 		the sum
+	 *    	the sum
 	 * 
-	 * @return
+	 * @return 
 	 * 		a three element array if found, empty array if not found
 	 * 
 	 * @throws NullPointerException
-	 * 		if the input array is null
+	 *      if the input array is null
 	 * @throws IllegalArgumentException
-	 * 		if the input array is not having sufficient elements
+	 *    	if the input array is not having sufficient elements
 	 */
 	public static int[] find3Numbers(int[] array, int sum) {
 		if (array == null)
@@ -1371,20 +1371,21 @@ public class ArrayUtil {
 
 		return new int[0];
 	}
-	
+
 	/**
-	 * Given an array and a sum, this method returns a sub array with the matching sum.
+	 * Given an array and a sum, this method returns a sub array with the
+	 * matching sum.
 	 * 
 	 * @param array
-	 * 		given array
+	 *    	given array
 	 * @param sum
-	 * 		given sum
+	 *    	given sum
 	 * 
-	 * @return
+	 * @return 
 	 * 		sub array if exists, an empty array if there is no sub-array sum
 	 * 
 	 * @throws NullPointerException
-	 * 		if the input array is null
+	 *    	if the input array is null
 	 */
 	public static int[] subarrayWithSum(int[] array, int sum) {
 		if (array == null)
@@ -1408,24 +1409,24 @@ public class ArrayUtil {
 
 		return new int[0];
 	}
-	
+
 	/**
 	 * Given an array which contains 0s and 1s, this method finds the largest
 	 * sub-array which is having equal number of 0s and 1s. Time: O(n^2)
 	 * 
 	 * @param array
-	 * 		given array
+	 *    	given array
 	 * 
-	 * @return
+	 * @return 
 	 * 		two element array of start and end index, or with {-1 and -1}
 	 * 
 	 * @throws NullPointerException
-	 * 		if the input array is null
+	 *    	if the input array is null
 	 */
 	public static int[] subarrayWith0s1s(int[] array) {
-		if(array == null)
+		if (array == null)
 			throw new NullPointerException("Input array can not be null.");
-		
+
 		int sum = 0;
 		int maxSize = -1, startIndex = 0;
 
@@ -1450,19 +1451,20 @@ public class ArrayUtil {
 		else
 			return new int[] { startIndex, startIndex + maxSize - 1 };
 	}
-	
+
 	/**
 	 * Given an array which contains 0s and 1s, this method finds the largest
-	 * sub-array which is having equal number of 0s and 1s. Time: O(n), Space: O(n)
+	 * sub-array which is having equal number of 0s and 1s. Time: O(n), Space:
+	 * O(n)
 	 * 
 	 * @param array
-	 * 		given array
+	 *   	given array
 	 * 
-	 * @return
+	 * @return 
 	 * 		two element array of start and end index, or with {-1 and -1}
 	 * 
 	 * @throws NullPointerException
-	 * 		if the input array is null
+	 *    	if the input array is null
 	 */
 	public static int[] subarrayWith0s1sOptimal(int[] array) {
 		if (array == null)
@@ -1505,28 +1507,28 @@ public class ArrayUtil {
 
 		return new int[] { endIndex - maxLength + 1, endIndex };
 	}
-	
+
 	/**
-	 * Given an array of positive integers, this method counts the number of 
-	 * triangles that can be formed from these numbers. To form a triangle  
-	 * from 3 values, the sum of any two values must be greater than the third.
-	 * Time: O(n^2).
+	 * Given an array of positive integers, this method counts the number of
+	 * triangles that can be formed from these numbers. To form a triangle from
+	 * 3 values, the sum of any two values must be greater than the third. Time:
+	 * O(n^2).
 	 * 
 	 * @param array
-	 * 		given array
+	 *    	given array
 	 * 
-	 * @return
+	 * @return 
 	 * 		two element array of start and end index, or with {-1 and -1}
 	 * 
 	 * @throws NullPointerException
-	 * 		if the input array is null
+	 *    	if the input array is null
 	 */
 	public static int numberOfTrianglesPossible(int[] array) {
 		if (array == null)
 			throw new NullPointerException("Input array can not be null.");
 
 		// TODO check for positive ints only.
-		
+
 		Arrays.sort(array);
 
 		int size = array.length;
@@ -1548,16 +1550,16 @@ public class ArrayUtil {
 
 		return count;
 	}
-	
+
 	/**
 	 * Given a positive integer, this method returns the next greater number
 	 * that is a permutation of the given digits in the number.
 	 * 
 	 * @param number
-	 * 		given number
+	 *            given number
 	 * 
-	 * @return
-	 * 		next greater number or the same number if not possible or given a -ve number
+	 * @return next greater number or the same number if not possible or given a
+	 *         -ve number
 	 */
 	public static int findNextGreater(int number) {
 		if (number <= 10)
@@ -1587,5 +1589,256 @@ public class ArrayUtil {
 			digits[j] = priorityQueue.poll();
 
 		return Integer.parseInt(new String(digits));
+	}
+
+	/**
+	 * Given an array of integers, this method returns the sum of bit
+	 * differences of each pair. For each pair of numbers in the array, sums the
+	 * number of bits they differ.
+	 * 
+	 * @param array
+	 *   	given array
+	 * 
+	 * @return 
+	 * 		sum of bit differences of pairs
+	 */
+	public static int sumOfBitDiffOfPairs(int[] array) {
+		int sum = 0; // Initialize result
+
+		int n = array.length - 1;
+
+		for (int i = 0; i < 32; i++) {
+			int count = 0;
+			for (int j = 0; j < n; j++)
+				if ((array[j] & (1 << i)) == 0)
+					count++;
+
+			sum += count * (n - count) * 2;
+		}
+
+		return sum;
+	}
+
+	/**
+	 * Given an array of integers, this method returns the sum of bitwise and of
+	 * each pair. For each pair of numbers in the array, sums the bitwise and of
+	 * the pair.
+	 * 
+	 * @param array
+	 *    	given array
+	 * 
+	 * @return 
+	 * 		sum of bit differences of pairs
+	 */
+	public static int sumOfBitwiseAndOfPairs(int[] array) {
+		int sum = 0; // Initialize result
+
+		for (int i = 0; i < 32; i++) {
+			// Count the number of elements with i'th bit set
+			int count = 0;
+			for (int j = 0; j < array.length; j++)
+				if ((array[j] & (1 << i)) == 0)
+					count++;
+
+			// There are 'count' set bits, means k(k-1)/2 pairs.
+			// Every pair adds 2^i to the answer.
+			sum += (1 << i) * (count * (count - 1) / 2);
+		}
+
+		return sum;
+	}
+
+	/**
+	 * Given a number, this method prints all the jumping numbers upto that
+	 * number (including). A number is a jumping number if all the adjacent
+	 * digits are differ by 1.
+	 * 
+	 * @param number
+	 *    	given number
+	 */
+	static void printJumpingNumbers(int number) {
+		if (number < 0)
+			return;
+
+		System.out.print(0 + " ");
+		for (int i = 1; i <= 9 && i <= number; i++)
+			printJumpingNumbersBfs(number, i);
+	}
+
+	/**
+	 * Print all numbers using BFS traversal starting from each digit.
+	 * 
+	 * @param maxNumber
+	 *     	max number
+	 * @param curNumber
+	 *    	current number
+	 */
+	private static void printJumpingNumbersBfs(int maxNumber, int curNumber) {
+		Queue<Integer> queue = new LinkedList<>();
+		queue.add(curNumber);
+
+		while (!queue.isEmpty()) {
+			curNumber = queue.remove();
+			if (curNumber <= maxNumber) {
+				System.out.print(curNumber + " ");
+				int lastDigit = curNumber % 10;
+
+				if (lastDigit == 0) // If last digit is 0, append next digit
+									// only
+					queue.add((curNumber * 10) + (lastDigit + 1));
+				else if (lastDigit == 9) // If last digit is 9, append previous
+											// digit only
+					queue.add((curNumber * 10) + (lastDigit - 1));
+				else {
+					queue.add((curNumber * 10) + (lastDigit - 1));
+					queue.add((curNumber * 10) + (lastDigit + 1));
+				}
+			}
+		}
+	}
+
+	/**
+	 * Given an array of towers with their heights, compute the amount of rain
+	 * water can be captured between towers. This method assumes that the towers
+	 * are arranged from 0 to n-1.
+	 * 
+	 * @param towers
+	 *    	given towers
+	 * 
+	 * @return 
+	 * 		the water can be captured
+	 */
+	public static int maxRainWaterBetweenTowers(int[] towers) {
+		if (towers == null)
+			throw new NullPointerException();
+
+		int n = towers.length;
+
+		int maxRainWater = 0;
+
+		// holds heights of tallest bar to the left
+		int[] left = new int[towers.length];
+		left[0] = towers[0];
+		for (int i = 1; i < n; i++)
+			left[i] = Math.max(left[i - 1], towers[i]);
+
+		// holds heights of tallest bar to the right
+		int[] right = new int[towers.length];
+		right[n - 1] = towers[n - 1];
+		for (int i = n - 2; i >= 0; i--)
+			right[i] = Math.max(right[i + 1], towers[i]);
+
+		// Accumulated water for each bar is min(left[i], right[i]) - towers[i]
+		for (int i = 0; i < n; i++)
+			maxRainWater += Math.min(left[i], right[i]) - towers[i];
+
+		return maxRainWater;
+	}
+
+	/**
+	 * Given an array of n elements from 0 to n-1, this method re-arranges the
+	 * elements such that the element at index i becomes element at
+	 * array[array[i]]. This method does not check for validity of numbers.
+	 * 
+	 * @param array
+	 *    	given integer array
+	 */
+	public static void rearrange(int[] array) {
+		if (array == null)
+			throw new NullPointerException();
+
+		int size = array.length;
+		for (int i = 0; i < size; i++)
+			array[(array[i] % size)] += i * size;
+
+		for (int i = 0; i < size; i++)
+			array[i] = array[i] / size;
+	}
+
+	/**
+	 * Given arrivals and departures of different trains, this method finds the
+	 * minimum number of platforms required at any point of time. For
+	 * simplicity, the implementation takes integers as the times, We can use
+	 * Date and Time objects instead. Time: O(n log n)
+	 * 
+	 * @param arrivals
+	 *    	arrival times
+	 * @param departure
+	 *    	departure times
+	 * 
+	 * @return 
+	 * 		the minimum platforms required at any time
+	 */
+	static int minPlatformsRequired(int[] arrivals, int[] departure) {
+		// TODO Null checks, etc.
+
+		Arrays.sort(arrivals);
+		Arrays.sort(departure);
+
+		int platformsNow = 1, minPlatforms = 1;
+		int i = 1, j = 0;
+
+		while (i < arrivals.length && j < departure.length) {
+			if (arrivals[i] < departure[j]) {
+				platformsNow++;
+				i++;
+				if (platformsNow > minPlatforms)
+					minPlatforms = platformsNow;
+			} else {
+				platformsNow--;
+				j++;
+			}
+		}
+
+		return minPlatforms;
+	}
+
+	/**
+	 * Given an array of integers, this method maximizes value (array[l] –
+	 * array[k] + array[j] – array[i]), such that i < j < k < l. DP
+	 * 
+	 * @return 
+	 * 		maximum value of (array[l] – array[k] + array[j] – array[i])
+	 */
+	public static int maximizeValue(int[] array) {
+		if (array == null)
+			throw new NullPointerException();
+		if (array.length < 4)
+			throw new IllegalArgumentException();
+
+		int n = array.length;
+
+		// holds maximum of array[l]
+		int[] max1 = new int[n + 1];
+		// holds maximum of array[l] – array[k]
+		int[] max2 = new int[n];
+		// holds maximum of array[l] – array[k] + array[j]
+		int[] max3 = new int[n - 1];
+		// holds maximum of array[l] – array[k] + array[j] – array[i]
+		int[] max4 = new int[n - 2];
+
+		// Initialize all the tables to Integer.MIN_VALUE
+		for (int i = 0; i <= n; i++)
+			max1[i] = Integer.MIN_VALUE;
+		for (int i = 0; i < n; i++)
+			max2[i] = Integer.MIN_VALUE;
+		for (int i = 0; i < n - 1; i++)
+			max3[i] = Integer.MIN_VALUE;
+		for (int i = 0; i < n - 2; i++)
+			max4[i] = Integer.MIN_VALUE;
+
+		for (int i = n - 1; i >= 0; i--)
+			max1[i] = Math.max(max1[i + 1], array[i]);
+
+		for (int i = n - 2; i >= 0; i--)
+			max2[i] = Math.max(max2[i + 1], max1[i + 1] - array[i]);
+
+		for (int i = n - 3; i >= 0; i--)
+			max3[i] = Math.max(max3[i + 1], max2[i + 1] + array[i]);
+
+		for (int i = n - 4; i >= 0; i--)
+			max4[i] = Math.max(max4[i + 1], max3[i + 1] - array[i]);
+
+		return max4[0];
 	}
 }

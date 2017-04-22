@@ -8,7 +8,7 @@ import org.algos4j.util.StringUtil;
  * @author psajja
  *
  */
-public class StringPermutationsTest {
+public class StringPrintPermutationsTest {
 
 	/**
 	 * @param args

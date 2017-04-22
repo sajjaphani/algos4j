@@ -1046,4 +1046,90 @@ public class ArraySortUtil {
 				swap(array, i, i + 1);
 		}
 	}
+	
+	/**
+	 * Given a set of nuts of different sizes and bolts of different sizes, this
+	 * method matches nuts and bolts efficiently. There is a one-one
+	 * corresponding mapping between nuts and bolts. Also known as Lock-Key
+	 * problem. Based on Quick sort.
+	 * 
+	 * <p>
+	 * Constraint: Only comparison of nut to a bolt and bolt to a nut is allowed.
+	 * </p>
+	 * 
+	 * @param nuts
+	 * 		given nuts
+	 * @param bolts
+	 * 		given bolts
+	 */
+	public static void matchPairs(char[] nuts, char[] bolts) {
+		// TODO error handling, data validation
+		
+		matchPairs(nuts, bolts, 0, nuts.length - 1);
+	}
+
+	/**
+	 * Re-arranges the nuts and bolts by applying quick sort approach.
+	 * 
+	 * @param nuts
+	 * 		given nuts
+	 * @param bolts
+	 * 		given bolts
+	 * @param low
+	 * 		current low
+	 * @param high
+	 * 		current high
+	 */
+	private static void matchPairs(char[] nuts, char[] bolts, int low, int high) {
+		if (low < high) {
+		
+			// Partition nuts based on chosen bolt
+			int pivot = partition(nuts, low, high, bolts[high]);
+
+			// Partition bolts based on chosen nut
+			partition(bolts, low, high, nuts[pivot]);
+
+			matchPairs(nuts, bolts, low, pivot - 1);
+			matchPairs(nuts, bolts, pivot + 1, high);
+		}
+	}
+	
+	/**
+	 * Partition the array based on given pivot.
+	 * 
+	 * @param array
+	 * 		given array
+	 * @param low
+	 * 		current low
+	 * @param high
+	 * 		current high
+	 * @param pivot
+	 * 		pivot element
+	 * 
+	 * @return
+	 * 		index after partition
+	 */
+	private static int partition(char[] array, int low, int high, char pivot) {
+		int i = low;
+		char temp;
+		for (int j = low; j < high; j++) {
+			if (array[j] < pivot) {
+				temp = array[i];
+				array[i] = array[j];
+				array[j] = temp;
+				i++;
+			} else if (array[j] == pivot) {
+				temp = array[j];
+				array[j] = array[high];
+				array[high] = temp;
+				j--;
+			}
+		}
+		
+		temp = array[i];
+		array[i] = array[high];
+		array[high] = temp;
+
+		return i;
+	}
 }
