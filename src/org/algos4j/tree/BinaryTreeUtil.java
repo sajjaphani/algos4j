@@ -4666,4 +4666,210 @@ public class BinaryTreeUtil {
 			pathCounts.put(sum, newCount);
 		}
 	}
+	
+	/**
+	 * Given a binary tree this method prints the extreme nodes of each level in
+	 * alternative order. First prints the root, next level last node followed
+	 * by next level first node and so on.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 */
+	static void printExtremeNodes(BinaryTree bt) {
+		if (bt == null)
+			return;
+
+		BTNode root = bt.getRootNode();
+		if (root == null)
+			return;
+
+		Queue<BTNode> queue = new LinkedList<>();
+		queue.add(root);
+
+		boolean leftCorner = true;
+		while (!queue.isEmpty()) {
+			int nodeCount = queue.size();
+
+			for (int n = nodeCount; n > 0; n--) {
+				BTNode curr = queue.remove();
+
+				if (curr.left != null)
+					queue.add(curr.left);
+
+				if (curr.right != null)
+					queue.add(curr.right);
+
+				// if leftCorner is true, print leftmost
+				if (leftCorner && n == nodeCount)
+					System.out.print(curr.getData() + " ");
+
+				// if leftCorner is false, print rightmost
+				if (!leftCorner && n == 1)
+					System.out.print(curr.getData() + " ");
+			}
+
+			// Change corner for next level
+			leftCorner = !leftCorner;
+		}
+	}
+	
+	/**
+	 * Given a binary tree, this method traverses the nodes in diagonal fashion.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 */
+	static void diagonalTraversal(BinaryTree bt) {
+		if (bt == null)
+			return;
+
+		BTNode root = bt.getRootNode();
+		if (root == null)
+			return;
+		
+		Map<Integer, List<BTNode>> diagonalsMap = new HashMap<>();
+		diagonalTraversal(bt.root, 0, diagonalsMap);
+		
+		for(Entry<Integer, List<BTNode>> entry : diagonalsMap.entrySet()) {
+			System.out.println("Diagonal Level: " + entry.getKey());
+			for(BTNode node : entry.getValue())
+				System.out.print(node.getData() + " ");
+
+			System.out.println();
+		}
+	}
+
+	/**
+	 * Recursively traverse the tree and update the diagonals map.
+	 * 
+	 * @param root
+	 * 		current root
+	 * @param distance
+	 * 		diagonal distance
+	 * @param diagonalsMap
+	 * 		the map contains the diagonal nodes
+	 */
+	private static void diagonalTraversal(BTNode root, int distance, Map<Integer, List<BTNode>> diagonalsMap) {
+		if (root == null)
+	        return;
+	 
+		List<BTNode> nodeList = diagonalsMap.get(distance);
+		if(nodeList == null)
+			nodeList = new ArrayList<>();
+		
+		nodeList.add(root);
+		diagonalsMap.put(distance, nodeList);
+	 
+	    // Left at distance + 1 level
+	    diagonalTraversal(root.left, distance + 1, diagonalsMap);
+	 
+	    // Right at the same distance
+	    diagonalTraversal(root.right, distance, diagonalsMap);		
+	}
+	
+	/**
+	 * Given a binary tree and a node value, this method prints all the cousins
+	 * of the given node. A cousin is at the same level of the node but belongs
+	 * to a different parent.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * @param nodeValue
+	 * 		given node
+	 */
+	static List<BTNode> getCousinNodes(BinaryTree bt, int nodeValue) {
+		if(bt == null)
+			return new ArrayList<>();
+		
+		BTNode node = search(bt, nodeValue);
+		if(node == null)
+			return new ArrayList<>();
+		
+		int level = getLevel(bt, nodeValue);
+		
+		List<BTNode> cousins = new ArrayList<>();
+		getCousinNodes(bt.root, node, level, cousins);
+		
+		return cousins;
+	}
+
+	/**
+	 * Recursively traverse the tree to the level and update the cousins.
+	 * 
+	 * @param root
+	 * 		current root
+	 * @param node
+	 * 		given node
+	 * @param level
+	 * 		level of the cousin
+	 * @param cousins
+	 * 		cousins
+	 */
+	private static void getCousinNodes(BTNode root, BTNode node, int level, List<BTNode> cousins) {
+		if (root == null || level < 2)
+			return;
+
+		// Level should be at least 2 otherwise cousins not possible
+		if (level == 2) {
+			if (root.left == node || root.right == node)
+				return;
+			if (root.left != null)
+				cousins.add(root.left);
+			if (root.right != null)
+				cousins.add(root.right);
+		} else if (level > 2) {
+			getCousinNodes(root.left, node, level - 1, cousins);
+			getCousinNodes(root.right, node, level - 1, cousins);
+		}
+	}
+	
+	/**
+	 * Given a binary tree, this method checks whether removing a node can split
+	 * the tree into two trees of equal length.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @return
+	 * 		true if the tree can be split into two equal halves, false otherwise
+	 */
+	public static boolean canSplit(BinaryTree bt) {
+		if(bt == null)
+			return false;
+		
+		BTNode root = bt.root;
+		int size = bt.size();
+		 
+        boolean[] canSplit = new boolean[1];
+        
+        canSplit(root, size, canSplit);
+        
+		return canSplit[0];
+	}
+
+	/**
+	 * Recursively checks if it can split above the subtree rooted at the current node.
+	 * 
+	 * @param root
+	 * 		current subtree root
+	 * @param size
+	 * 		size of the tree.
+	 * 
+	 * @param canSplit
+	 * 		updates to true if we can split at this node, false otherwise
+	 */
+	private static int canSplit(BTNode root, int size, boolean[] canSplit) {
+		if (root == null)
+			return 0;
+
+		// Compute sizes of the current subtree
+		int sizeHere = canSplit(root.left, size, canSplit) + 1 + canSplit(root.right, size, canSplit);
+
+		// We can split the tree at this node
+		if (sizeHere == size - sizeHere)
+			canSplit[0] = true;
+
+		// Return current subtree size rooted at this node
+		return sizeHere;
+	}
 }

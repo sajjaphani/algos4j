@@ -395,5 +395,10 @@ public class BinaryTree {
 		public void setData(int data) {
 			this.data = data;
 		}
+		
+		@Override
+		public String toString() {
+			return Integer.toString(getData());
+		}
 	}
 }
