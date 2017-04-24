@@ -4872,4 +4872,50 @@ public class BinaryTreeUtil {
 		// Return current subtree size rooted at this node
 		return sizeHere;
 	}
+	
+	/**
+	 * Given a binary tree, this method returns the max difference between any
+	 * node and its ancestor node.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @return
+	 * 		max difference of node and its ancestor
+	 */
+	public static int maxDiffOfNodeAndItsAncestor(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException();
+
+		int[] maxDiff = { Integer.MIN_VALUE };
+
+		maxDiffOfNodeAndItsAncestor(bt.root, maxDiff);
+
+		return maxDiff[0];
+
+	}
+
+	/**
+	 * Recursively compute the max difference by traversing the tree in bottom up fashion.
+	 * 
+	 * @param root
+	 * 		current root
+	 * @param maxDiff
+	 * 		max difference obtained so far
+	 */
+	private static int maxDiffOfNodeAndItsAncestor(BTNode root, int[] maxDiff) {
+		if (root == null)
+			return Integer.MAX_VALUE;
+
+		if (root.left == null && root.right == null)
+			return root.getData();
+
+		int minOfChildren = Math.min(maxDiffOfNodeAndItsAncestor(root.left, maxDiff), maxDiffOfNodeAndItsAncestor(root.right, maxDiff));
+
+		// Update max value
+		maxDiff[0] = Math.max(maxDiff[0], root.getData() - minOfChildren);
+
+		// Max value from the current root
+		return Math.min(minOfChildren, root.getData());
+	}
 }

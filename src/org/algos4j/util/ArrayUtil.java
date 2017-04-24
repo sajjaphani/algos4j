@@ -1841,4 +1841,36 @@ public class ArrayUtil {
 
 		return max4[0];
 	}
+	
+	/**
+	 * Given an array of n ropes where each item is the length of the rope (positive),
+	 * compute the min cost required to connect ropes. The cost to connect two
+	 * ropes is equal to the sum of the lengths of the two ropes.
+	 * 
+	 * @param ropes
+	 * 		given ropes
+	 * 
+	 * @return
+	 * 		the min cost required to connect the ropes
+	 */
+	public static int getCostToConnect(int[] ropes) {
+		if (ropes == null)
+			throw new NullPointerException();
+
+		Queue<Integer> minHeap = new PriorityQueue<>();
+		for (int rope : ropes)
+			minHeap.add(rope);
+
+		int cost = 0;
+		while (minHeap.size() > 1) {
+			int min1 = minHeap.remove();
+			int min2 = minHeap.remove();
+
+			int sum = min1 + min2;
+			cost += sum;
+			minHeap.add(sum);
+		}
+
+		return cost;
+	}
 }
