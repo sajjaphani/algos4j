@@ -1132,4 +1132,19 @@ public class ArraySortUtil {
 
 		return i;
 	}
+	
+	/**
+	 * Given an array of sorted arrays, this method merges and returns a new sorted array.
+	 * 
+	 * @param arrays
+	 * 		sorted arrays
+	 * 
+	 * @return
+	 * 		new sorted array by merging them
+	 */
+	static int[] mergeSortedArrays(int[][] arrays) {
+		// TODO error handling
+		
+		return null;
+	}
 }

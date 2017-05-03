@@ -127,7 +127,7 @@ public class StackUtil {
 	 * Get the operator precedence.
 	 * 
 	 * @param symbol
-	 * 		given symbol, get the precedence.
+	 * 		given symbol
 	 * 
 	 * @return
 	 * 		returns the operator precedence
@@ -244,7 +244,7 @@ public class StackUtil {
 					operandStack.push(evaluate(operandStack.pop(), operandStack.pop(), operatorStack.pop()));
 				operatorStack.pop();
 			} else if (isOperator(symbol)) {
-				while (!operatorStack.isEmpty() && hasPrecedence(symbol, operatorStack.peek()))
+				while (!operatorStack.isEmpty() && hasHigherPrecedence(symbol, operatorStack.peek()))
 					operandStack.push(evaluate(operandStack.pop(), operandStack.pop(), operatorStack.pop()));
 
 				operatorStack.push(symbol);
@@ -273,9 +273,10 @@ public class StackUtil {
 	 * @return
 	 * 		true if second operator has higher precedence, false otherwise
 	 */
-	private static boolean hasPrecedence(char op1, char op2) {
+	private static boolean hasHigherPrecedence(char op1, char op2) {
         if (op2 == '(' || op2 == ')')
             return false;
+    
         return getPrecedence(op1) < getPrecedence(op2);
     }
 	

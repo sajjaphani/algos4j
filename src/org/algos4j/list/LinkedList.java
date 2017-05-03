@@ -380,7 +380,7 @@ public class LinkedList {
 	 * @author psajja
 	 * 
 	 */
-	static class Node implements Cloneable{
+	public static class Node implements Cloneable{
 
 		int data;
 		public Node next;

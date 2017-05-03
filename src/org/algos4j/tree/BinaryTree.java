@@ -23,6 +23,22 @@ public class BinaryTree {
 	}
 
 	/**
+	 * Constructs a new binary tree with the given root.
+	 * 
+	 * @param root
+	 * 		root node
+	 * 
+	 * @return
+	 * 		new binary tree
+	 */
+	public static BinaryTree createTree(BTNode root) {
+		BinaryTree bt = new BinaryTree();
+		bt.root = root;
+
+		return bt;
+	}
+	
+	/**
 	 * Get the root node of this binary tree.
 	 * 
 	 * @return the root node.
@@ -361,7 +377,7 @@ public class BinaryTree {
 	 * @author psajja
 	 * 
 	 */
-	static class BTNode {
+	public static class BTNode {
 		BTNode left;
 		BTNode right;
 		private int data;

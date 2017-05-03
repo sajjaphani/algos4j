@@ -1873,4 +1873,27 @@ public class ArrayUtil {
 
 		return cost;
 	}
+	
+	static void printKthLargest(int[] array, int k) {
+		if (array == null)
+			throw new NullPointerException();
+
+		if (array.length < k)
+			throw new IllegalArgumentException();
+
+		Queue<Integer> queue = new PriorityQueue<>();
+		for (int i = 0; i < k; i++)
+			queue.add(array[i]);
+		
+		System.out.println("Kth largest so far: " + queue.peek());
+		
+		for (int i = k; i < array.length; i++) {
+			if (array[i] > queue.peek()) {
+				queue.add(array[i]);
+				queue.remove();
+			}
+
+			System.out.println("Kth largest so far: " + queue.peek());
+		}
+	}
 }

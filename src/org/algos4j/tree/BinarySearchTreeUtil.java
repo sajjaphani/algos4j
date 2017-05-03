@@ -965,8 +965,9 @@ public class BinarySearchTreeUtil {
 	
 	/**
 	 * Given a sorted array (increasing order), this method constructs a binary
-	 * search tree which has minimal height. This method assumes the array is
-	 * sorted and does not explicitly check whether the array is sorted or not.
+	 * search tree (balanced) which has minimal height. This method assumes 
+	 * the array is sorted and does not explicitly check whether the array is 
+	 * sorted or not.
 	 * 
 	 * @param array
 	 * 		given sorted array
@@ -977,12 +978,12 @@ public class BinarySearchTreeUtil {
 	 * @throws NullPointerException
 	 * 		if the input array is null
 	 */
-	public static BinaryTree createMinimalBst(int[] array) {
+	public static BinaryTree createBalancedBst(int[] array) {
 		if (array == null)
 			throw new NullPointerException("Input array should not be null");
 
 		BinaryTree bt = new BinarySearchTree();
-		bt.setRoot(createMinimalBst(array, 0, array.length - 1));
+		bt.setRoot(createBalancedBst(array, 0, array.length - 1));
 
 		return bt;
 	}
@@ -1000,15 +1001,18 @@ public class BinarySearchTreeUtil {
 	 * @return
 	 * 		root node of this subtree
 	 */
-	private static BTNode createMinimalBst(int[] array, int start, int end) {
+	private static BTNode createBalancedBst(int[] array, int start, int end) {
 		if (end < start)
 			return null;
+		int mid;
+		if ((end - start) % 2 == 0)
+			mid = (start + end) / 2;
+		else
+			mid = (start + end + 1) / 2;
 
-		int mid = (start + end) / 2;
-	
 		BTNode root = new BTNode(array[mid]);
-		root.left = createMinimalBst(array, start, mid - 1);
-		root.right = createMinimalBst(array, mid + 1, end);
+		root.left = createBalancedBst(array, start, mid - 1);
+		root.right = createBalancedBst(array, mid + 1, end);
 
 		return root;
 	}
@@ -1102,5 +1106,72 @@ public class BinarySearchTreeUtil {
 		weaveLists(sequenceLeft, sequenceRight, prefix, weavedLists);
 		prefix.remove(prefix.size() - 1);
 		sequenceRight.add(0, secondHead);
+	}
+	
+	/**
+	 * Given a binary search tree, this method transforms the tree into
+	 * balanced binary search tree.
+	 * 
+	 * @param bst
+	 * 		binary search tree
+	 * 
+	 * @return
+	 * 		balanced binary search tree
+	 */
+	static BinaryTree toBalencedBst(BinarySearchTree bst) {
+		if (bst == null)
+			throw new NullPointerException();
+
+		List<BTNode> nodes = new ArrayList<>();
+		addBstNodes(bst.root, nodes);
+
+		BTNode root = getBalancedBst(nodes, 0, nodes.size() - 1);
+		BinaryTree bt = new BinarySearchTree();
+		bt.root = root;
+		
+		return bt;
+	}
+
+	/**
+	 * Traverse the tree inorder and add the nodes to the list.
+	 * 
+	 * @param root
+	 * 		current root node
+	 * @param nodes
+	 * 		list to add the nodes
+	 */
+	private static void addBstNodes(BTNode root, List<BTNode> nodes) {
+		if (root == null)
+			return;
+
+		addBstNodes(root.left, nodes);
+		nodes.add(root);
+		addBstNodes(root.right, nodes);
+	}
+	
+	/**
+	 * Constructs and returns the balanced binary search tree.
+	 * 
+	 * @param nodes
+	 * 		list of nodes
+	 * @param start
+	 * 		start index
+	 * @param end
+	 * 		end index
+	 * 
+	 * @return
+	 * 		the current subtree root
+	 */
+	private static BTNode getBalancedBst(List<BTNode> nodes, int start, int end) {
+		if (start > end)
+			return null;
+
+		int mid = (start + end) / 2;
+
+		BTNode root = nodes.get(mid);
+		root.left = getBalancedBst(nodes, start, mid - 1);
+		root.right = getBalancedBst(nodes, mid + 1, end);
+
+		return root;
 	}
 }

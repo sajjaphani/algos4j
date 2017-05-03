@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.TreeMap;
 
+import org.algos4j.list.LinkedList.Node;
 import org.algos4j.tree.BinaryTree.BTNode;
 import org.algos4j.util.ArrayUtil;
 
@@ -3180,6 +3181,7 @@ public class BinaryTreeUtil {
 		if (node1 == null)
 			return false;
 
+		// TODO, use StringBuilder instead
 		String inorder1 = getInorder(node1, "");
 		String inorder2 = getInorder(node2, "");
 
@@ -3204,6 +3206,7 @@ public class BinaryTreeUtil {
 	 * 		inorder string
 	 */
 	private static String getInorder(BTNode node, String inorder) {
+		
 		if (node == null)
 			return inorder;
 
@@ -4917,5 +4920,440 @@ public class BinaryTreeUtil {
 
 		// Max value from the current root
 		return Math.min(minOfChildren, root.getData());
+	}
+	
+	/**
+	 * Given a perfect binary tree, where each node has exactly two children
+	 * except leaf nodes, this method reverse the alternative levels. This 
+	 * method does not validate the tree for perfectness.
+	 * 
+	 * @param bt
+	 *            given binary tree
+	 * 
+	 * @throws NullPointerException
+	 *             if the given binary tree is null
+	 */
+	static void reverseAlternativeLevels(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException("BinaryTree can not be null.");
+
+		BTNode root = bt.root;
+		if (root == null)
+			return;
+
+		reverseAlternativeLevels(root.left, root.right, 0);
+	}
+
+	/**
+	 * Recursively traverse the tree and reverse the levels.
+	 * 
+	 * @param root1
+	 * 		first subtree root
+	 * @param root2
+	 * 		second subtree root
+	 * @param level
+	 * 		current level
+	 */
+	private static void reverseAlternativeLevels(BTNode root1, BTNode root2, int level) {
+		if (root1 == null || root2 == null)
+			return;
+
+		if (level % 2 == 0)
+			swap(root1, root2);
+
+		// go deeper in two subtrees
+		reverseAlternativeLevels(root1.left, root2.right, level + 1);
+		reverseAlternativeLevels(root1.right, root2.left, level + 1);
+	}
+
+	/**
+	 * Swap two node values.
+	 * 
+	 * @param root1
+	 * 		first node
+	 * @param root2
+	 * 		second node
+	 */
+	private static void swap(BTNode root1, BTNode root2) {
+		int temp = root1.getData();
+		root1.setData(root2.getData());
+		root2.setData(temp);
+	}
+	
+	/**
+	 * Given a binary tree, this method checks whether the given tree is a max
+	 * binary heap. A max binary heap has the following properties
+	 * <ul>
+	 * <li>It should be a complete tree </li>
+ 	 * <li>Every node’s value should be greater than or equal to its child.
+	 * </ul>
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @return
+	 * 		true if the given binary tree is max heap, false otherwise
+	 */
+	public static boolean isMaxHeap(BinaryTree bt) {
+		if(bt == null)
+			throw new NullPointerException();
+		
+		BTNode root = bt.root;
+		if(root == null)
+			return true;
+		
+		return isCompleteBinaryTree(bt) && isMaxHeap(root);
+	}
+
+	/**
+	 * Check the subtree recursively for max heap property.
+	 * 
+	 * @param root
+	 * 		current subtree root
+	 * 
+	 * @return
+	 * 		true if subtree is max heap, false otherwise
+	 */
+	private static boolean isMaxHeap(BTNode root) {
+		if (root == null)
+			return true;
+
+		if (root.left == null && root.right == null)
+			return true;
+
+		if (root.right == null) {
+			// Left most node
+			return root.getData() >= root.left.getData();
+		} else {
+			// Recur on each sub tree
+			if (root.getData() >= root.left.getData() && root.getData() >= root.right.getData())
+				return isMaxHeap(root.left) && isMaxHeap(root.right);
+
+			return false;
+		}
+	}
+	
+	/**
+	 * Given a binary tree, this method checks whether the given tree is a min
+	 * binary heap. A min binary heap has the following properties
+	 * <ul>
+	 * <li>It should be a complete tree </li>
+ 	 * <li>Every node’s value should be less than or equal to its child.
+	 * </ul>
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @return
+	 * 		true if the given binary tree is min heap, false otherwise
+	 */
+	public static boolean isMinHeap(BinaryTree bt) {
+		if(bt == null)
+			throw new NullPointerException();
+		
+		BTNode root = bt.root;
+		if(root == null)
+			return true;
+		
+		return isCompleteBinaryTree(bt) && isMinHeap(root);
+	}
+
+	/**
+	 * Check the subtree recursively for min heap property.
+	 * 
+	 * @param root
+	 * 		current subtree root
+	 * 
+	 * @return
+	 * 		true if subtree is min heap, false otherwise
+	 */
+	private static boolean isMinHeap(BTNode root) {
+		if (root == null)
+			return true;
+
+		if (root.left == null && root.right == null)
+			return true;
+
+		if (root.right == null) {
+			// Left most node
+			return root.getData() <= root.left.getData();
+		} else {
+			// Recur on each sub tree
+			if (root.getData() <= root.left.getData() && root.getData() <= root.right.getData())
+				return isMinHeap(root.left) && isMinHeap(root.right);
+
+			return false;
+		}
+	}
+	
+	/**
+	 * Represents a class to hold the max match of identical subtree.
+	 * This holds the matched subtree node along with the size of the match.
+	 * 
+	 * @author psajja
+	 *
+	 */
+	private static class MatchNode {
+		BTNode matchedRoot;
+		int size;
+	}
+	
+	/**
+	 * Given a binary tree, this method computes the size of the largest
+	 * subtree having identical left and right subtrees. Traverses the 
+	 * nodes in post order to process left and right subtrees.
+	 * 
+	 * @param bt
+	 * 		given binary tree
+	 * 
+	 * @return
+	 * 		the largest subtree size
+	 */
+	static int getMatchedSubtreeCount(BinaryTree bt) {
+		if (bt == null)
+			throw new NullPointerException();
+
+		MatchNode match = new MatchNode();
+
+		getMatchedSubtreeCount(bt.root, match, new StringBuilder());
+
+		System.out.println("The max identical subtree can be founded at node rooted: " + match.matchedRoot);
+
+		return match.size;
+	}
+
+	/**
+	 * Recursively traverse the the left and right subtrees in postorder and find the matching sequences.
+	 * 
+	 * @param root
+	 * 		current root node
+	 * @param match
+	 * 		holds the current subtree node along with the max size
+	 * @param sb
+	 * 		buffer to hold the sequence
+	 */
+	private static int getMatchedSubtreeCount(BTNode root, MatchNode match, StringBuilder sb) {
+		if (root == null)
+			return 0;
+
+		StringBuilder left = new StringBuilder();
+		StringBuilder right = new StringBuilder();
+
+		int leftSize = getMatchedSubtreeCount(root.left, match, left);
+
+		int rightSize = getMatchedSubtreeCount(root.right, match, right);
+
+		int sizeHere = leftSize + rightSize + 1;
+		if (left.equals(right)) {
+			if (sizeHere > match.size) {
+				match.size = sizeHere;
+				match.matchedRoot = root;
+			}
+		}
+
+		sb.append("|").append(left).append("|");
+		sb.append("|").append(root.getData()).append("|");
+		sb.append("|").append(right).append("|");
+
+		return sizeHere;
+	}
+	
+	/**
+	 * Given a singly linked list of <code>org.algos4j.list.LinkedList</code>, 
+	 * this method builds a complete binary tree
+	 * from list nodes.
+	 * 
+	 * @param list
+	 * 		given linked list
+	 * 
+	 * @return
+	 * 		constructed binary tree;
+	 */
+	public static BinaryTree toTree(org.algos4j.list.LinkedList list) {
+		if (list == null)
+			throw new NullPointerException();
+
+		BinaryTree bt = new BinaryTree();
+		Node listHead = list.getHead();
+		if (listHead == null)
+			return bt;
+
+		Queue<BTNode> queue = new java.util.LinkedList<>();
+		BTNode treeHead = new BTNode(listHead.getData());
+		queue.add(treeHead);
+
+		listHead = listHead.next;
+		while (listHead != null) {
+			BTNode currentTreeNode = queue.remove();
+
+			BTNode leftChild = new BTNode(listHead.getData());
+			queue.add(leftChild);
+
+			BTNode rightChild = null;
+
+			listHead = listHead.next;
+
+			if (listHead != null) {
+				rightChild = new BTNode(listHead.getData());
+				queue.add(rightChild);
+				listHead = listHead.next;
+			}
+
+			currentTreeNode.left = leftChild;
+			currentTreeNode.right = rightChild;
+		}
+		bt.root = treeHead;
+
+		return bt;
+	}
+	
+	/**
+	 * Builds a binary tree from the given inoder and preorder traversal.
+	 * 
+	 * @param inorder
+	 * 		inorder traversal
+	 * @param preorder
+	 * 		preorder traversal
+	 * 
+	 * @return
+	 * 		tree constructed from the given traversals
+	 */
+	public static BinaryTree buildTreeFromInorderPreorder(int[] inorder, int[] preorder) {
+		if (inorder == null || preorder == null)
+			throw new NullPointerException();
+
+		if (inorder.length != preorder.length)
+			throw new IllegalArgumentException();
+
+		int[] preorderIndex = new int[] { 0 };
+		BTNode root = buildTreeFromInorderPreorder(inorder, preorder, preorderIndex, 0, inorder.length - 1);
+		BinaryTree bt = new BinaryTree();
+		bt.root = root;
+
+		return bt;
+	}
+
+	/**
+	 * Recursively build the tree.
+	 * 
+	 * @param inorder
+	 * 		inorder traversal
+	 * @param preorder
+	 * 		preorder traversal
+	 * @param preorderIndex
+	 * 		holds current preorder index
+	 * @param inorderStart
+	 * 		start index of inorder
+	 * @param inorderEnd
+	 * 		end index of inorder
+	 * 
+	 * @return
+	 * 		constructed tree
+	 */
+	private static BTNode buildTreeFromInorderPreorder(int[] inorder, int[] preorder, int[] preorderIndex,
+			int inorderStart, int inorderEnd) {
+		if (inorderStart > inorderEnd)
+			return null;
+		
+		BTNode node = new BTNode(preorder[preorderIndex[0]++]);
+
+		if (inorderStart == inorderEnd)
+			return node;
+
+		int inorderIndex = search(inorder, inorderStart, inorderEnd, node.getData());
+		if (inorderIndex == -1)
+			throw new IllegalArgumentException("Traversals are not proper..");
+
+		node.left = buildTreeFromInorderPreorder(inorder, preorder, preorderIndex, inorderStart, inorderIndex - 1);
+		node.right = buildTreeFromInorderPreorder(inorder, preorder, preorderIndex, inorderIndex + 1, inorderEnd);
+
+		return node;
+	}
+
+	/**
+	 * Finds the index of data in inorder traversal.
+	 * 
+	 * @param inorder
+	 * 		inorder traversal
+	 * @param inorderStart
+	 * 		current inorder start index
+	 * @param inorderEnd
+	 * 		current inorder end index
+	 * @param data
+	 * 		data item to find
+	 * 
+	 * @return
+	 * 		index of the data item, -1 if not found
+	 */
+	private static int search(int[] inorder, int inorderStart, int inorderEnd, int data) {
+		for (int i = inorderStart; i <= inorderEnd; i++) {
+			if (inorder[i] == data)
+				return i;
+		}
+
+		return -1;
+	}
+	
+	/**
+	 * Builds a binary tree from the given inoder and preorder traversal.
+	 * 
+	 * @param inorder
+	 * 		inorder traversal
+	 * @param postorder
+	 * 		postorder traversal
+	 * 
+	 * @return
+	 * 		tree constructed from the given traversals
+	 */
+	public static BinaryTree buildTreeFromInorderPostorder(int[] inorder, int[] postorder) {
+		if (inorder == null || postorder == null)
+			throw new NullPointerException();
+
+		if (inorder.length != postorder.length)
+			throw new IllegalArgumentException();
+
+		int[] postorderIndex = new int[] { postorder.length - 1 };
+		BTNode root = buildTreeFromInorderPostorder(inorder, postorder, postorderIndex, 0, inorder.length - 1);
+		BinaryTree bt = new BinaryTree();
+		bt.root = root;
+
+		return bt;
+	}
+
+	/**
+	 * Recursively build the tree.
+	 * 
+	 * @param inorder
+	 * 		inorder traversal
+	 * @param postorder
+	 * 		postorder traversal
+	 * @param postorderIndex
+	 * 		holds current preorder index
+	 * @param inorderStart
+	 * 		start index of inorder
+	 * @param inorderEnd
+	 * 		end index of inorder
+	 * 
+	 * @return
+	 * 		constructed tree
+	 */
+	private static BTNode buildTreeFromInorderPostorder(int[] inorder, int[] postorder, int[] postorderIndex,
+			int inorderStart, int inorderEnd) {
+		if (inorderStart > inorderEnd)
+			return null;
+
+		BTNode node = new BTNode(postorder[postorderIndex[0]--]);
+
+		if (inorderStart == inorderEnd)
+			return node;
+
+		int inorderIndex = search(inorder, inorderStart, inorderEnd, node.getData());
+		if (inorderIndex == -1)
+			throw new IllegalArgumentException("Traversals are not proper..");
+
+		node.right = buildTreeFromInorderPostorder(inorder, postorder, postorderIndex, inorderIndex + 1, inorderEnd);
+		node.left = buildTreeFromInorderPostorder(inorder, postorder, postorderIndex, inorderStart, inorderIndex - 1);
+
+		return node;
 	}
 }

@@ -555,4 +555,78 @@ public class Array2dUtil {
 			}
 		}
 	}
+
+	/**
+	 * Given an nXn array where the values are 0 or 1, this method finds the
+	 * number of islands. A group of connected 1s form an island. This is
+	 * similar to connected components problem.
+	 * 
+	 * @param array
+	 * 		given array
+	 * 
+	 * @return
+	 * 		number of islands/comoponents
+	 */
+	static int countIslands(int[][] array) {
+		// TODO, data validation
+
+		boolean visited[][] = new boolean[array.length][array[0].length];
+
+		int count = 0;
+		for (int i = 0; i < array.length; ++i)
+			for (int j = 0; j < array[i].length; ++j)
+				if (array[i][j] == 1 && !visited[i][j]) {
+					countIslands(array, i, j, visited);
+					count++;
+				}
+
+		return count;
+	}
+
+	/**
+	 * Do a depth first search traversal and update the visited nodes.
+	 * 
+	 * @param array
+	 * 		given array
+	 * @param row
+	 * 		current row
+	 * @param col
+	 * 		current column
+	 * @param visited
+	 * 		marks the visited nodes
+	 */
+	private static void countIslands(int[][] array, int row, int col, boolean[][] visited) {
+
+		// Distance to to a neighbor row cell, prev row(3), curr row(2), next row(3)
+		int[] rowNeighbor = new int[] { -1, -1, -1, 0, 0, 1, 1, 1 };
+		// Distance to a neighbor col cell
+		int[] colNeighbor = new int[] { -1, 0, 1, -1, 1, -1, 0, 1 };
+
+		visited[row][col] = true;
+
+		for (int k = 0; k < 8; ++k)
+			if (isPartOfComponent(array, row + rowNeighbor[k], col + colNeighbor[k], visited))
+				countIslands(array, row + rowNeighbor[k], col + colNeighbor[k], visited);
+	}
+
+	/**
+	 * Checks whether the cell at the given row and column is part of island.
+	 * 
+	 * @param array
+	 * 		given array
+	 * @param row
+	 * 		current row
+	 * @param col
+	 * 		current row
+	 * @param visited
+	 * 		visited nodes
+	 * 
+	 * @return
+	 * 		true if the cell is part of the current component, false otherwise
+	 */
+	private static boolean isPartOfComponent(int[][] array, int row, int col, boolean[][] visited) {
+
+		return row >= 0 && row < array.length && col >= 0 && col < array[0].length
+				&& (array[row][col] == 1 && !visited[row][col]);
+	}
 }
